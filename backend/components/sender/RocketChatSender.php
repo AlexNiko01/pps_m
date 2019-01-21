@@ -13,7 +13,7 @@ class RocketChatSender implements Sender
      */
     public function send($message)
     {
-        $rocketChatClient = new Client('https://rocket.chat/hooks/a3TCkLaXZLRJOxaklCZ8-2pyxTpTA6Pc-LqNKlBb68y', 'o.semenchuk');
+        $rocketChatClient = new Client('https://pop888.pw/api/v1/chat.postMessage/a3TCkLaXZLRJOxaklCZ8-2pyxTpTA6Pc-LqNKlBb68y', 'o.semenchuk');
         $rocketChatClient->sendRequest($message);
     }
 }
