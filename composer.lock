@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3cd07d6cc69ba730d6f220d6b41242cf",
+    "content-hash": "55dc0c0f8c6f1207baca29834f51830b",
     "packages": [
         {
             "name": "aki/yii2-bot-telegram",
@@ -146,6 +146,42 @@
             "license": [
                 "MIT"
             ]
+        },
+        {
+            "name": "bt/rocketchat-php",
+            "version": "1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bt/rocketchat-php.git",
+                "reference": "5c11197cc6cea66ce4e75e1fec9f919890652d8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bt/rocketchat-php/zipball/5c11197cc6cea66ce4e75e1fec9f919890652d8d",
+                "reference": "5c11197cc6cea66ce4e75e1fec9f919890652d8d",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RocketChatPhp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bertram Truong",
+                    "email": "b@bertramtruong.com"
+                }
+            ],
+            "description": "A PHP interface to send incoming webhooks.",
+            "time": "2016-04-29T07:31:37+00:00"
         },
         {
             "name": "cebe/markdown",
@@ -364,6 +400,33 @@
                 "html"
             ],
             "time": "2018-02-23T01:58:20+00:00"
+        },
+        {
+            "name": "fab1en/rocket-chat-rest-client",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Fab1en/rocket-chat-rest-client.git",
+                "reference": "6db5fe4c1817833566dfebf700da43bc4f73dbbd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Fab1en/rocket-chat-rest-client/zipball/6db5fe4c1817833566dfebf700da43bc4f73dbbd",
+                "reference": "6db5fe4c1817833566dfebf700da43bc4f73dbbd",
+                "shasum": ""
+            },
+            "require": {
+                "nategood/httpful": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Rocket Chat REST API client in PHP.",
+            "time": "2017-05-03T20:07:04+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -684,6 +747,56 @@
                 "psr-3"
             ],
             "time": "2018-11-05T09:00:11+00:00"
+        },
+        {
+            "name": "nategood/httpful",
+            "version": "0.2.20",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nategood/httpful.git",
+                "reference": "c1cd4d46a4b281229032cf39d4dd852f9887c0f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nategood/httpful/zipball/c1cd4d46a4b281229032cf39d4dd852f9887c0f6",
+                "reference": "c1cd4d46a4b281229032cf39d4dd852f9887c0f6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Httpful": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nate Good",
+                    "email": "me@nategood.com",
+                    "homepage": "http://nategood.com"
+                }
+            ],
+            "description": "A Readable, Chainable, REST friendly, PHP HTTP Client",
+            "homepage": "http://github.com/nategood/httpful",
+            "keywords": [
+                "api",
+                "curl",
+                "http",
+                "requests",
+                "rest",
+                "restful"
+            ],
+            "time": "2015-10-26T16:11:30+00:00"
         },
         {
             "name": "psr/http-message",
@@ -3793,7 +3906,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "fab1en/rocket-chat-rest-client": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

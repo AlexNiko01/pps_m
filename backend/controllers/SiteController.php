@@ -69,7 +69,7 @@ class SiteController extends Controller
     public function actionLogin()
     {
 
-        Yii::$app->sender->send('test');
+//        Yii::$app->sender->send('test');
 
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
