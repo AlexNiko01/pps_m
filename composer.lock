@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "55dc0c0f8c6f1207baca29834f51830b",
+    "content-hash": "21c5c2cfeb7ca9c2ab55b1791045421a",
     "packages": [
         {
             "name": "aki/yii2-bot-telegram",
@@ -1026,6 +1026,53 @@
             ],
             "description": "A PHP interface to send requests to Rocket Chat incoming webhooks.",
             "time": "2018-04-08T02:40:37+00:00"
+        },
+        {
+            "name": "yii2tech/crontab",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yii2tech/crontab.git",
+                "reference": "1d1c6bd20dc86b59da4d195bd1c7214366f79ec2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yii2tech/crontab/zipball/1d1c6bd20dc86b59da4d195bd1c7214366f79ec2",
+                "reference": "1d1c6bd20dc86b59da4d195bd1c7214366f79ec2",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "~2.0.14"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii2tech\\crontab\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Klimov",
+                    "email": "klimov.paul@gmail.com"
+                }
+            ],
+            "description": "Crontab support extension for the Yii2 framework",
+            "keywords": [
+                "cron",
+                "cronjob",
+                "crontab",
+                "yii2"
+            ],
+            "time": "2018-09-19T10:11:05+00:00"
         },
         {
             "name": "yiisoft/yii2",
