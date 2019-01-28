@@ -1,80 +1,95 @@
 <?php
+use backend\assets\BackendAsset;
+use backend\models\Node;
+use yii\helpers\Html;
+use yii\widgets\Breadcrumbs;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use backend\assets\AppAsset;
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
-use common\widgets\Alert;
-
-AppAsset::register($this);
+BackendAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <?= Html::csrfMetaTags() ?>
+
     <title><?= Html::encode($this->title) ?></title>
+
     <?php $this->head() ?>
 </head>
-<body>
+<body class="hold-transition skin-blue sidebar-mini">
 <?php $this->beginBody() ?>
 
-<div class="wrap">
-    <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-    ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
-    }
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
-    ]);
-    NavBar::end();
-    ?>
+<div class="wrapper">
+    <?= $this->render('partials_backend/_header') ?>
 
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <?= $this->render('partials_backend/_sideMenu') ?>
+
+        </section>
+    </aside>
+
+    <div class="content-wrapper">
+        <div class="tree-container-wrapper">
+
+            <ul class="breadcrumb" id="node-breadcrumbs">
+                <?= Node::getNodeBreadcrumbs() ?>
+            </ul>
+
+            <div id="node-tree-container" style="display: none">
+                <input class="form-control" id="tree-search"
+                       placeholder="<?php echo Yii::t('admin', "Search by name or #ID. Press ESC to close."); ?>"
+                       type="text"/>
+                <div id="node-tree">
+                    <?= Node::getHtmlTree(); ?>
+                </div>
+            </div>
+
+        </div>
+
+        <section class="content-header">
+            <h1>
+                <?= Html::encode($this->title) ?>
+            </h1>
+
+            <?=
+            Breadcrumbs::widget(
+                [
+                    'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                ]
+            ); ?>
+        </section>
+
+        <section class="content">
+
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+<!--                    --><?//= $content ?>
+                </div>
+            </div>
+        </section>
+
     </div>
+
 </div>
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
+<?= \odaialali\yii2toastr\ToastrFlash::widget([
+    'options' => [
+        'positionClass' => 'toast-bottom-left'
+    ]
+]); ?>
 
 <?php $this->endBody() ?>
+<script>
+    console.log(atob('JWMgR08gQVdBWSEhIQ=='), "font-size: 40px;color:#ff3939; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;text-align:center");
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>

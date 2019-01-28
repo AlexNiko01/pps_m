@@ -17,10 +17,25 @@ return [
             'csrfParam' => '_csrf-backend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
+            'class' => webvimark\modules\UserManagement\components\UserConfig::class,
+            'on afterLogin' => function ($event) {
+                \webvimark\modules\UserManagement\models\UserVisitLog::newVisitor($event->identity->id);
+            }
         ],
+        'user-management' => [
+            'class' => webvimark\modules\UserManagement\UserManagementModule::class,
+
+            'on beforeAction' => function (yii\base\ActionEvent $event) {
+                if ($event->action->uniqueId === 'user-management/auth/login') {
+                    $event->action->controller->layout = 'loginLayout.php';
+                }
+            },
+        ],
+//        'user' => [
+//            'identityClass' => 'common\models\User',
+//            'enableAutoLogin' => true,
+//            'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
+//        ],
         'session' => [
             // this is the name of the session cookie used for login on the backend
             'name' => 'advanced-backend',
@@ -50,6 +65,7 @@ return [
 
             return $sender;
         },
+
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
