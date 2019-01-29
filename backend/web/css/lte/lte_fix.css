@@ -1,0 +1,51 @@
+table > thead > tr > th,
+table > tbody > tr > th,
+table > tfoot > tr > th,
+table > thead > tr > td,
+table > tbody > tr > td,
+table > tfoot > tr > td {
+  border-top: 1px solid #dddddd;
+}
+table > thead > tr > th {
+  border-bottom: 2px solid #dddddd;
+}
+table tr td .progress {
+  margin-top: 5px;
+}
+.table-bordered {
+  border: 1px solid #dddddd;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+  border: 1px solid #dddddd;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > thead > tr > td {
+  border-bottom-width: 2px;
+}
+.sidebar-menu,
+.main-sidebar .user-panel,
+.sidebar-menu > li.header {
+  white-space: inherit;
+}
+.sidebar-collapse .sidebar-menu,
+.sidebar-collapse .main-sidebar .user-panel,
+.sidebar-collapse .sidebar-menu > li.header {
+  white-space: nowrap;
+}
+.sidebar-collapse:hover .sidebar-menu,
+.sidebar-collapse:hover .main-sidebar .user-panel,
+.sidebar-collapse:hover .sidebar-menu > li.header {
+  white-space: inherit;
+}
+.lte-hide-title {
+  display: none;
+}
+section.content {
+  overflow-x: auto;
+}
+/*# sourceMappingURL=lte_fix.css.map */

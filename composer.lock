@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1ce6d02c3dbb23ede8c37b43aac73f27",
+    "content-hash": "0f47cce697572f3528ded16b3087a3ec",
     "packages": [
         {
             "name": "aki/yii2-bot-telegram",
@@ -67,6 +67,22 @@
             "license": [
                 "MIT"
             ]
+        },
+        {
+            "name": "bower-asset/drmonty-chosen",
+            "version": "1.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mrohnstock/chosen.git",
+                "reference": "9e972317a1d1b758b09af8fbe61040c9d672b513"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mrohnstock/chosen/zipball/9e972317a1d1b758b09af8fbe61040c9d672b513",
+                "reference": "9e972317a1d1b758b09af8fbe61040c9d672b513",
+                "shasum": null
+            },
+            "type": "bower-asset"
         },
         {
             "name": "bower-asset/inputmask",
@@ -2104,6 +2120,51 @@
             "time": "2016-10-14T10:53:00+00:00"
         },
         {
+            "name": "yii2mod/yii2-chosen-select",
+            "version": "1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yii2mod/yii2-chosen-select.git",
+                "reference": "c4ed63f3a6217db3e94788b3db44bad62449d8da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yii2mod/yii2-chosen-select/zipball/c4ed63f3a6217db3e94788b3db44bad62449d8da",
+                "reference": "c4ed63f3a6217db3e94788b3db44bad62449d8da",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/drmonty-chosen": ">=1.4",
+                "yiisoft/yii2": "*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.0"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "yii2mod\\chosen\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Igor Chepurnoy",
+                    "email": "igorzfort@gmail.com"
+                }
+            ],
+            "description": "Chosen Select Widget based on Chosen jQuery plugin",
+            "keywords": [
+                "select",
+                "widget",
+                "yii2"
+            ],
+            "time": "2018-08-20T14:45:21+00:00"
+        },
+        {
             "name": "yii2tech/crontab",
             "version": "1.0.4",
             "source": {
@@ -3754,16 +3815,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "4.0.1",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "febd209a219cea7b56ad799b30ebbea34b71eb8f"
+                "reference": "4a43e9af57b4afa663077b9bc85255dbc6e8a2bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/febd209a219cea7b56ad799b30ebbea34b71eb8f",
-                "reference": "febd209a219cea7b56ad799b30ebbea34b71eb8f",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/4a43e9af57b4afa663077b9bc85255dbc6e8a2bd",
+                "reference": "4a43e9af57b4afa663077b9bc85255dbc6e8a2bd",
                 "shasum": ""
             },
             "require": {
@@ -3800,7 +3861,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2018-11-25T09:31:21+00:00"
+            "time": "2019-01-28T15:26:03+00:00"
         },
         {
             "name": "sebastian/exporter",

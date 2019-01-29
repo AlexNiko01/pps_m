@@ -40,6 +40,9 @@ class Node extends \webvimark\components\BaseActiveRecord
     protected $_timestamp_enabled = true;
     protected $_enable_common_cache = true;
 
+    public static function getDb() {
+        return Yii::$app->db2;
+    }
     /**
      * @return string
      */

@@ -35,7 +35,7 @@ BackendAsset::register($this);
         </section>
     </aside>
 
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="min-height: 100vh">
         <div class="tree-container-wrapper">
 
             <ul class="breadcrumb" id="node-breadcrumbs">
@@ -80,11 +80,11 @@ BackendAsset::register($this);
 
 </div>
 
-<?= \odaialali\yii2toastr\ToastrFlash::widget([
-    'options' => [
-        'positionClass' => 'toast-bottom-left'
-    ]
-]); ?>
+<?//= \odaialali\yii2toastr\ToastrFlash::widget([
+//    'options' => [
+//        'positionClass' => 'toast-bottom-left'
+//    ]
+//]); ?>
 
 <?php $this->endBody() ?>
 <script>

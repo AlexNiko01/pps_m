@@ -34,7 +34,8 @@
     "kartik-v/yii2-grid": "^3.1",
     "webvimark/module-user-management": "^1.0",
     "webvimark/module-migrations": "^1.0",
-    "webvimark/generators": "^1.0"
+    "webvimark/generators": "^1.0",
+    "yii2mod/yii2-chosen-select": "^1.0"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",
