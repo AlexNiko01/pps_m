@@ -32,6 +32,9 @@ return [
                     $event->action->controller->layout = 'loginLayout.php';
                 }
             },
-        ]
+        ],
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module',
+        ],
     ],
 ];

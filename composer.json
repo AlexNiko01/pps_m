@@ -35,7 +35,10 @@
     "webvimark/module-user-management": "^1.0",
     "webvimark/module-migrations": "^1.0",
     "webvimark/generators": "^1.0",
-    "yii2mod/yii2-chosen-select": "^1.0"
+    "yii2mod/yii2-chosen-select": "^1.0",
+    "kartik-v/yii2-krajee-base": "1.8.4",
+    "kartik-v/yii2-export": "@dev",
+    "kartik-v/yii2-dialog": "*"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

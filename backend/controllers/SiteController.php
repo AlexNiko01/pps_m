@@ -3,6 +3,8 @@
 namespace backend\controllers;
 
 use backend\components\sender\TelegramSender;
+use backend\models\Node;
+use common\models\TransactionSearch;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -63,7 +65,22 @@ class SiteController extends Controller
         if (Yii::$app->user->isGuest) {
             return Yii::$app->user->loginRequired();
         }
-        return $this->render('index');
+
+        $children = Node::getCurrentNode()->getChildrenList(true, false);
+        if ($children) {
+            $queryParams['TransactionSearch']['brands'] = implode(',', array_keys($children));
+        }
+
+
+        $searchModel = new TransactionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//        var_dump($dataProvider);
+//        die();
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+
     }
 
 
