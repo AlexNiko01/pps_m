@@ -198,29 +198,29 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
                 'class' => 'payment_method-column'
             ],
         ],
-        [
-            'attribute' => 'status',
-            'format' => 'raw',
-            'value' => function ($model) {
-                if ($model->status == Payment::STATUS_SUCCESS) {
-                    return '<span class="success">' . Payment::getStatusDescription($model->status) . '</span>';
-                } else if ($model->status == Payment::STATUS_CREATED) {
-                    return '<span style="color: #777;">' . Payment::getStatusDescription($model->status) . '</span>';
-                } else if ($model->status == Payment::STATUS_ERROR) {
-                    return '<span class="error">' . Payment::getStatusDescription($model->status) . '</span>';
-                } else if ($model->status == Payment::STATUS_CANCEL) {
-                    return '<span style="color: indianred;">' . Payment::getStatusDescription($model->status) . '</span>';
-                } else {
-                    return isset($model->status) ? Payment::getStatusDescription($model->status) : '-';
-                }
-            },
-            'headerOptions' => [
-                'class' => 'status-column-header'
-            ],
-            'contentOptions' => [
-                'class' => 'status-column'
-            ],
-        ],
+//        [
+//            'attribute' => 'status',
+//            'format' => 'raw',
+//            'value' => function ($model) {
+//                if ($model->status == Payment::STATUS_SUCCESS) {
+//                    return '<span class="success">' . Payment::getStatusDescription($model->status) . '</span>';
+//                } else if ($model->status == Payment::STATUS_CREATED) {
+//                    return '<span style="color: #777;">' . Payment::getStatusDescription($model->status) . '</span>';
+//                } else if ($model->status == Payment::STATUS_ERROR) {
+//                    return '<span class="error">' . Payment::getStatusDescription($model->status) . '</span>';
+//                } else if ($model->status == Payment::STATUS_CANCEL) {
+//                    return '<span style="color: indianred;">' . Payment::getStatusDescription($model->status) . '</span>';
+//                } else {
+//                    return isset($model->status) ? Payment::getStatusDescription($model->status) : '-';
+//                }
+//            },
+//            'headerOptions' => [
+//                'class' => 'status-column-header'
+//            ],
+//            'contentOptions' => [
+//                'class' => 'status-column'
+//            ],
+//        ],
 
     ],
 ]); ?>

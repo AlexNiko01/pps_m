@@ -135,6 +135,14 @@ class Transaction extends ActiveRecord
         ];
     }
 
+    /**
+     * Relation with Payment system
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPaymentSystem()
+    {
+        return $this->hasOne(PaymentSystem::className(), ['id' => 'payment_system_id']);
+    }
 
     public function addToRedisQueue()
     {
