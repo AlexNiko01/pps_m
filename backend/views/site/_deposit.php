@@ -2,9 +2,11 @@
 
 /* @var $total array */
 /* @var $currencies array */
+
 /* @var $searchDataProvider object */
 
 use backend\models\Node;
+use pps\payment\Payment;
 use yii\grid\GridView;
 use yii\helpers\{
     ArrayHelper, Html, Url
@@ -13,8 +15,8 @@ use yii\widgets\{
     ActiveForm, Pjax
 };
 use kartik\export\ExportMenu;
-use pps\payment\Payment;
-use common\classes\CurrencyList;
+
+//use common\classes\CurrencyList;
 use \webvimark\modules\UserManagement\components\GhostHtml;
 
 
@@ -23,9 +25,9 @@ $node = Node::getCurrentNode();
 $this->title = "Deposit {$node->name}";
 $this->params['breadcrumbs'][] = $this->title;
 
-$currency_list = CurrencyList::getArrayCurrencies($currencies);
+//$currency_list = CurrencyList::getArrayCurrencies($currencies);
 
-$searchModel->load(\Yii::$app->request->post());
+$searchModelDeposit->load(\Yii::$app->request->post());
 
 $is_super_admin = Yii::$app->user->isSuperAdmin;
 
@@ -33,7 +35,7 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
 
 <div class="col-md-12 no-padding-left">
     <?= ExportMenu::widget([
-        'dataProvider' => $searchDataProvider,
+        'dataProvider' => $dataProviderDeposit,
         'columns' => [
             'id',
             [
@@ -93,42 +95,12 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
     ?>
 </div>
 
-<?= $this->render('_search_form', [
-    'searchModel' => $searchModel,
-    'currency_list' => $currency_list,
-    'type' => 'deposit',
-])?>
+<? //= $this->render('_search_form', [
+//    'searchModel' => $searchModel,
+//    'currency_list' => $currency_list,
+//    'type' => 'deposit',
+//]) ?>
 
-<style>
-    .success {
-        color: green
-    }
-
-    .error {
-        color: brown;
-    }
-
-    .show-more {
-        font-size: 12px;
-        color: #00a7d0;
-    }
-
-    .show-more:hover {
-        cursor: pointer;
-    }
-    pre {
-        text-align: left;
-    }
-
-    body {
-        overflow: auto;
-    }
-
-    .btn-marg {
-        margin-left: 2px;
-        margin-right: 2px;
-    }
-</style>
 
 <!--?php Pjax::begin([
     'id' => 'transaction-deposit-pjax',
@@ -140,7 +112,7 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
 
 <?= GridView::widget([
     'id' => 'transaction-deposit-grid',
-    'dataProvider' => $searchDataProvider,
+    'dataProvider' => $dataProviderDeposit,
     'showFooter' => false,
     'summary' => false,
     'pager' => [
@@ -190,58 +162,10 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
             ],
         ],
         [
-            'attribute' => 'currency',
-            'value' => function ($model) {
-                return $model->currency ?? '';
-            },
-            'headerOptions' => [
-                'class' => 'currency-column-header'
-            ],
-            'contentOptions' => [
-                'class' => 'currency-column'
-            ],
-        ],
-        [
-            'attribute' => 'amount',
-            'value' => function ($model) {
-                return $model->amount ?? '';
-            },
-            'headerOptions' => [
-                'class' => 'amount-column-header'
-            ],
-            'contentOptions' => [
-                'class' => 'amount-column'
-            ],
-        ],
-        [
-            'attribute' => 'write_off',
-            'value' => function ($model) {
-                return $model->write_off ?? '';
-            },
-            'headerOptions' => [
-                'class' => 'write_off-column-header'
-            ],
-            'contentOptions' => [
-                'class' => 'write_off-column'
-            ],
-        ],
-        [
-            'attribute' => 'refund',
-            'value' => function ($model) {
-                return $model->refund ?? '';
-            },
-            'headerOptions' => [
-                'class' => 'refund-column-header'
-            ],
-            'contentOptions' => [
-                'class' => 'refund-column'
-            ],
-        ],
-        'commission_payer',
-        [
             'attribute' => 'payment_system_id',
             'label' => 'Payment System',
             'value' => function ($model) {
+//                var_dump($model);
                 return $model->paymentSystem->name ?? '';
             },
             'headerOptions' => [
@@ -278,24 +202,22 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
             ],
             'visible' => $is_super_admin
         ],
-        //'buyer_id',
         [
             'attribute' => 'status',
             'format' => 'raw',
-            'value' => function ($model) {
-                if ($model->status == Payment::STATUS_SUCCESS) {
-                    return '<span class="success">' . Payment::getStatusDescription($model->status) . '</span>';
-                } else if ($model->status == Payment::STATUS_CREATED) {
-                    return '<span style="color: #777;">' . Payment::getStatusDescription($model->status) . '</span>';
-                } else if ($model->status == Payment::STATUS_ERROR) {
-                    return '<span class="error">' . Payment::getStatusDescription($model->status) . '</span>';
-                } else if ($model->status == Payment::STATUS_CANCEL) {
-                    return '<span style="color: indianred;">' . Payment::getStatusDescription($model->status) . '</span>';
-                } else {
-                    return isset($model->status) ? Payment::getStatusDescription($model->status) : '-';
-                }
-
-            },
+//            'value' => function ($model) {
+//                if ($model->status == Payment::STATUS_SUCCESS) {
+//                    return '<span class="success">' . Payment::getStatusDescription($model->status) . '</span>';
+//                } else if ($model->status == Payment::STATUS_CREATED) {
+//                    return '<span style="color: #777;">' . Payment::getStatusDescription($model->status) . '</span>';
+//                } else if ($model->status == Payment::STATUS_ERROR) {
+//                    return '<span class="error">' . Payment::getStatusDescription($model->status) . '</span>';
+//                } else if ($model->status == Payment::STATUS_CANCEL) {
+//                    return '<span style="color: indianred;">' . Payment::getStatusDescription($model->status) . '</span>';
+//                } else {
+//                    return isset($model->status) ? Payment::getStatusDescription($model->status) : '-';
+//                }
+//            },
             'headerOptions' => [
                 'class' => 'status-column-header'
             ],
@@ -303,97 +225,7 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
                 'class' => 'status-column'
             ],
         ],
-        /*[
-            'attribute' => 'requisites',
-            'format' => 'raw',
-            'value' => function ($model) {
-                $data = '';
-
-                if ($model->requisites != '[]' && $model->requisites != '') {
-                    if ($jsons = json_decode($model->requisites, true)) {
-                        if (count($jsons) > 1) {
-                            $firstKey = array_first(array_keys($jsons));
-                            $data .= "<b>" . Html::encode($firstKey) . "</b>: " . Html::encode($jsons[$firstKey]) . "<br />";
-                            $data .= '<div class="requisites r-' . $model->id . '" style="display: none;">';
-                            foreach ($jsons AS $key => $value) {
-                                if ($key == $firstKey) continue;
-                                $data .= "<b>" . Html::encode($key) . "</b>: " . Html::encode($value) . "<br />";
-                            }
-                            $data .= '</div>';
-                            $data .= '<span class="show-more" onclick="$(\'.requisites.r-' . $model->id . '\').toggle()">Show more</span>';
-
-                        } else {
-                            foreach ($jsons AS $key => $value) {
-                                $data .= "<b>" . Html::encode($key) . "</b>: " . Html::encode($value) . "<br />";
-                            }
-                        }
-                    }
-                }
-
-                return $data;
-            },
-            'headerOptions' => [
-                'class' => 'requisites-column-header'
-            ],
-            'contentOptions' => [
-                'class' => 'requisites-column',
-                'style' => 'text-align: left;'
-            ],
-        ],*/
-        [
-            'attribute' => 'created_at',
-            'value' => function ($model) {
-                return (!empty($model->created_at) ? date("d.m.Y H:i:s", $model->created_at) : '');
-            },
-            'headerOptions' => [
-                'class' => 'created-date-column-header'
-            ],
-            'contentOptions' => [
-                'class' => 'created-date-column'
-            ],
-        ],
-        [
-            'attribute' => 'updated_at',
-            'value' => function ($model) {
-                return (!empty($model->updated_at) ? date("d.m.Y H:i:s", $model->updated_at) : '');
-            },
-            'headerOptions' => [
-                'class' => 'created-date-column-header'
-            ],
-            'contentOptions' => [
-                'class' => 'created-date-column'
-            ],
-        ],
-        [
-            'class' => 'yii\grid\ActionColumn',
-            'template' => '{view-transaction}{change-sum}',
-            'buttons' => [
-                'view-transaction' => function ($url, $model) {
-                    if (!empty($model->id)) {
-                        return GhostHtml::a('View', [
-                            'view',
-                            'id' => $model->id
-                        ], [
-                                'class' => 'btn btn-info btn-xs btn-marg pull-left'
-                            ]
-                        );
-                    } else {
-                        return '';
-                    }
-                },
-//                'change-sum' => function($url, $model) 
-//                {
-//                    if (floatval($model->refund) > floatval($model->amount)) :
-//                        return Html::a('change sum', '#', [
-//                                'class' => 'btn btn-info btn-xs btn-marg pull-left',
-//                                'id' => 'cs_' . $model->id,
-//                                'onclick' => "change_sum('{$model->id}', 'cs_');return false;"
-//                            ]
-//                        );
-//                    endif;
-//                },
-            ]
-        ],
+        'way'
     ],
 ]); ?>
 

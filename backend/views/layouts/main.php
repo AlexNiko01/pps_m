@@ -1,4 +1,5 @@
 <?php
+
 use backend\assets\BackendAsset;
 use backend\models\Node;
 use yii\helpers\Html;
@@ -67,11 +68,9 @@ BackendAsset::register($this);
         </section>
 
         <section class="content">
-
-
             <div class="panel panel-default">
                 <div class="panel-body">
-<!--                    --><?//= $content ?>
+                    <?= $content ?>
                 </div>
             </div>
         </section>
@@ -80,7 +79,7 @@ BackendAsset::register($this);
 
 </div>
 
-<?//= \odaialali\yii2toastr\ToastrFlash::widget([
+<? //= \odaialali\yii2toastr\ToastrFlash::widget([
 //    'options' => [
 //        'positionClass' => 'toast-bottom-left'
 //    ]

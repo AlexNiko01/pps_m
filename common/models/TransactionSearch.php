@@ -5,7 +5,7 @@ namespace common\models;
 use pps\payment\Payment;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-
+require '../../vendor/pps/pps-payment/Payment.php';
 /**
  * TransactionSearch represents the model behind the search form about `common\models\Transaction`.
  */
@@ -35,9 +35,10 @@ class TransactionSearch extends Transaction
     /**
      * Creates data provider instance with search query applied
      * @param array $params
+     * @param string $way
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $way)
     {
         $query = Transaction::find();
         $query->joinWith('paymentSystem');
@@ -62,6 +63,7 @@ class TransactionSearch extends Transaction
             ($this->status >= 0)
         ) {
             $query->where(['status' => $this->status]);
+
         }
 
         if (!$this->validate()) {
@@ -73,7 +75,7 @@ class TransactionSearch extends Transaction
         // grid filtering conditions
         $query->andFilterWhere([
             'transaction.id' => $this->id,
-            'way' => $this->way,
+            'way' => $way,
             'payment_system_id' => $this->payment_system_id,
             'amount' => $this->amount,
             'write_off' => $this->write_off,
@@ -89,7 +91,15 @@ class TransactionSearch extends Transaction
             ->andFilterWhere(['like', 'payment_method', $this->payment_method])
             ->andFilterWhere(['like', 'external_id', $this->external_id])
             ->andFilterWhere(['like', 'requisites', $this->requisites])
-//            ->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['in', 'status', [
+                Payment::STATUS_TIMEOUT,
+                Payment::STATUS_CANCEL,
+                Payment::STATUS_ERROR,
+                Payment::STATUS_MISPAID,
+                Payment::STATUS_DSPEND,
+                Payment::STATUS_VOIDED,
+                Payment::STATUS_NETWORK_ERROR,
+                Payment::STATUS_PENDING_ERROR]])
             ->andFilterWhere(['like', 'comment', $this->comment])
             ->andFilterWhere(['like', 'result_data', $this->result_data])
             ->andFilterWhere(['like', 'query_data', $this->query_data]);

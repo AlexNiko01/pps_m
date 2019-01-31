@@ -34,38 +34,22 @@ $this->title = 'Dashboard';
 <?= Html::script('', ['src' => Url::to(['/js/chart.min.js'])]) ?>
 
 <style>
-    .panel {
-        background: transparent;
-        border: none;
-        box-shadow: none;
-    }
 
-    .panel-body {
-        padding: 0;
-    }
-
-    .statuses, .transactions, .merchants {
-        background: #fff;
-        border-radius: 4px;
-        box-shadow: 0 0 5px rgba(33, 33, 33, .1);
-        margin-bottom: 15px;
-    }
-
-    .transactions, .merchants {
-        height: 200px;
-        max-height: 400px;
-        overflow: auto;
-        padding: 6px;
-    }
 </style>
 <div class="row">
     <div class="col-lg-6 col-xs-12">
+        <h3>Withdraw transactions</h3>
         <?php echo $this->render('_withdraw', [
-            'searchModel' => $searchModel,
-            'searchDataProvider' => $dataProvider,
+            'searchModelWithdraw' => $searchModelWithdraw,
+            'dataProviderWithdraw' => $dataProviderWithdraw,
         ]); ?>
     </div>
     <div class="col-lg-6 col-xs-12">
+        <h3> Deposit transactions</h3>
+        <?php echo $this->render('_deposit', [
+            'searchModelDeposit' => $searchModelDeposit,
+            'dataProviderDeposit' => $dataProviderDeposit
+        ]); ?>
 
     </div>
 </div>

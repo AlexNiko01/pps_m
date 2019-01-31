@@ -71,14 +71,17 @@ class SiteController extends Controller
             $queryParams['TransactionSearch']['brands'] = implode(',', array_keys($children));
         }
 
+        $searchModelWithdraw = new TransactionSearch();
+        $dataProviderWithdraw = $searchModelWithdraw->search(Yii::$app->request->queryParams, 'withdraw');
 
-        $searchModel = new TransactionSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-//        var_dump($dataProvider);
-//        die();
+        $searchModelDeposit = new TransactionSearch();
+        $dataProviderDeposit = $searchModelWithdraw->search(Yii::$app->request->queryParams, 'deposit');
+
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'searchModelWithdraw' => $searchModelWithdraw,
+            'dataProviderWithdraw' => $dataProviderWithdraw,
+            'searchModelDeposit' => $searchModelDeposit,
+            'dataProviderDeposit' => $dataProviderDeposit
         ]);
 
     }

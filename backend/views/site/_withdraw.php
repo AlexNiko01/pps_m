@@ -19,8 +19,7 @@ $node = Node::getCurrentNode();
 $this->title = "Withdraw {$node->name}";
 $this->params['breadcrumbs'][] = $this->title;
 
-
-$searchModel->load(\Yii::$app->request->post());
+$searchModelWithdraw->load(\Yii::$app->request->post());
 
 $is_super_admin = Yii::$app->user->isSuperAdmin;
 
@@ -28,7 +27,7 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
 
 <div class="col-md-12 no-padding-left">
     <?= ExportMenu::widget([
-        'dataProvider' => $searchDataProvider,
+        'dataProvider' => $dataProviderWithdraw,
         'columns' => [
             'id',
             [
@@ -95,25 +94,6 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
 //    'type' => 'withdraw',
 //]) ?>
 
-<style>
-    .success {
-        color: green
-    }
-
-    .error {
-        color: brown;
-    }
-
-    .show-more {
-        font-size: 12px;
-        color: #00a7d0;
-    }
-
-    .show-more:hover {
-        cursor: pointer;
-    }
-</style>
-
 <!--?php Pjax::begin([
     'id' => 'transaction-deposit-pjax',
     'enablePushState' => false,
@@ -123,7 +103,7 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
 ]) ?-->
 <?= GridView::widget([
     'id' => 'transaction-deposit-grid',
-    'dataProvider' => $searchDataProvider,
+    'dataProvider' => $dataProviderWithdraw,
     'showFooter' => false,
     'summary' => false,
     'pager' => [
@@ -198,29 +178,30 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
                 'class' => 'payment_method-column'
             ],
         ],
-//        [
-//            'attribute' => 'status',
-//            'format' => 'raw',
-//            'value' => function ($model) {
-//                if ($model->status == Payment::STATUS_SUCCESS) {
-//                    return '<span class="success">' . Payment::getStatusDescription($model->status) . '</span>';
-//                } else if ($model->status == Payment::STATUS_CREATED) {
-//                    return '<span style="color: #777;">' . Payment::getStatusDescription($model->status) . '</span>';
-//                } else if ($model->status == Payment::STATUS_ERROR) {
-//                    return '<span class="error">' . Payment::getStatusDescription($model->status) . '</span>';
-//                } else if ($model->status == Payment::STATUS_CANCEL) {
-//                    return '<span style="color: indianred;">' . Payment::getStatusDescription($model->status) . '</span>';
-//                } else {
-//                    return isset($model->status) ? Payment::getStatusDescription($model->status) : '-';
-//                }
-//            },
-//            'headerOptions' => [
-//                'class' => 'status-column-header'
-//            ],
-//            'contentOptions' => [
-//                'class' => 'status-column'
-//            ],
-//        ],
+        [
+            'attribute' => 'status',
+            'format' => 'raw',
+            'value' => function ($model) {
+                if ($model->status == Payment::STATUS_SUCCESS) {
+                    return '<span class="success">' . Payment::getStatusDescription($model->status) . '</span>';
+                } else if ($model->status == Payment::STATUS_CREATED) {
+                    return '<span style="color: #777;">' . Payment::getStatusDescription($model->status) . '</span>';
+                } else if ($model->status == Payment::STATUS_ERROR) {
+                    return '<span class="error">' . Payment::getStatusDescription($model->status) . '</span>';
+                } else if ($model->status == Payment::STATUS_CANCEL) {
+                    return '<span style="color: indianred;">' . Payment::getStatusDescription($model->status) . '</span>';
+                } else {
+                    return isset($model->status) ? Payment::getStatusDescription($model->status) : '-';
+                }
+            },
+            'headerOptions' => [
+                'class' => 'status-column-header'
+            ],
+            'contentOptions' => [
+                'class' => 'status-column'
+            ],
+        ],
+        'way'
 
     ],
 ]); ?>
