@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\components\sender\TelegramSender;
 use backend\models\Node;
+use common\models\Transaction;
 use common\models\TransactionSearch;
 use Yii;
 use yii\web\Controller;
@@ -59,28 +60,61 @@ class SiteController extends Controller
         ];
     }
 
+    /**
+     * @param $searchModel TransactionSearch
+     * @param $queryParams
+     * @param $children
+     * @return mixed
+     */
+    private function getWithdrawTransactions($searchModel,  $children)
+    {
+        $queryParams = \Yii::$app->request->queryParams;
+        $queryParams['TransactionSearch']['way'] = 'withdraw';
+        if ($children) {
+            $queryParams['TransactionSearch']['brands'] = implode(',', array_keys($children));
+        }
+        return $searchModel->search($queryParams);
 
+    }
+
+    /**
+     * @param $searchModel TransactionSearch
+     * @param $queryParams
+     * @param $children
+     * @return mixed
+     */
+    private function getDepositTransactions($searchModel, $children)
+    {
+        $queryParams = \Yii::$app->request->queryParams;
+        $queryParams['TransactionSearch']['way'] = 'deposit';
+
+        if ($children) {
+            $queryParams['TransactionSearch']['brands'] = implode(',', array_keys($children));
+        }
+
+        return $searchModel->search($queryParams);
+    }
+
+    /**
+     * @return string|\yii\web\Response
+     * @throws ForbiddenHttpException
+     */
     public function actionIndex()
     {
         if (Yii::$app->user->isGuest) {
             return Yii::$app->user->loginRequired();
         }
-
         $children = Node::getCurrentNode()->getChildrenList(true, false);
-        if ($children) {
-            $queryParams['TransactionSearch']['brands'] = implode(',', array_keys($children));
-        }
 
-        $searchModelWithdraw = new TransactionSearch();
-        $dataProviderWithdraw = $searchModelWithdraw->search(Yii::$app->request->queryParams, 'withdraw');
 
-        $searchModelDeposit = new TransactionSearch();
-        $dataProviderDeposit = $searchModelWithdraw->search(Yii::$app->request->queryParams, 'deposit');
+        $searchModel = new TransactionSearch();
+        $dataProviderWithdraw = $this->getWithdrawTransactions($searchModel, $children);
+        $dataProviderDeposit = $this->getDepositTransactions($searchModel, $children);
 
         return $this->render('index', [
-            'searchModelWithdraw' => $searchModelWithdraw,
+            'searchModelWithdraw' => $searchModel,
             'dataProviderWithdraw' => $dataProviderWithdraw,
-            'searchModelDeposit' => $searchModelDeposit,
+            'searchModelDeposit' => $searchModel,
             'dataProviderDeposit' => $dataProviderDeposit
         ]);
 

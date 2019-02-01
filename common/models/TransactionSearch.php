@@ -5,7 +5,9 @@ namespace common\models;
 use pps\payment\Payment;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+
 require '../../vendor/pps/pps-payment/Payment.php';
+
 /**
  * TransactionSearch represents the model behind the search form about `common\models\Transaction`.
  */
@@ -38,8 +40,9 @@ class TransactionSearch extends Transaction
      * @param string $way
      * @return ActiveDataProvider
      */
-    public function search($params, $way)
+    public function search($params)
     {
+
         $query = Transaction::find();
         $query->joinWith('paymentSystem');
         // add conditions that should always apply here
@@ -75,7 +78,8 @@ class TransactionSearch extends Transaction
         // grid filtering conditions
         $query->andFilterWhere([
             'transaction.id' => $this->id,
-            'way' => $way,
+//            'way' => $way,
+            'way' => $this->way,
             'payment_system_id' => $this->payment_system_id,
             'amount' => $this->amount,
             'write_off' => $this->write_off,

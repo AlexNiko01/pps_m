@@ -89,7 +89,7 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
 
 <?php
 //echo $this->render('_search_form', [
-//    'searchModel' => $searchModel,
+//    'searchModel' => $searchModelWithdraw,
 //    'currency_list' => $currency_list,
 //    'type' => 'withdraw',
 //]) ?>

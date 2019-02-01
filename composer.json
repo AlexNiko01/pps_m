@@ -3,98 +3,6 @@
     {
       "type": "composer",
       "url": "https://asset-packagist.org"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-core.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-payment.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-trio.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-royal-pay.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-testps.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-cryptonator.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-freekassa.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-interkassa.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-nixmoney.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-gourl.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-ecommpay.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-blockchain.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-querybuilder.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-walletone.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-dengionline.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-skrill.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-paysafecard.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-cardpay.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-cubits.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:mshykanov/pps-piastrix.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:atishenko/pps-bitgo.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:pps/pps-qiwi.git"
-    },
-    {
-      "type": "git",
-      "url": "git@gitlab.devme.in:atishenko/pps-fondy.git"
     }
   ],
   "name": "yiisoft/yii2-app-advanced",
@@ -129,39 +37,16 @@
     "yii2tech/crontab": "^1.0",
     "guzzlehttp/guzzle": "^6.3",
     "irazasyed/telegram-bot-sdk": "^2.2",
-    "kartik-v/yii2-grid": "^3.1",
     "webvimark/module-user-management": "^1.0",
     "webvimark/module-migrations": "^1.0",
     "webvimark/generators": "^1.0",
     "yii2mod/yii2-chosen-select": "^1.0",
-    "kartik-v/yii2-krajee-base": "1.8.4",
-    "kartik-v/yii2-export": "@dev",
+    "kartik-v/yii2-export": "^1.2.9",
     "kartik-v/yii2-dialog": "*",
-    "pps/pps-querybuilder": "*",
-    "pps/pps-core": "*",
-    "pps/pps-payment": "*",
-    "pps/pps-trio": "dev-master",
-    "pps/pps-royal-pay": "dev-master",
-    "pps/pps-testps": "dev-master",
-    "pps/pps-cryptonator": "dev-master",
-    "pps/pps-freekassa": "dev-master",
-    "pps/pps-interkassa": "dev-master",
-    "pps/pps-nixmoney": "dev-master",
-    "pps/pps-gourl": "dev-master",
-    "pps/pps-ecommpay": "dev-master",
-    "pps/pps-blockchain": "dev-master",
-    "pps/pps-walletone": "dev-master",
-    "pps/pps-dengionline": "dev-master",
-    "pps/pps-skrill": "dev-master",
-    "pps/pps-paysafecard": "dev-master",
-    "pps/pps-cardpay": "dev-master",
-    "pps/pps-cubits": "dev-master",
-    "pps/pps-piastrix": "dev-master",
-    "pps/pps-bitgo": "dev-master",
-    "pps/pps-qiwi": "dev-master",
-    "predis/predis": "^1.1",
-    "nezhelskoy/yii2-highlight": "*",
-    "pps/pps-fondy": "dev-master"
+    "cebe/markdown": "~1.1.0",
+    "kartik-v/yii2-krajee-base": "1.9.4",
+    "kartik-v/yii2-widget-activeform": "1.5.2",
+    "kartik-v/yii2-grid": "3.2.1"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",
