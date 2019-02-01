@@ -66,7 +66,7 @@ class SiteController extends Controller
      * @param $children
      * @return mixed
      */
-    private function getWithdrawTransactions($searchModel,  $children)
+    private function getWithdrawTransactions($searchModel, $children)
     {
         $queryParams = \Yii::$app->request->queryParams;
         $queryParams['TransactionSearch']['way'] = 'withdraw';
