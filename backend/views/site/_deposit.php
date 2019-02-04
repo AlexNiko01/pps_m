@@ -25,75 +25,73 @@ $node = Node::getCurrentNode();
 $this->title = "Deposit {$node->name}";
 $this->params['breadcrumbs'][] = $this->title;
 
-//$currency_list = CurrencyList::getArrayCurrencies($currencies);
-
 $searchModelDeposit->load(\Yii::$app->request->post());
 
-$is_super_admin = Yii::$app->user->isSuperAdmin;
+$isSuperAdmin = Yii::$app->user->isSuperAdmin;
 
 ?>
 
-<div class="col-md-12 no-padding-left">
-    <?= ExportMenu::widget([
-        'dataProvider' => $dataProviderDeposit,
-        'columns' => [
-            'id',
-            [
-                'attribute' => 'merchant_transaction_id',
-                'label' => 'Merch. tr. ID',
-            ],
-            [
-                'attribute' => 'external_id',
-                'label' => 'External ID',
-                'visible' => $is_super_admin
-            ],
-            'currency',
-            'amount',
-            'write_off',
-            'refund',
-            'commission_payer',
-            [
-                'attribute' => 'payment_system_id',
-                'label' => 'Payment system',
-                'value' => function ($model, $key, $index) {
-                    return $model->paymentSystem->name;
-                }
-            ],
-            'payment_method',
-            [
-                'attribute' => 'merchant_transaction_id',
-                'label' => 'Inside ID'
-            ],
-            'buyer_id',
-            'status',
-            'comment',
-            [
-                'attribute' => 'created_at',
-                'value' => function ($model, $key, $index) {
-                    return date('Y-m-d H:i:s', $model->created_at);
-                }
-            ],
-            [
-                'attribute' => 'updated_at',
-                'value' => function ($model, $key, $index) {
-                    return date('Y-m-d H:i:s', $model->updated_at);
-                }
-            ]
-        ],
-        'filename' => 'deposit_transactions',
-        'fontAwesome' => true,
-        'target' => ExportMenu::TARGET_BLANK,
-        'dropdownOptions' => [
-            'label' => 'Export',
-            'title' => 'Select format',
-            'class' => 'btn btn-primary'
-        ],
-        'exportConfig' => [
-            ExportMenu::FORMAT_PDF => false,
-        ],
-    ]);
-    ?>
-</div>
+<!--<div class="col-md-12 no-padding-left">-->
+<!--    --><?//= ExportMenu::widget([
+//        'dataProvider' => $dataProviderDeposit,
+//        'columns' => [
+//            'id',
+//            [
+//                'attribute' => 'merchant_transaction_id',
+//                'label' => 'Merch. tr. ID',
+//            ],
+//            [
+//                'attribute' => 'external_id',
+//                'label' => 'External ID',
+//                'visible' => $isSuperAdmin
+//            ],
+//            'currency',
+//            'amount',
+//            'write_off',
+//            'refund',
+//            'commission_payer',
+//            [
+//                'attribute' => 'payment_system_id',
+//                'label' => 'Payment system',
+//                'value' => function ($model, $key, $index) {
+//                    return $model->paymentSystem->name;
+//                }
+//            ],
+//            'payment_method',
+//            [
+//                'attribute' => 'merchant_transaction_id',
+//                'label' => 'Inside ID'
+//            ],
+//            'buyer_id',
+//            'status',
+//            'comment',
+//            [
+//                'attribute' => 'created_at',
+//                'value' => function ($model, $key, $index) {
+//                    return date('Y-m-d H:i:s', $model->created_at);
+//                }
+//            ],
+//            [
+//                'attribute' => 'updated_at',
+//                'value' => function ($model, $key, $index) {
+//                    return date('Y-m-d H:i:s', $model->updated_at);
+//                }
+//            ]
+//        ],
+//        'filename' => 'deposit_transactions',
+//        'fontAwesome' => true,
+//        'target' => ExportMenu::TARGET_BLANK,
+//        'dropdownOptions' => [
+//            'label' => 'Export',
+//            'title' => 'Select format',
+//            'class' => 'btn btn-primary'
+//        ],
+//        'exportConfig' => [
+//            ExportMenu::FORMAT_PDF => false,
+//        ],
+//    ]);
+//    ?>
+<!--</div>-->
 
 <? //= $this->render('_search_form', [
 //    'searchModel' => $searchModel,
@@ -200,7 +198,7 @@ $is_super_admin = Yii::$app->user->isSuperAdmin;
             'contentOptions' => [
                 'class' => 'external_id-column'
             ],
-            'visible' => $is_super_admin
+            'visible' => $isSuperAdmin
         ],
         [
             'attribute' => 'status',

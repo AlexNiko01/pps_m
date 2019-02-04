@@ -42,6 +42,22 @@ use webvimark\modules\UserManagement\UserManagementModule;
             'url' => '#',
             'items' => UserManagementModule::menuItems(),
         ],
+        [
+            'label' => 'Settings',
+            'icon' => '<i class="fa fa-plus-square-o"></i>',
+            'url' => '#',
+            'items' => [
+                [
+                    'label' => 'Telegram',
+                    'url' => ['/settings/telegram']
+                ],
+                [
+                    'label' => 'Rocket Chat',
+                    'url' => ['/settings/rocket-chat']
+                ]
+
+            ]
+        ]
 
     ],
 ]);
