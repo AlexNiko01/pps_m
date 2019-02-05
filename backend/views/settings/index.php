@@ -18,7 +18,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Settings', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
+    <?php
+    $transactionsSample = common\models\Transaction::find()
+        ->filterWhere(['not in', 'status', [1, 2]])
+        ->andFilterWhere(['not', ['id' => null]])
+        ->andFilterWhere(['>', 'updated_at', time() - 36000])
+        ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id'])
+        ->asArray()
+        ->all();
+    foreach ($transactionsSample as $item) {
+        var_dump($item);
+    }
+    die(); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
