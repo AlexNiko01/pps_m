@@ -37,44 +37,49 @@ class SettingsController extends Controller
     {
         $searchModel = new SettingsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $groupsSample = Settings::find()->select('group')->distinct()->asArray()->all();
+        $groups = [];
+        foreach ($groupsSample as $arr) {
+            if ($arr['group']) {
+                $groups[$arr['group']] = $arr['group'];
+            }
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
-
-    private function renderQueryParams($group){
-
-    }
-
-
-    public function actionTelegram()
-    {
-        $searchModel = new SettingsSearch();
-        $queryParams = Yii::$app->request->queryParams;
-        $queryParams['SettingsSearch']['group'] = 'telegram';
-        $dataProvider = $searchModel->search($queryParams);
-
-
-        return $this->render('telegram', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    public function actionRocketChat()
-    {
-        $searchModel = new SettingsSearch();
-        $queryParams = Yii::$app->request->queryParams;
-        $queryParams['SettingsSearch']['group'] = 'rocket_chat';
-        $dataProvider = $searchModel->search($queryParams);
-
-        return $this->render('rocket_chat', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+//TODO:: do something with this comments:
+//    private function renderQueryParams($group){
+//        $searchModel = new SettingsSearch();
+//        $queryParams = Yii::$app->request->queryParams;
+//        $queryParams['SettingsSearch']['group'] = $group;
+//        return  $searchModel->search($queryParams);
+//    }
+//
+//
+//    public function actionTelegram()
+//    {
+//        $searchModel = new SettingsSearch();
+//        $dataProvider = $this->renderQueryParams('telegram');
+//
+//        return $this->render('telegram', [
+//            'searchModel' => $searchModel,
+//            'dataProvider' => $dataProvider,
+//        ]);
+//    }
+//
+//    public function actionRocketChat()
+//    {
+//        $searchModel = new SettingsSearch();
+//        $dataProvider = $this->renderQueryParams('rocket_chat');
+//
+//        return $this->render('rocket_chat', [
+//            'searchModel' => $searchModel,
+//            'dataProvider' => $dataProvider,
+//        ]);
+//    }
 
     /**
      * Displays a single Settings model.

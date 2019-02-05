@@ -2,9 +2,10 @@
 
 namespace backend\components\sender;
 
+use backend\models\Settings;
+
 class TelegramSender implements Sender
 {
-    const CHAT_ID = -371816849;
 
     /**
      * @param $message
@@ -15,8 +16,9 @@ class TelegramSender implements Sender
         /**
          * @var \Yii::$app->telegram aki\telegram\Telegram
          */
+        $chatIdSample = Settings::find()->where(['key' => 'chatId'])->select('value')->asArray()->one();
         \Yii::$app->telegram->sendMessage([
-            'chat_id' => self::CHAT_ID,
+            'chat_id' => $chatIdSample['value'],
             'text' => $message,
         ]);
 

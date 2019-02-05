@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\SettingsSearch */
@@ -24,12 +24,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-            'group',
+            [
+                'attribute' => 'group',
+                'filterType' => GridView::FILTER_POS_HEADER,
+                'filter' => ['rocket_chat' => 'rocket_chat', 'telegram' => 'telegram'],
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => [
+                    'placeholder' => 'group',
+                    'class' => 'form-control'
+                ],
+            ],
             'key',
             'value',
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

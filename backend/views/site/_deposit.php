@@ -32,7 +32,7 @@ $isSuperAdmin = Yii::$app->user->isSuperAdmin;
 ?>
 
 <!--<div class="col-md-12 no-padding-left">-->
-<!--    --><?//= ExportMenu::widget([
+<!--    --><? //= ExportMenu::widget([
 //        'dataProvider' => $dataProviderDeposit,
 //        'columns' => [
 //            'id',
@@ -163,7 +163,6 @@ $isSuperAdmin = Yii::$app->user->isSuperAdmin;
             'attribute' => 'payment_system_id',
             'label' => 'Payment System',
             'value' => function ($model) {
-//                var_dump($model);
                 return $model->paymentSystem->name ?? '';
             },
             'headerOptions' => [
@@ -203,19 +202,19 @@ $isSuperAdmin = Yii::$app->user->isSuperAdmin;
         [
             'attribute' => 'status',
             'format' => 'raw',
-//            'value' => function ($model) {
-//                if ($model->status == Payment::STATUS_SUCCESS) {
-//                    return '<span class="success">' . Payment::getStatusDescription($model->status) . '</span>';
-//                } else if ($model->status == Payment::STATUS_CREATED) {
-//                    return '<span style="color: #777;">' . Payment::getStatusDescription($model->status) . '</span>';
-//                } else if ($model->status == Payment::STATUS_ERROR) {
-//                    return '<span class="error">' . Payment::getStatusDescription($model->status) . '</span>';
-//                } else if ($model->status == Payment::STATUS_CANCEL) {
-//                    return '<span style="color: indianred;">' . Payment::getStatusDescription($model->status) . '</span>';
-//                } else {
-//                    return isset($model->status) ? Payment::getStatusDescription($model->status) : '-';
-//                }
-//            },
+            'value' => function ($model) {
+                if ($model->status == Payment::STATUS_SUCCESS) {
+                    return '<span class="success">' . Payment::getStatusDescription($model->status) . '</span>';
+                } else if ($model->status == Payment::STATUS_CREATED) {
+                    return '<span style="color: #777;">' . Payment::getStatusDescription($model->status) . '</span>';
+                } else if ($model->status == Payment::STATUS_ERROR) {
+                    return '<span class="error">' . Payment::getStatusDescription($model->status) . '</span>';
+                } else if ($model->status == Payment::STATUS_CANCEL) {
+                    return '<span style="color: indianred;">' . Payment::getStatusDescription($model->status) . '</span>';
+                } else {
+                    return isset($model->status) ? Payment::getStatusDescription($model->status) : '-';
+                }
+            },
             'headerOptions' => [
                 'class' => 'status-column-header'
             ],
@@ -251,59 +250,3 @@ $isSuperAdmin = Yii::$app->user->isSuperAdmin;
         </tbody>
     </table>
 <?php endif; ?>
-
-<!-- Modal -->
-<div class="modal" id="show-notify-info" tabindex="-1" role="dialog" aria-labelledby="notify-label">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                        onclick="$('#show-notify-info').modal('hide')"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Notify info</h4>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function notify(tr_id, br_id) {
-        var data = {
-            tr_id: tr_id,
-            br_id: br_id
-        };
-
-        var header = $('.modal-header');
-        header.removeClass('alert-error');
-        header.removeClass('alert-success');
-
-        $.get('<?= Url::to(['transaction/notify'])?>', data, function (res) {
-            if (res.message) {
-                $('#show-notify-info .modal-body').html(res.message);
-
-                if (res.status === 'error') {
-                    header.addClass('alert-error');
-                }
-
-                if (res.status === 'success') {
-                    header.addClass('alert-success');
-                }
-            }
-
-            $('#show-notify-info').modal('show');
-        });
-    }
-    <?php /*
-    function change_sum(id, prefix) {
-        var data = {
-            id: id
-        };
-
-        $.get('<?= Url::to(['transaction/change-sum'])?>', data, function(res) { });
-
-        $('#' + prefix + id).remove();
-    }
- */ ?>
-</script>
