@@ -1,0 +1,26 @@
+{
+    "name": "pps/pps-cubits",
+    "description": "PPS Cubits",
+    "type": "yii2-extension",
+    "prefer-dist": true,
+    "keywords": [
+        "yii2",
+        "extension"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maks",
+            "email": "m.shykanov@dedik.info"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "pps\\cubits\\": ""
+        }
+    }
+}

@@ -1,7 +1,10 @@
 <?php
 
+use common\models\Transaction;
+use yii\db\Query;
 use yii\helpers\Html;
 use kartik\grid\GridView;
+
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\SettingsSearch */
@@ -18,18 +21,33 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Settings', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-    <?php
-    $transactionsSample = common\models\Transaction::find()
-        ->filterWhere(['not in', 'status', [1, 2]])
-        ->andFilterWhere(['not', ['id' => null]])
-        ->andFilterWhere(['>', 'updated_at', time() - 36000])
-        ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id'])
-        ->asArray()
-        ->all();
-    foreach ($transactionsSample as $item) {
-        var_dump($item);
-    }
-    die(); ?>
+
+
+<!--    --><?php
+//
+//    $transactionsSample = Transaction::find()
+//        ->filterWhere(['not in', 'status', [1, 2]])
+//        ->andFilterWhere(['>', 'updated_at', time() - 360000])
+//        ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id'])
+//        ->limit(2)
+//        ->all();
+//
+//    foreach ($transactionsSample as $item) {
+//        echo 'Failed transaction id: ' . $item->id
+//            . ' ; Merchant transaction id: ' . $item->merchant_transaction_id
+//            . ' ; time: ' . $item->updated_at
+//            . ' ; currency: ' . $item->currency
+//            . ' ; status: ' . pps\payment\Payment::getStatusDescription($item->status)
+//            . ' ; payment system: ' . $item->paymentSystem->name
+//            . '</br>';
+//
+//    }
+//
+//    die(); ?>
+
+
+
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

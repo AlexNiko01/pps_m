@@ -13,13 +13,10 @@ class InitCronTabsController extends Controller
         $cronTab = new CronTab();
         $cronTab->setJobs([
             [
-                'min' => '0',
+                'min' => '2',
                 'hour' => '0',
-                'command' => 'php /path/to/project/yii some-cron',
+                'command' => 'php /var/www/html/data/yii notification/transactions',
             ],
-            [
-                'line' => '0 0 * * * php /path/to/project/yii another-cron'
-            ]
         ]);
         $cronTab->apply();
     }

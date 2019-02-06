@@ -1,0 +1,18 @@
+# Codeception Test Suite Configuration
+#
+# Suite for unit or integration tests.
+
+actor: UnitTester
+coverage:
+  enabled: true
+  include:
+  - ZotaPayApi/*
+  exclude:
+  - ZotaPayApi/ZotaPayStatuses.php
+  - ZotaPayApi/ZotaPayApi.php
+  - ZotaPayApi/Exceptions/*
+modules:
+    enabled:
+        - Asserts
+        - Yii2:
+          part: [orm, fixtures]

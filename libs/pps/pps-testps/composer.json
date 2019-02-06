@@ -1,0 +1,25 @@
+{
+    "name": "pps/pps-testps",
+    "description": "PPS payment system for testing",
+    "type": "yii2-extension",
+    "keywords": [
+        "yii2",
+        "extension"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maks",
+            "email": "m.shykanov@dedik.info"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "pps\\testps\\": ""
+        }
+    }
+}

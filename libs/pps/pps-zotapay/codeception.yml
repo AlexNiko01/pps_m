@@ -1,0 +1,22 @@
+namespace: pps\zotapay\tests
+paths:
+    tests: tests
+    output: tests/_output
+    data: tests/_data
+    support: tests/_support
+    envs: tests/_envs
+actor_suffix: Tester
+settings:
+    bootstrap: _bootstrap.php
+    colors: true
+    memory_limit: 1024M
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
+modules:
+    config:
+        Yii2:
+            configFile: '../../../api/config/test-local.php'
+#    enabled:
+#           - REST:
+#               depends: PhpBrowser

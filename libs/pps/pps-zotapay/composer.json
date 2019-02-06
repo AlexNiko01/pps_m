@@ -1,0 +1,27 @@
+{
+    "name": "pps/pps-zotapay",
+    "description": "PPS ZotaPay",
+    "type": "yii2-extension",
+    "keywords": [
+        "yii2",
+        "extension"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nikolay",
+            "email": "n.zapeka@devcaz.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "yiisoft/yii2": "*",
+        "ext-json": "*"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "pps\\zotapay\\": ""
+        }
+    }
+}
