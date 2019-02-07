@@ -2,20 +2,25 @@
 
 namespace console\controllers;
 
-use backend\components\sender\MessageSender;
 use common\models\Transaction;
+use yii\base\InvalidConfigException;
 use yii\console\Controller;
+use yii\log\FileTarget;
+use yii\log\LogRuntimeException;
 
-//require '../../vendor/pps/pps-payment/Payment.php';
 
 class NotificationController extends Controller
 {
-    const TRANSACTION_TRACKING_INTERVAL = 1800;
+    const TRANSACTION_TRACKING_INTERVAL = 900;
 
-    public function actionTransactions()
+
+    public function actionTransaction(): void
     {
-        $messageSender = new MessageSender();
-
+        try {
+            $this->recodeLog('log1');
+        } catch (InvalidConfigException $e) {
+        } catch (LogRuntimeException $e) {
+        }
         $transactionsSample = Transaction::find()
             ->filterWhere(['not in', 'status', [1, 2]])
             ->andFilterWhere(['>', 'updated_at', time() - self::TRANSACTION_TRACKING_INTERVAL])
@@ -23,13 +28,36 @@ class NotificationController extends Controller
             ->all();
 
         foreach ($transactionsSample as $item) {
-            $messageSender->send('Failed transaction id: ' . $item->id
+            try {
+                $this->recodeLog('log2');
+            } catch (InvalidConfigException $e) {
+            } catch (LogRuntimeException $e) {
+            }
+            \Yii::$app->sender->send('Failed transaction id: ' . $item->id
                 . ' ; Merchant transaction id: ' . $item->merchant_transaction_id
                 . ' ; time: ' . $item->updated_at
                 . ' ; currency: ' . $item->currency
-                . ' ; status: ' . Payment::getStatusDescription($item->status)
+                . ' ; status: ' . \pps\payment\Payment::getStatusDescription($item->status)
                 . ' ; payment system: ' . $item->paymentSystem->name
-                . '</br>');
+            );
+        };
+        try {
+            $this->recodeLog('log3');
+        } catch (InvalidConfigException $e) {
+        } catch (LogRuntimeException $e) {
         }
+    }
+
+    /**
+     * @param $msg
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\log\LogRuntimeException
+     */
+    public function recodeLog($msg)
+    {
+        $log = new FileTarget();
+        $log->logFile = \Yii::$app->getRuntimePath() . '/logs/wx_debug_' . date("Y-m-d") . '.log';
+        $log->messages[] = [$msg, 1, 'application', microtime(true)];
+        $log->export();
     }
 }

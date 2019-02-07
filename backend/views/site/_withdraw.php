@@ -156,7 +156,7 @@ $isSuperAdmin = Yii::$app->user->isSuperAdmin;
                 'class' => 'mtid-column'
             ],
         ],
-        'commission_payer',
+
         [
             'attribute' => 'payment_system_id',
             'label' => 'Payment System',

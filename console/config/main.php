@@ -30,6 +30,17 @@ return [
                 ],
             ],
         ],
+        'telegram' => [
+            'class' => 'aki\telegram\Telegram',
+            'botToken' => '703592142:AAGedZspWYQ9Ba7h29JOjWr_NfjtFCumy5Y',
+        ],
+        'sender' => function () {
+            $sender = new backend\components\sender\MessageSender;
+            $sender->addSender(new backend\components\sender\RocketChatSender);
+            $sender->addSender(new backend\components\sender\TelegramSender);
+
+            return $sender;
+        },
     ],
     'params' => $params,
 ];

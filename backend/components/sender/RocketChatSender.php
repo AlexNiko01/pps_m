@@ -26,6 +26,6 @@ class RocketChatSender implements Sender
         }
 
         $channel = new \RocketChat\Channel('pps_monitoring', array($user));
-        $channel->postMessage('Hello world2');
+        $channel->postMessage($message);
     }
 }
