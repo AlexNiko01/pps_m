@@ -13,11 +13,9 @@ class CronController extends Controller
         $cronTab = new CronTab();
         $cronTab->setJobs([
             [
-                'min' => '*/5',
-                'command' => 'php /var/www/html/data/yii notification/transaction',
+                'command' => '/usr/local/bin/php /var/www/html/data/yii notification/transaction',
             ],
         ]);
-
         $cronTab->apply();
     }
 }
