@@ -11,7 +11,7 @@ use yii\log\LogRuntimeException;
 
 class NotificationController extends Controller
 {
-    const TRANSACTION_TRACKING_INTERVAL = 46000;
+    const TRANSACTION_TRACKING_INTERVAL = 86400;
 
 
     public function actionTransaction(): void
