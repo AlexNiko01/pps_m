@@ -2,14 +2,14 @@
 
 namespace console\controllers;
 
+use common\components\helpers\Logger;
 use common\models\Transaction;
 use yii\console\Controller;
-use yii\log\FileTarget;
 
 
 class NotificationController extends Controller
 {
-    const TRANSACTION_TRACKING_INTERVAL = 60000;
+    const TRANSACTION_TRACKING_INTERVAL = 60;
 
 
     public function actionTransaction(): void
@@ -18,7 +18,6 @@ class NotificationController extends Controller
             ->filterWhere(['not in', 'status', [0, 1, 2]])
             ->andFilterWhere(['>', 'updated_at', time() - self::TRANSACTION_TRACKING_INTERVAL])
             ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id'])
-            ->limit(1)
             ->all();
 
         foreach ($transactionsSample as $item) {
@@ -31,18 +30,9 @@ class NotificationController extends Controller
                 'Payment system: ' . $item->paymentSystem->name . '.'
             ]);
         };
+            Logger::recodeLog('test');
+
     }
 
-    /**
-     * @param $msg
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\log\LogRuntimeException
-     */
-    public function recodeLog($msg)
-    {
-        $log = new FileTarget();
-        $log->logFile = \Yii::$app->getRuntimePath() . '/logs/wx_debug_' . date("Y-m-d") . '.log';
-        $log->messages[] = [$msg, 1, 'application', microtime(true)];
-        $log->export();
-    }
+
 }
