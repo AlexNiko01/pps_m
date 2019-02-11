@@ -9,9 +9,9 @@ use yii\log\LogRuntimeException;
 class Logger
 {
     /**
-     * @param $msg
+     * @param string $msg
      */
-    public static function recodeLog($msg)
+    public static function recodeLog(string $msg): void
     {
         try {
             $log = new FileTarget();

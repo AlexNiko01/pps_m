@@ -16,11 +16,6 @@ use webvimark\modules\UserManagement\UserManagementModule;
             'url' => ['/site/index'],
         ],
         [
-            'label' => 'Node management',
-            'icon' => '<i class="fa fa-plus-square-o"></i>',
-            'url' => ['/front-node/details'],
-        ],
-        [
             'label' => 'Users',
             'icon' => '<i class="fa fa-users"></i>',
             'url' => '#',

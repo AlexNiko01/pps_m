@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use backend\models\PaymentSystem;
 use common\components\helpers\Logger;
 use common\models\Transaction;
 use yii\console\Controller;
@@ -30,9 +31,13 @@ class NotificationController extends Controller
                 'Payment system: ' . $item->paymentSystem->name . '.'
             ]);
         };
-            Logger::recodeLog('test');
+        Logger::recodeLog('test');
 
     }
 
+    public function actionPaymentSystems()
+    {
+        $paymentSystemsPps = PaymentSystem::find()->where(['active' => 1])->asArray()->all();
+    }
 
 }
