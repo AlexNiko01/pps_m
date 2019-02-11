@@ -23,27 +23,27 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
 
-<!--    --><?php
-//
-//    $transactionsSample = Transaction::find()
-//        ->filterWhere(['not in', 'status', [0, 1, 2]])
-//        ->andFilterWhere(['>', 'updated_at', time() - 46000])
-//        ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id'])
-//        ->all();
-//
-//    foreach ($transactionsSample as $item) {
-//        echo('<b>Failed transaction id:</b> ' . $item->id
-//            . ' ;</br><b>Merchant transaction id:</b> ' . $item->merchant_transaction_id
-//            . ' ;</br><b>time:</b> ' . date('m-d-Y h:i:s', $item->updated_at)
-//            . ' ;</br><b>currency:</b> ' . $item->currency
-//            . ' ;</br><b>status:</b> ' . \pps\payment\Payment::getStatusDescription($item->status)
-//            . ' ;</br><b>payment system:</b> ' . $item->paymentSystem->name
-//            . '</br></br>');
-//    };
-//
-//    die();
-//
-//    ?>
+    <?php
+
+    $transactionsSample = Transaction::find()
+        ->filterWhere(['not in', 'status', [0, 1, 2]])
+        ->andFilterWhere(['>', 'updated_at', time() - 300400])
+        ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id'])
+        ->all();
+
+    foreach ($transactionsSample as $item) {
+        echo('<b>Failed transaction id:</b> ' . $item->id
+            . ' ;</br><b>Merchant transaction id:</b> ' . $item->merchant_transaction_id
+            . ' ;</br><b>time:</b> ' . date('m-d-Y h:i:s', $item->updated_at)
+            . ' ;</br><b>currency:</b> ' . $item->currency
+            . ' ;</br><b>status:</b> ' . \pps\payment\Payment::getStatusDescription($item->status)
+            . ' ;</br><b>payment system:</b> ' . $item->paymentSystem->name
+            . '</br></br>');
+    };
+
+    die();
+
+    ?>
 
 
     <?= GridView::widget([

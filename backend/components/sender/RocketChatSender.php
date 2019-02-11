@@ -8,10 +8,10 @@ use backend\models\Settings;
 class RocketChatSender implements Sender
 {
     /**
-     * @param $message
+     * @param array $messageArr
      * @return mixed|void
      */
-    public function send($message)
+    public function send($messageArr)
     {
         $url = Settings::find()->where(['key' => 'rocket_chat_url'])->select('value')->asArray()->one()['value'];
         define('REST_API_ROOT', '/api/v1/');
@@ -26,6 +26,11 @@ class RocketChatSender implements Sender
         }
 
         $channel = new \RocketChat\Channel('pps_monitoring', array($user));
+
+        $message = '';
+        foreach ($messageArr as $item) {
+            $message .= $item . PHP_EOL;
+        }
         $channel->postMessage($message);
     }
 }

@@ -36,7 +36,7 @@ return [
         ],
         'sender' => function () {
             $sender = new backend\components\sender\MessageSender;
-//            $sender->addSender(new backend\components\sender\RocketChatSender);
+            $sender->addSender(new backend\components\sender\RocketChatSender);
             $sender->addSender(new backend\components\sender\TelegramSender);
 
             return $sender;

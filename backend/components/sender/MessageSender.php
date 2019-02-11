@@ -2,6 +2,8 @@
 
 namespace backend\components\sender;
 
+use yii\db\ActiveRecord;
+
 class MessageSender extends \yii\base\Component
 {
     /**
@@ -20,12 +22,12 @@ class MessageSender extends \yii\base\Component
     }
 
     /**
-     * @param string $message
+     * @param array $messageArr
      */
-    public function send(string $message)
+    public function send(array $messageArr)
     {
         foreach ($this->senders as $sender) {
-            $sender->send($message);
+            $sender->send($messageArr);
         }
     }
 }
