@@ -108,7 +108,7 @@ class NotificationController extends Controller
             $response = $client->request('GET', $url);
         } catch (GuzzleException $e) {
         }
-        return $response->getStatusCode();
+        return $response;
     }
 
 }
