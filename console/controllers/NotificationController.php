@@ -3,9 +3,14 @@
 namespace console\controllers;
 
 use backend\models\PaymentSystem;
+use backend\models\PaymentSystemExternalData;
+use backend\models\PaymentSystemStatus;
 use common\components\helpers\Logger;
 use common\models\Transaction;
+use GuzzleHttp\Exception\GuzzleException;
+use Mpdf\Tag\P;
 use yii\console\Controller;
+use yii\db\Query;
 
 
 class NotificationController extends Controller
@@ -35,9 +40,75 @@ class NotificationController extends Controller
 
     }
 
-    public function actionPaymentSystems()
+    public function actionPs()
     {
-        $paymentSystemsPps = PaymentSystem::find()->where(['active' => 1])->asArray()->all();
+        $paymentSystemsStatuses = PaymentSystemStatus::find()->indexBy('payment_system_id')->all();
+
+        $subQuery = (new Query)
+            ->select('payment_system_id')
+            ->from('payment_system_external_data')
+            ->distinct();
+        $paymentSystemsPpsData = (new Query())
+            ->select(['name', 'id', 'callback_url'])
+            ->from('payment_system')
+            ->where(['in', 'id', $subQuery])
+            ->andWhere(['active' => 1])
+            ->indexBy('id')
+            ->all(\Yii::$app->db2);
+
+
+        foreach ($paymentSystemsPpsData as $id => $data) {
+            $connection = \Yii::$app->db;
+            $transaction = $connection->beginTransaction();
+            try {
+                if (array_key_exists($id, $paymentSystemsStatuses)) {
+                    $paymentSystemStatus = $paymentSystemsStatuses[$id];
+                    unset($paymentSystemsStatuses[$id]);
+                } else {
+                    $paymentSystemStatus = new PaymentSystemStatus();
+                    $paymentSystemStatus->name = $data['name'];
+                }
+
+                $active = 0;
+                $response = $this->sendRequest($data['callback_url']);
+                if ($response === 200) {
+                    $active = 1;
+                }
+                $paymentSystemStatus->active = $active;
+                if ($paymentSystemStatus->save()) {
+                    $transaction->commit();
+                } else {
+                    $transaction->rollBack();
+                }
+
+            } catch (\Exception $e) {
+                $transaction->rollBack();
+                var_dump($e->getMessage());
+                throw $e;
+            } catch (\Throwable $e) {
+                $transaction->rollBack();
+                var_dump($e->getMessage());
+                throw $e;
+            }
+        }
+
+        if (!empty($paymentSystemsPps)) {
+            foreach ($paymentSystemsPps as $pss) {
+                $ps = $paymentSystemsStatuses[$pss['id']];
+                $ps->deleted = 1;
+                $ps->save();
+            }
+        }
+    }
+
+    private function sendRequest($url)
+    {
+        $client = new \GuzzleHttp\Client();
+        try {
+            $response = $client->request('GET', $url);
+        } catch (GuzzleException $e) {
+        }
+        return $response->getStatusCode();
     }
 
 }
