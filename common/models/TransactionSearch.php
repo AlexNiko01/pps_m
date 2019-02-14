@@ -6,7 +6,6 @@ use pps\payment\Payment;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-require '../../vendor/pps/pps-payment/Payment.php';
 
 /**
  * TransactionSearch represents the model behind the search form about `common\models\Transaction`.

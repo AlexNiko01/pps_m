@@ -49,7 +49,7 @@ class NotificationController extends Controller
             ->from('payment_system_external_data')
             ->distinct();
         $paymentSystemsPpsData = (new Query())
-            ->select(['name', 'id', 'callback_url'])
+            ->select(['name', 'id', 'code'])
             ->from('payment_system')
             ->where(['in', 'id', $subQuery])
             ->andWhere(['active' => 1])
@@ -66,15 +66,25 @@ class NotificationController extends Controller
                     unset($paymentSystemsStatuses[$id]);
                 } else {
                     $paymentSystemStatus = new PaymentSystemStatus();
-                    $paymentSystemStatus->name = $data['name'];
                 }
 
                 $active = 0;
-                $response = $this->sendRequest($data['callback_url']);
-                if ($response === 200) {
-                    $active = 1;
+                $code = $data['code'];
+                $url = \Yii::$app->pps->payments[$code]['url'];
+                if($url){
+                    $response = $this->sendRequest($url);
+                    if ($response) {
+                        if ($response->getStatusCode() === 200) {
+                            $active = 1;
+                        }
+                    }
                 }
+
                 $paymentSystemStatus->active = $active;
+                $paymentSystemStatus->name = $data['name'];
+                $paymentSystemStatus->payment_system_id = $id;
+                $paymentSystemStatus->deleted = $id;
+
                 if ($paymentSystemStatus->save()) {
                     $transaction->commit();
                 } else {
