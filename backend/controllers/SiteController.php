@@ -108,8 +108,16 @@ class SiteController extends Controller
         $children = Node::getCurrentNode()->getChildrenList(true, false);
 
         $searchModel = new TransactionSearch();
+
         $dataProviderDeposit = $this->getDepositTransactions($searchModel, $children);
+//        $dataProviderDeposit->pagination->pageParam = 'first-dp-page';
+//        $dataProviderDeposit->sort->sortParam = 'first-dp-sort';
+
+
         $dataProviderWithdraw = $this->getWithdrawTransactions($searchModel, $children);
+//        $dataProviderWithdraw->pagination->pageParam = 'second-dp-page';
+//        $dataProviderWithdraw->sort->sortParam = 'second-dp-sort';
+
 
         $searchModelSystems = new PaymentSystemStatusSearch();
         $dataProviderSystems = $searchModelSystems->search(\Yii::$app->request->queryParams);
