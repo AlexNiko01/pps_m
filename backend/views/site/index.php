@@ -46,13 +46,6 @@ $this->title = 'Dashboard';
 </div>
 <div class="row">
     <div class="col-lg-6 col-xs-12">
-        <h3>Withdraw transactions</h3>
-        <?php echo $this->render('_withdraw', [
-            'searchModelWithdraw' => $searchModelWithdraw,
-            'dataProviderWithdraw' => $dataProviderWithdraw,
-        ]); ?>
-    </div>
-    <div class="col-lg-6 col-xs-12">
         <h3> Deposit transactions</h3>
         <?php echo $this->render('_deposit', [
             'searchModelDeposit' => $searchModelDeposit,
@@ -60,4 +53,12 @@ $this->title = 'Dashboard';
         ]); ?>
 
     </div>
+    <div class="col-lg-6 col-xs-12">
+        <h3>Withdraw transactions</h3>
+        <?php echo $this->render('_withdraw', [
+            'searchModelWithdraw' => $searchModelWithdraw,
+            'dataProviderWithdraw' => $dataProviderWithdraw,
+        ]); ?>
+    </div>
+
 </div>

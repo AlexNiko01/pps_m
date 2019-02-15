@@ -1,112 +1,27 @@
 <?php
-
 /* @var $total array */
 /* @var $currencies array */
-
 /* @var $searchDataProvider object */
 
 use backend\models\Node;
 use pps\payment\Payment;
 use yii\grid\GridView;
-use yii\helpers\{
-    ArrayHelper, Html, Url
-};
-use yii\widgets\{
-    ActiveForm, Pjax
-};
-use kartik\export\ExportMenu;
-
-//use common\classes\CurrencyList;
-use \webvimark\modules\UserManagement\components\GhostHtml;
-
+use yii\helpers\Html;
+use yii\widgets\Pjax;
 
 $node = Node::getCurrentNode();
-
 $this->title = "Deposit {$node->name}";
 $this->params['breadcrumbs'][] = $this->title;
-
-//$searchModelDeposit->load(\Yii::$app->request->post());
-
 $isSuperAdmin = Yii::$app->user->isSuperAdmin;
-
 ?>
 
-<!--<div class="col-md-12 no-padding-left">-->
-<!--    --><? //= ExportMenu::widget([
-//        'dataProvider' => $dataProviderDeposit,
-//        'columns' => [
-//            'id',
-//            [
-//                'attribute' => 'merchant_transaction_id',
-//                'label' => 'Merch. tr. ID',
-//            ],
-//            [
-//                'attribute' => 'external_id',
-//                'label' => 'External ID',
-//                'visible' => $isSuperAdmin
-//            ],
-//            'currency',
-//            'amount',
-//            'write_off',
-//            'refund',
-//            'commission_payer',
-//            [
-//                'attribute' => 'payment_system_id',
-//                'label' => 'Payment system',
-//                'value' => function ($model, $key, $index) {
-//                    return $model->paymentSystem->name;
-//                }
-//            ],
-//            'payment_method',
-//            [
-//                'attribute' => 'merchant_transaction_id',
-//                'label' => 'Inside ID'
-//            ],
-//            'buyer_id',
-//            'status',
-//            'comment',
-//            [
-//                'attribute' => 'created_at',
-//                'value' => function ($model, $key, $index) {
-//                    return date('Y-m-d H:i:s', $model->created_at);
-//                }
-//            ],
-//            [
-//                'attribute' => 'updated_at',
-//                'value' => function ($model, $key, $index) {
-//                    return date('Y-m-d H:i:s', $model->updated_at);
-//                }
-//            ]
-//        ],
-//        'filename' => 'deposit_transactions',
-//        'fontAwesome' => true,
-//        'target' => ExportMenu::TARGET_BLANK,
-//        'dropdownOptions' => [
-//            'label' => 'Export',
-//            'title' => 'Select format',
-//            'class' => 'btn btn-primary'
-//        ],
-//        'exportConfig' => [
-//            ExportMenu::FORMAT_PDF => false,
-//        ],
-//    ]);
-//    ?>
-<!--</div>-->
-
-<? //= $this->render('_search_form', [
-//    'searchModel' => $searchModel,
-//    'currency_list' => $currency_list,
-//    'type' => 'deposit',
-//]) ?>
-
-
-<!--?php Pjax::begin([
+<?php Pjax::begin([
     'id' => 'transaction-deposit-pjax',
     'enablePushState' => false,
     'clientOptions' => [
-        'method' => 'get'
+        'method' => 'post'
     ]
-]) ?-->
+]) ?>
 
 <?= GridView::widget([
     'id' => 'transaction-deposit-grid',
@@ -226,27 +141,5 @@ $isSuperAdmin = Yii::$app->user->isSuperAdmin;
     ],
 ]); ?>
 
-<!--?php Pjax::end() ?-->
+<?php Pjax::end(); ?>
 
-<?php if (sizeof($total) > 0) : ?>
-    <table class="table table-bordered" style="width: 50%; margin-top: 32px;">
-        <thead>
-        <tr>
-            <th>Currency</th>
-            <th>Total Client Refund</th>
-            <th>Total Merchant Receive</th>
-            <th>Total Tax</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($total as $currency => $item): ?>
-            <tr>
-                <td><?= $currency ?></td>
-                <td><?= $total[$currency]['amount'] ?></td>
-                <td><?= $total[$currency]['refund'] ?></td>
-                <td><?= $total[$currency]['refund_tax'] ?></td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-<?php endif; ?>

@@ -3,110 +3,29 @@
 /* @var $this \yii\web\View */
 /* @var $total array */
 /* @var $currencies array */
-
 /* @var $searchDataProvider object */
 
 use backend\models\Node;
-use webvimark\modules\UserManagement\components\GhostHtml;
 use yii\grid\GridView;
 use yii\helpers\{Html};
-use kartik\export\ExportMenu;
 use pps\payment\Payment;
-
+use yii\widgets\Pjax;
 
 $node = Node::getCurrentNode();
-
 $this->title = "Withdraw {$node->name}";
 $this->params['breadcrumbs'][] = $this->title;
-
-//$searchModelWithdraw->load(\Yii::$app->request->post());
-
 $isSuperAdmin = Yii::$app->user->isSuperAdmin;
-
 ?>
 
-<!--<div class="col-md-12 no-padding-left">-->
-<!--    --><?php //try {
-//        echo ExportMenu::widget([
-//            'dataProvider' => $dataProviderWithdraw,
-//            'columns' => [
-//                'id',
-//                [
-//                    'attribute' => 'merchant_transaction_id',
-//                    'label' => 'Merch. tr. ID',
-//                ],
-//                [
-//                    'attribute' => 'external_id',
-//                    'label' => 'External ID',
-//                    'visible' => $isSuperAdmin
-//                ],
-//                'currency',
-//                'amount',
-//                'write_off',
-//                'receive',
-//                'commission_payer',
-//                [
-//                    'attribute' => 'payment_system_id',
-//                    'label' => 'Payment system',
-//                    'value' => function ($model, $key, $index) {
-//                        return $model->paymentSystem->name;
-//                    }
-//                ],
-//                'payment_method',
-//                [
-//                    'attribute' => 'merchant_transaction_id',
-//                    'label' => 'Inside ID'
-//                ],
-//                'buyer_id',
-//                'status',
-//                'comment',
-//                [
-//                    'attribute' => 'created_at',
-//                    'value' => function ($model, $key, $index) {
-//                        return date('Y-m-d H:i:s', $model->created_at);
-//                    }
-//                ],
-//                [
-//                    'attribute' => 'updated_at',
-//                    'value' => function ($model, $key, $index) {
-//                        return date('Y-m-d H:i:s', $model->updated_at);
-//                    }
-//                ]
-//            ],
-//            'filename' => 'withdraw_transactions',
-//            'fontAwesome' => true,
-//            'target' => ExportMenu::TARGET_BLANK,
-//            'dropdownOptions' => [
-//                'label' => 'Export',
-//                'title' => 'Select format',
-//                'class' => 'btn btn-primary'
-//            ],
-//            'exportConfig' => [
-//                ExportMenu::FORMAT_PDF => false,
-//            ],
-//        ]);
-//    } catch (Exception $e) {
-//        echo $e;
-//    }
-//    ?>
-<!--</div>-->
-
-<?php
-//echo $this->render('_search_form', [
-//    'searchModel' => $searchModelWithdraw,
-//    'currency_list' => $currency_list,
-//    'type' => 'withdraw',
-//]) ?>
-
-<!--?php Pjax::begin([
-    'id' => 'transaction-deposit-pjax',
+<?php Pjax::begin([
+    'id' => 'transaction-withdraw-pjax',
     'enablePushState' => false,
     'clientOptions' => [
-        'method' => 'get'
+        'method' => 'post'
     ]
-]) ?-->
+]) ?>
 <?= GridView::widget([
-    'id' => 'transaction-deposit-grid',
+    'id' => 'transaction-withdraw-grid',
     'dataProvider' => $dataProviderWithdraw,
     'showFooter' => false,
     'summary' => false,
@@ -209,28 +128,5 @@ $isSuperAdmin = Yii::$app->user->isSuperAdmin;
 
     ],
 ]); ?>
-<!--?php Pjax::end() ?-->
-
-<?php if (sizeof($total) > 0) : ?>
-    <table class="table table-bordered" style="width: 50%; margin-top: 32px;">
-        <thead>
-        <tr>
-            <th>Currency</th>
-            <th>Total Merchant Refund</th>
-            <th>Total Client Receive</th>
-            <th>Total Tax</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($total as $currency => $item): ?>
-            <tr>
-                <td><?= $currency ?></td>
-                <td><?= $total[$currency]['amount'] ?></td>
-                <td><?= $total[$currency]['receive'] ?></td>
-                <td><?= $total[$currency]['receive_tax'] ?></td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-<?php endif; ?>
+<?php Pjax::end(); ?>
 

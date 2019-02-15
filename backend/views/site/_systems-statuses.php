@@ -3,6 +3,15 @@
 use kartik\grid\BooleanColumn;
 use kartik\grid\DataColumn;
 use kartik\grid\GridView;
+use yii\widgets\Pjax;
+
+Pjax::begin([
+    'id' => 'transaction-deposit-pjax',
+    'enablePushState' => false,
+    'clientOptions' => [
+        'method' => 'post'
+    ]
+]);
 
 echo GridView::widget([
     'dataProvider' => $dataProviderSystems,
@@ -28,3 +37,4 @@ echo GridView::widget([
         ]
     ],
 ]);
+Pjax::end();

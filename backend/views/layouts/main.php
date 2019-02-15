@@ -86,6 +86,7 @@ BackendAsset::register($this);
 //]); ?>
 
 <?php $this->endBody() ?>
+
 <script>
     console.log(atob('JWMgR08gQVdBWSEhIQ=='), "font-size: 40px;color:#ff3939; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;text-align:center");
 </script>

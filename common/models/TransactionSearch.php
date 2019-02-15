@@ -3,7 +3,6 @@
 namespace common\models;
 
 use pps\payment\Payment;
-use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
 
@@ -36,7 +35,6 @@ class TransactionSearch extends Transaction
     /**
      * Creates data provider instance with search query applied
      * @param array $params
-     * @param string $way
      * @return ActiveDataProvider
      */
     public function search($params)

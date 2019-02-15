@@ -108,8 +108,8 @@ class SiteController extends Controller
         $children = Node::getCurrentNode()->getChildrenList(true, false);
 
         $searchModel = new TransactionSearch();
-        $dataProviderWithdraw = $this->getWithdrawTransactions($searchModel, $children);
         $dataProviderDeposit = $this->getDepositTransactions($searchModel, $children);
+        $dataProviderWithdraw = $this->getWithdrawTransactions($searchModel, $children);
 
         $searchModelSystems = new PaymentSystemStatusSearch();
         $dataProviderSystems = $searchModelSystems->search(\Yii::$app->request->queryParams);
