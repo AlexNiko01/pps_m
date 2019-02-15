@@ -37,6 +37,14 @@ $this->title = 'Dashboard';
 
 </style>
 <div class="row">
+    <div class="col-lg-3 col-xs-12">
+        <?php echo $this->render('_systems-statuses', [
+            'searchModelSystems' => $searchModelSystems,
+            'dataProviderSystems' => $dataProviderSystems
+        ]); ?>
+    </div>
+</div>
+<div class="row">
     <div class="col-lg-6 col-xs-12">
         <h3>Withdraw transactions</h3>
         <?php echo $this->render('_withdraw', [

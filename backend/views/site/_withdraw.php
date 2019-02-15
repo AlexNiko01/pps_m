@@ -19,7 +19,7 @@ $node = Node::getCurrentNode();
 $this->title = "Withdraw {$node->name}";
 $this->params['breadcrumbs'][] = $this->title;
 
-$searchModelWithdraw->load(\Yii::$app->request->post());
+//$searchModelWithdraw->load(\Yii::$app->request->post());
 
 $isSuperAdmin = Yii::$app->user->isSuperAdmin;
 

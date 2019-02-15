@@ -25,7 +25,7 @@ $node = Node::getCurrentNode();
 $this->title = "Deposit {$node->name}";
 $this->params['breadcrumbs'][] = $this->title;
 
-$searchModelDeposit->load(\Yii::$app->request->post());
+//$searchModelDeposit->load(\Yii::$app->request->post());
 
 $isSuperAdmin = Yii::$app->user->isSuperAdmin;
 

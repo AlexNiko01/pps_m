@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\components\sender\TelegramSender;
 use backend\models\Node;
+use backend\models\PaymentSystemStatusSearch;
 use common\models\Transaction;
 use common\models\TransactionSearch;
 use Yii;
@@ -106,16 +107,20 @@ class SiteController extends Controller
         }
         $children = Node::getCurrentNode()->getChildrenList(true, false);
 
-
         $searchModel = new TransactionSearch();
         $dataProviderWithdraw = $this->getWithdrawTransactions($searchModel, $children);
         $dataProviderDeposit = $this->getDepositTransactions($searchModel, $children);
+
+        $searchModelSystems = new PaymentSystemStatusSearch();
+        $dataProviderSystems = $searchModelSystems->search(\Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModelWithdraw' => $searchModel,
             'dataProviderWithdraw' => $dataProviderWithdraw,
             'searchModelDeposit' => $searchModel,
-            'dataProviderDeposit' => $dataProviderDeposit
+            'dataProviderDeposit' => $dataProviderDeposit,
+            'searchModelSystems' => $searchModelSystems,
+            'dataProviderSystems' => $dataProviderSystems
         ]);
 
     }
