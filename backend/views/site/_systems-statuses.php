@@ -6,7 +6,7 @@ use kartik\grid\GridView;
 use yii\widgets\Pjax;
 
 Pjax::begin([
-    'id' => 'transaction-deposit-pjax',
+    'id' => 'status-pjax',
     'enablePushState' => false,
     'clientOptions' => [
         'method' => 'post'
@@ -15,6 +15,7 @@ Pjax::begin([
 
 echo GridView::widget([
     'dataProvider' => $dataProviderSystems,
+    'id'=>'status-grid',
     'summary' => false,
     'columns' => [
         [
