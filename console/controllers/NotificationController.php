@@ -56,7 +56,6 @@ class NotificationController extends Controller
             ->indexBy('id')
             ->all(\Yii::$app->db2);
 
-
         foreach ($paymentSystemsPpsData as $id => $data) {
             $connection = \Yii::$app->db;
             $transaction = $connection->beginTransaction();
@@ -70,25 +69,25 @@ class NotificationController extends Controller
 
                 $active = 0;
                 $code = $data['code'];
-                $url = \Yii::$app->pps->payments[$code]['url'];
-                if($url){
-                    $response = $this->sendRequest($url);
+                $url = \Yii::$app->pps->payments[$code] ? \Yii::$app->pps->payments[$code]['url'] : '';
+                $method = \Yii::$app->pps->payments[$code] ? \Yii::$app->pps->payments[$code]['method'] : '';
+                if ($url && $method) {
+                    $response = $this->sendRequest($url, $method);
                     if ($response) {
-                        if ($response->getStatusCode() === 200) {
+                        if ($response->getStatusCode() < 400) {
                             $active = 1;
                         }
                     }
-                }
+                    $paymentSystemStatus->active = $active;
+                    $paymentSystemStatus->name = $data['name'];
+                    $paymentSystemStatus->payment_system_id = $id;
+                    $paymentSystemStatus->deleted = $id;
 
-                $paymentSystemStatus->active = $active;
-                $paymentSystemStatus->name = $data['name'];
-                $paymentSystemStatus->payment_system_id = $id;
-                $paymentSystemStatus->deleted = $id;
-
-                if ($paymentSystemStatus->save()) {
-                    $transaction->commit();
-                } else {
-                    $transaction->rollBack();
+                    if ($paymentSystemStatus->save()) {
+                        $transaction->commit();
+                    } else {
+                        $transaction->rollBack();
+                    }
                 }
 
             } catch (\Exception $e) {
@@ -111,11 +110,11 @@ class NotificationController extends Controller
         }
     }
 
-    private function sendRequest($url)
+    private function sendRequest($url, $method)
     {
         $client = new \GuzzleHttp\Client();
         try {
-            $response = $client->request('GET', $url);
+            $response = $client->request($method, $url);
         } catch (GuzzleException $e) {
         }
         return $response;

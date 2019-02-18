@@ -26,15 +26,46 @@ return [
         'pps' => [
             'class' => pps\core\Core::class,
             'payments' => [
-                //useless:
+                'interkassa' => [
+                    'class' => pps\interkassa\Interkassa::class,
+                    'url' => 'https://api.interkassa.com/v1/currency',
+                    'method' => 'GET'
+                ],
+                'freekassa' => [
+                    'class' => pps\freekassa\FreeKassa::class,
+                    'url' => 'https://www.free-kassa.ru/api.php',
+                    'method' => 'GET'
+                ],
+                'royal-pay' => [
+                    'class' => pps\royalpay\RoyalPay::class,
+                    'url' => 'https://royal-pay.com/api',
+                    'method' => 'GET'
+                ],
+//                'apcopay' => [
+//                    'url' => 'Apcopay',
+//
+//                ],
+                'astropay' => [
+                    'class' => pps\astropay\Astropay::class,
+                    'sandbox' => true,
+                    'url' => 'https://sandbox-api.astropaycard.com/'
+                ],
+                'bitgo' => [
+                    'class' => pps\bitgo\BitGo::class,
+                    'sandbox' => false,
+                    'url' => 'https://bitgo.com/api'
+                ],
+
+
+
+
+
+
+
                 'trio' => [
                     'class' => pps\trio\Trio::class,
                 ],
-                //useless:
-                'royal-pay' => [
-                    'class' => pps\royalpay\RoyalPay::class,
-                    'url' => 'https://royal-pay.com/api'
-                ],
+
 //                'testps' => [
 //                    'class' => pps\testps\TestPS::class
 //                ],
@@ -42,14 +73,8 @@ return [
                     'class' => pps\cryptonator\Cryptonator::class,
                     'url' => 'https://api.cryptonator.com/api/'
                 ],
-                'freekassa' => [
-                    'class' => pps\freekassa\FreeKassa::class,
-                    'url' => 'https://www.free-kassa.ru/api.php'
-                ],
-                'interkassa' => [
-                    'class' => pps\interkassa\Interkassa::class,
-                    'url' => 'https://api.interkassa.com/'
-                ],
+
+
                 'nixmoney' => [
                     'class' => pps\nixmoney\NixMoney::class,
                     'url' => 'https://www.nixmoney.com/'
@@ -102,19 +127,10 @@ return [
                 'cubits' => [
                     'class' => pps\cubits\Cubits::class,
                 ],
-                'bitgo' => [
-                    'class' => pps\bitgo\BitGo::class,
-                    'sandbox' => false,
-                    'url' => ''
-                ],
+
                 'qiwi' => [
                     'class' => pps\qiwi\Qiwi::class,
                     'url' => 'https://pay-qiwi.com/api/qiwi/'
-                ],
-                'astropay' => [
-                    'class' => pps\astropay\Astropay::class,
-                    'sandbox' => true,
-                    'url' => ''
                 ],
                 'fondy' => [
                     'class' => pps\fondy\Fondy::class,
