@@ -188,7 +188,7 @@ class NotificationController extends Controller
         $enabledMethods = $this->actionPaymentSystemData();
 
 
-      $paymentMethod = $this->sortData($enabledMethods, $code);
+        $paymentMethod = $this->sortData($enabledMethods, $code);
 
         $request = [
             'payment_system' => $code,
@@ -235,12 +235,18 @@ class NotificationController extends Controller
         foreach ($enabledMethods as $item) {
 
             if ($item['code'] && $item['code'] === $code) {
-                if($item['currencies']){
-                    $result[] = $item['currencies'][0];
+                if ($item['currencies']) {
+                    $counter = 0;
+                    foreach ($item['currencies'] as $key => $val){
+                        if ($counter >= 1) break;
+                        $result[$key] = $val;
+                        $counter++;
+                    }
                 }
             }
 
         }
+//        return $result;
         var_dump($result);
         die();
     }
