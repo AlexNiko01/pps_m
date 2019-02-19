@@ -2,15 +2,14 @@
 
 namespace console\controllers;
 
-use backend\models\PaymentSystem;
-use backend\models\PaymentSystemExternalData;
 use backend\models\PaymentSystemStatus;
 use common\components\helpers\Logger;
 use common\models\Transaction;
 use GuzzleHttp\Exception\GuzzleException;
-use Mpdf\Tag\P;
+use pps\querybuilder\QueryBuilder;
 use yii\console\Controller;
 use yii\db\Query;
+use yii\web\Response;
 
 
 class NotificationController extends Controller
@@ -56,6 +55,13 @@ class NotificationController extends Controller
             ->indexBy('id')
             ->all(\Yii::$app->db2);
 
+        $enabledMethods = $this->actionPaymentSystemData();
+        foreach ($enabledMethods as $m){
+            var_dump($m['currencies']);
+            die();
+        }
+
+
         foreach ($paymentSystemsPpsData as $id => $data) {
             $connection = \Yii::$app->db;
             $transaction = $connection->beginTransaction();
@@ -72,12 +78,46 @@ class NotificationController extends Controller
                 $url = \Yii::$app->pps->payments[$code] ? \Yii::$app->pps->payments[$code]['url'] : '';
                 $method = \Yii::$app->pps->payments[$code] ? \Yii::$app->pps->payments[$code]['method'] : '';
                 if ($url && $method) {
-                    $response = $this->sendRequest($url, $method);
-                    if ($response) {
-                        if ($response->getStatusCode() < 400) {
-                            $active = 1;
-                        }
+
+                    $request = [
+                        'payment_system' => $code,
+                        'currency' => 'USD',
+                        'amount' => '1',
+//                        TODO:   figure out what is payment_method:
+                        'payment_method' => 'w1',
+                        'transaction_id' => 'TA_02199033163',
+                        'way' => 'withdraw'
+                    ];
+                    $path = 'withdraw';
+
+                    $query = $this->query($path, $request, true);
+                    $response = $query->getResponse(true);
+
+                    if (isset($response['errors'])) {
+                        $result = [
+                            'status' => 'error',
+                            'data' => $response['errors']
+                        ];
+                    } elseif (isset($response['data'])) {
+                        $result = [
+                            'status' => 'success',
+                            'data' => $response['data']
+                        ];
+                    } else {
+                        $result = [
+                            'status' => 'error',
+                            'data' => $query->getInfo()
+                        ];
                     }
+
+                    $httpCode = $query->getInfo()['http_code'];
+                    var_dump($result, $httpCode);
+
+
+                    if ($httpCode < 400) {
+                        $active = 1;
+                    }
+
                     $paymentSystemStatus->active = $active;
                     $paymentSystemStatus->name = $data['name'];
                     $paymentSystemStatus->payment_system_id = $id;
@@ -110,14 +150,76 @@ class NotificationController extends Controller
         }
     }
 
-    private function sendRequest($url, $method)
+
+
+    /**
+     * @param array $credentials
+     * @param array $query
+     * @param string $date
+     * @param bool $post
+     * @return string
+     */
+    private function genAuthKey(array $credentials, array $query, string $date, bool $post): string
     {
-        $client = new \GuzzleHttp\Client();
-        try {
-            $response = $client->request($method, $url);
-        } catch (GuzzleException $e) {
+        $publicKey = $credentials['publicKey'];
+        $privateKey = $credentials['privateKey'];
+
+        $flags = 0;
+
+        if ($post) {
+            $method = 'post';
+            $contentType = 'application/json';
+        } else {
+            $method = 'get';
+            $contentType = '';
+            $flags |= JSON_NUMERIC_CHECK;
         }
-        return $response;
+
+        ksort($query, SORT_STRING);
+
+        $contentStringMD5 = md5(json_encode($query, $flags));
+
+        $stringToSign = "$method\n";
+        $stringToSign .= "$contentStringMD5\n";
+        $stringToSign .= "$contentType\n";
+        $stringToSign .= "$date";
+
+        $signature = base64_encode(hash_hmac('sha256', utf8_encode($stringToSign), $privateKey, true));
+
+        return "PPS {$publicKey}:{$signature}";
     }
 
+    private function query(string $endpoint, array $data = [], $isPost = true)
+    {
+
+        $url = 'https://api.paypro.pw/merchant/' . $endpoint;
+
+        $credentials = [
+            'publicKey' => 'Tg8lP56esqmFS3aW',
+            'privateKey' => 'Nhx9M7bREGuteqz8GIuvOBKg16VTa5QX'
+        ];
+
+        $date = date('U');
+        $authKey = $this->genAuthKey($credentials, $data, $date, $isPost);
+
+        $query = (new QueryBuilder($url))
+            ->setParams($data)
+            ->setHeader('Auth', $authKey)
+            ->setHeader('X-PPS-Time', $date);
+
+        if ($isPost) {
+            $query->asPost()->json();
+        }
+
+        return $query->send();
+    }
+
+    public function actionPaymentSystemData()
+    {
+
+        $accountInfo = $this->query('account-info', [], false)->getResponse(true);
+        $enabledMethods = $accountInfo['payment_systems'];
+
+        return $enabledMethods;
+    }
 }
