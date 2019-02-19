@@ -55,12 +55,6 @@ class NotificationController extends Controller
             ->indexBy('id')
             ->all(\Yii::$app->db2);
 
-        $enabledMethods = $this->actionPaymentSystemData();
-        foreach ($enabledMethods as $m){
-            var_dump($m['currencies']);
-            die();
-        }
-
 
         foreach ($paymentSystemsPpsData as $id => $data) {
             $connection = \Yii::$app->db;
@@ -78,46 +72,12 @@ class NotificationController extends Controller
                 $url = \Yii::$app->pps->payments[$code] ? \Yii::$app->pps->payments[$code]['url'] : '';
                 $method = \Yii::$app->pps->payments[$code] ? \Yii::$app->pps->payments[$code]['method'] : '';
                 if ($url && $method) {
+                    $httpCode = $this->sendRequest($data)['httpCode'];
+                    var_dump($httpCode);
 
-                    $request = [
-                        'payment_system' => $code,
-                        'currency' => 'USD',
-                        'amount' => '1',
-//                        TODO:   figure out what is payment_method:
-                        'payment_method' => 'w1',
-                        'transaction_id' => 'TA_02199033163',
-                        'way' => 'withdraw'
-                    ];
-                    $path = 'withdraw';
-
-                    $query = $this->query($path, $request, true);
-                    $response = $query->getResponse(true);
-
-                    if (isset($response['errors'])) {
-                        $result = [
-                            'status' => 'error',
-                            'data' => $response['errors']
-                        ];
-                    } elseif (isset($response['data'])) {
-                        $result = [
-                            'status' => 'success',
-                            'data' => $response['data']
-                        ];
-                    } else {
-                        $result = [
-                            'status' => 'error',
-                            'data' => $query->getInfo()
-                        ];
-                    }
-
-                    $httpCode = $query->getInfo()['http_code'];
-                    var_dump($result, $httpCode);
-
-
-                    if ($httpCode < 400) {
+                    if ($httpCode && $httpCode < 400) {
                         $active = 1;
                     }
-
                     $paymentSystemStatus->active = $active;
                     $paymentSystemStatus->name = $data['name'];
                     $paymentSystemStatus->payment_system_id = $id;
@@ -149,7 +109,6 @@ class NotificationController extends Controller
             }
         }
     }
-
 
 
     /**
@@ -221,5 +180,68 @@ class NotificationController extends Controller
         $enabledMethods = $accountInfo['payment_systems'];
 
         return $enabledMethods;
+    }
+
+    public function sendRequest($data)
+    {
+        $code = $data['code'];
+        $enabledMethods = $this->actionPaymentSystemData();
+
+
+      $paymentMethod = $this->sortData($enabledMethods, $code);
+
+        $request = [
+            'payment_system' => $code,
+            'currency' => 'USD',
+            'amount' => '1',
+//TODO:   figure out what is payment_method:
+            'payment_method' => 'w1',
+            'transaction_id' => 'TA_02199033163',
+            'way' => 'withdraw'
+        ];
+        $path = 'withdraw';
+
+        $query = $this->query($path, $request, true);
+        $response = $query->getResponse(true);
+
+        if (isset($response['errors'])) {
+            $result = [
+                'status' => 'error',
+                'data' => $response['errors']
+            ];
+        } elseif (isset($response['data'])) {
+            $result = [
+                'status' => 'success',
+                'data' => $response['data']
+            ];
+        } else {
+            $result = [
+                'status' => 'error',
+                'data' => $query->getInfo()
+            ];
+        }
+
+        $httpCode = $query->getInfo()['http_code'];
+        return [
+            'httpCode' => $httpCode,
+            'result' => $result
+        ];
+
+    }
+
+    public function sortData($enabledMethods, $code)
+    {
+        $result = [];
+        foreach ($enabledMethods as $item) {
+
+            if ($item['code'] && $item['code'] === $code) {
+                if($item['currencies']){
+                    $result[] = $item['currencies'][0];
+                }
+            }
+
+        }
+        var_dump($result);
+        die();
     }
 }
