@@ -41,22 +41,32 @@ class NotificationController extends Controller
 
     public function actionPs()
     {
+
         $paymentSystemsStatuses = PaymentSystemStatus::find()->indexBy('payment_system_id')->all();
 
-        $subQuery = (new Query)
-            ->select('payment_system_id')
-            ->from('payment_system_external_data')
-            ->distinct();
-        $paymentSystemsPpsData = (new Query())
-            ->select(['name', 'id', 'code'])
-            ->from('payment_system')
-            ->where(['in', 'id', $subQuery])
-            ->andWhere(['active' => 1])
-            ->indexBy('id')
-            ->all(\Yii::$app->db2);
+        $query = new Query;
+        $query->select([
+            'user_payment_system.payment_system_id',
+            'user_payment_system.currencies',
+            'payment_system.name'
+        ])
+            ->from('user_payment_system')
 
+            ->leftJoin('payment_system',
+                'payment_system.id =user_payment_system.payment_system_id'
+            )
+            ->where(['payment_system.active' => 1,])
+            ->andWhere(['user_payment_system.node_id' => 5,])
+            ->indexBy(function ($row){
+                return $row['user_payment_system.payment_system_id'];
+            });
+
+        $command = $query->createCommand(\Yii::$app->db2);
+        $paymentSystemsPpsData = $command->queryAll();
 
         foreach ($paymentSystemsPpsData as $id => $data) {
+
+            var_dump(json_decode($data['currencies']));
             $connection = \Yii::$app->db;
             $transaction = $connection->beginTransaction();
             try {
@@ -68,27 +78,25 @@ class NotificationController extends Controller
                 }
 
                 $active = 0;
-                $code = $data['code'];
-                $url = \Yii::$app->pps->payments[$code] ? \Yii::$app->pps->payments[$code]['url'] : '';
-                $method = \Yii::$app->pps->payments[$code] ? \Yii::$app->pps->payments[$code]['method'] : '';
-                if ($url && $method) {
-                    $httpCode = $this->sendRequest($data)['httpCode'];
-                    var_dump($httpCode);
 
-                    if ($httpCode && $httpCode < 400) {
-                        $active = 1;
-                    }
-                    $paymentSystemStatus->active = $active;
-                    $paymentSystemStatus->name = $data['name'];
-                    $paymentSystemStatus->payment_system_id = $id;
-                    $paymentSystemStatus->deleted = $id;
+                $httpCode = $this->sendRequest($data)['httpCode'];
+                var_dump($httpCode);
 
-                    if ($paymentSystemStatus->save()) {
-                        $transaction->commit();
-                    } else {
-                        $transaction->rollBack();
-                    }
+
+                if ($httpCode && $httpCode < 400) {
+                    $active = 1;
                 }
+                $paymentSystemStatus->active = $active;
+                $paymentSystemStatus->name = $data['name'];
+                $paymentSystemStatus->payment_system_id = $id;
+                $paymentSystemStatus->deleted = $id;
+
+                if ($paymentSystemStatus->save()) {
+                    $transaction->commit();
+                } else {
+                    $transaction->rollBack();
+                }
+
 
             } catch (\Exception $e) {
                 $transaction->rollBack();
@@ -151,11 +159,11 @@ class NotificationController extends Controller
     private function query(string $endpoint, array $data = [], $isPost = true)
     {
 
-        $url = 'https://api.paypro.pw/merchant/' . $endpoint;
+        $url = 'http://master.api.paygate.xim.hattiko.pw/merchant/' . $endpoint;
 
         $credentials = [
-            'publicKey' => 'Tg8lP56esqmFS3aW',
-            'privateKey' => 'Nhx9M7bREGuteqz8GIuvOBKg16VTa5QX'
+            'publicKey' => 'qlZTm0U6YvF0QeEZ',
+            'privateKey' => 'pgweRDPuTssaDtwBI5EotpfZHw3hdYaY'
         ];
 
         $date = date('U');
@@ -237,7 +245,7 @@ class NotificationController extends Controller
             if ($item['code'] && $item['code'] === $code) {
                 if ($item['currencies']) {
                     $counter = 0;
-                    foreach ($item['currencies'] as $key => $val){
+                    foreach ($item['currencies'] as $key => $val) {
                         if ($counter >= 1) break;
                         $result[$key] = $val;
                         $counter++;
