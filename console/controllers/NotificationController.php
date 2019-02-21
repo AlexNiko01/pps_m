@@ -39,6 +39,25 @@ class NotificationController extends Controller
 
     }
 
+    private function sortPaymentSystemsData($paymentSystemsPpsSample)
+    {
+        $paymentSystemsPpsData = [];
+        foreach ($paymentSystemsPpsSample as $item) {
+            if ($item['currencies']) {
+                $currencies = json_decode($item['currencies']);
+                if ($currencies[0] && $item['payment_system_id']) {
+                    $id = $item['payment_system_id'];
+                    $currenciesArr = explode('_', $currencies[0]);
+                    $paymentSystemsPpsData[$id]['currency'] = $currenciesArr[0];
+                    $paymentSystemsPpsData[$id]['payment_method'] = $currenciesArr[1];
+                    $paymentSystemsPpsData[$id]['payment_system'] = $item['code'];
+                    $paymentSystemsPpsData[$id]['way'] = $currenciesArr[2];
+                }
+            }
+        }
+        return $paymentSystemsPpsData;
+    }
+
     public function actionPs()
     {
 
@@ -48,25 +67,26 @@ class NotificationController extends Controller
         $query->select([
             'user_payment_system.payment_system_id',
             'user_payment_system.currencies',
-            'payment_system.name'
+            'payment_system.name',
+            'payment_system.code'
         ])
             ->from('user_payment_system')
-
             ->leftJoin('payment_system',
                 'payment_system.id =user_payment_system.payment_system_id'
             )
             ->where(['payment_system.active' => 1,])
             ->andWhere(['user_payment_system.node_id' => 5,])
-            ->indexBy(function ($row){
+            ->indexBy(function ($row) {
                 return $row['user_payment_system.payment_system_id'];
             });
 
         $command = $query->createCommand(\Yii::$app->db2);
-        $paymentSystemsPpsData = $command->queryAll();
+        $paymentSystemsPpsSample = $command->queryAll();
+
+        $paymentSystemsPpsData = $this->sortPaymentSystemsData($paymentSystemsPpsSample);
 
         foreach ($paymentSystemsPpsData as $id => $data) {
 
-            var_dump(json_decode($data['currencies']));
             $connection = \Yii::$app->db;
             $transaction = $connection->beginTransaction();
             try {
@@ -79,7 +99,7 @@ class NotificationController extends Controller
 
                 $active = 0;
 
-                $httpCode = $this->sendRequest($data)['httpCode'];
+                $httpCode = $this->sendRequest($data);
                 var_dump($httpCode);
 
 
@@ -192,22 +212,15 @@ class NotificationController extends Controller
 
     public function sendRequest($data)
     {
-        $code = $data['code'];
-        $enabledMethods = $this->actionPaymentSystemData();
-
-
-        $paymentMethod = $this->sortData($enabledMethods, $code);
-
         $request = [
-            'payment_system' => $code,
-            'currency' => 'USD',
+            'payment_system' => $data['payment_system'],
+            'currency' => $data['currency'],
             'amount' => '1',
-//TODO:   figure out what is payment_method:
-            'payment_method' => 'w1',
+            'payment_method' => $data['payment_method'],
             'transaction_id' => 'TA_02199033163',
-            'way' => 'withdraw'
+            'way' => $data['way']
         ];
-        $path = 'withdraw';
+        $path = $data['way'];
 
         $query = $this->query($path, $request, true);
         $response = $query->getResponse(true);
@@ -237,25 +250,4 @@ class NotificationController extends Controller
 
     }
 
-    public function sortData($enabledMethods, $code)
-    {
-        $result = [];
-        foreach ($enabledMethods as $item) {
-
-            if ($item['code'] && $item['code'] === $code) {
-                if ($item['currencies']) {
-                    $counter = 0;
-                    foreach ($item['currencies'] as $key => $val) {
-                        if ($counter >= 1) break;
-                        $result[$key] = $val;
-                        $counter++;
-                    }
-                }
-            }
-
-        }
-//        return $result;
-        var_dump($result);
-        die();
-    }
 }
