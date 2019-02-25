@@ -198,7 +198,6 @@ class NotificationController extends Controller
     {
         $paymentSystemsPpsData = [];
         foreach ($paymentSystemsPpsSample as $item) {
-
             if ($item['currencies'] === null || !$item['payment_system_id']) {
                 continue;
             }
