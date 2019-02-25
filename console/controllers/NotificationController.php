@@ -198,14 +198,16 @@ class NotificationController extends Controller
     {
         $paymentSystemsPpsData = [];
         foreach ($paymentSystemsPpsSample as $item) {
-            $id = '';
-            if ($item['currencies'] && $item['payment_system_id']) {
-                $id = $item['payment_system_id'];
-                $paymentSystemsPpsData[$id]['amount'] = 1;
-                $paymentSystemsPpsData[$id]['payment_system'] = $item['code'];
-                $paymentSystemsPpsData[$id]['way'] = 'deposit';
 
+            if ($item['currencies'] === null || !$item['payment_system_id']) {
+                continue;
             }
+
+            $id = $item['payment_system_id'];
+            $paymentSystemsPpsData[$id]['amount'] = 1;
+            $paymentSystemsPpsData[$id]['payment_system'] = $item['code'];
+            $paymentSystemsPpsData[$id]['way'] = 'deposit';
+
             $fieldsArray = $this->actionPaymentSystemData($item['code'], $item['way']);
 
 //            TODO: finish array sorting
@@ -219,7 +221,7 @@ class NotificationController extends Controller
                     && $fieldsArray[0]['methods'][0]['method'] && !empty($fieldsArray[0]['methods'][0]['method'])
                 ) {
                     $paymentSystemsPpsData[$id]['payment_method'] = $fieldsArray[0]['methods'][0]['method'];
-                    if(!empty($fieldsArray[0]['methods'][0]['fields'])){
+                    if (!empty($fieldsArray[0]['methods'][0]['fields'])) {
                         $paymentSystemsPpsData[$id]['requisites'] = $fieldsArray[0]['methods'][0]['fields'];
                     }
                 }

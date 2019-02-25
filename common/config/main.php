@@ -41,10 +41,10 @@ return [
                     'url' => 'https://royal-pay.com/api',
                     'method' => 'GET'
                 ],
-//                'apcopay' => [
-//                    'url' => 'Apcopay',
-//
-//                ],
+                'apcopay' => [
+                    'url' => 'Apcopay',
+
+                ],
                 'astropay' => [
                     'class' => pps\astropay\Astropay::class,
                     'sandbox' => true,
@@ -55,12 +55,6 @@ return [
                     'sandbox' => false,
                     'url' => 'https://bitgo.com/api'
                 ],
-
-
-
-
-
-
 
                 'trio' => [
                     'class' => pps\trio\Trio::class,
@@ -73,8 +67,6 @@ return [
                     'class' => pps\cryptonator\Cryptonator::class,
                     'url' => 'https://api.cryptonator.com/api/'
                 ],
-
-
                 'nixmoney' => [
                     'class' => pps\nixmoney\NixMoney::class,
                     'url' => 'https://www.nixmoney.com/'

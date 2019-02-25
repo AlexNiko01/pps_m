@@ -126,6 +126,9 @@ class Restructuring
     {
 
         $newPs = [];
+        if ($accountMethods === null) {
+            echo 123;
+        }
         foreach ($accountMethods as $key => $val) {
             $newPs[strtoupper($key)] = $val;
         }
