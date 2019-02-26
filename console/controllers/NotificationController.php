@@ -285,6 +285,8 @@ class NotificationController extends Controller
                 $active = 0;
                 $requestData = $data;
                 unset($requestData['name']);
+
+
                 if ($requestData['payment_system'] && $requestData['currency'] && $requestData['payment_method'] && $requestData['way']) {
 
                     $response = $this->actionSendQuery($requestData);
