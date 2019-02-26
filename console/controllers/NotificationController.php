@@ -408,8 +408,8 @@ class NotificationController extends Controller
 
         $request['transaction_id'] = 'TA_' . date('mdGis') . rand(10, 99);
         $query = $this->query($path, $request, true);
+//        $response = $query->getResponse(true);
         return $query;
-        $response = $query->getResponse(true);
 
         if (isset($response['errors'])) {
             return [
