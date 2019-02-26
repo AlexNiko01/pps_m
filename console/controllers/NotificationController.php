@@ -204,12 +204,22 @@ class NotificationController extends Controller
 
             $id = $item['payment_system_id'];
             $paymentSystemsPpsData[$id]['amount'] = 1;
+            $paymentSystemsPpsData[$id]['name'] = $item['name'];
             $paymentSystemsPpsData[$id]['payment_system'] = $item['code'];
-            $paymentSystemsPpsData[$id]['way'] = 'deposit';
+            $paymentSystemsPpsData[$id]['way'] = '';
 
-            $fieldsArray = $this->actionPaymentSystemData($item['code'], $item['way']);
+            if ($item['currencies'] && !empty($item['currencies'])) {
+                $currenciesArr = json_decode($item['currencies']);
+                if ($currenciesArr[0]) {
+                    $currencyArr = explode('_', $currenciesArr[0]);
+                    if ($currencyArr[2]) {
+                        $paymentSystemsPpsData[$id]['way'] = $currencyArr[2];
+                    }
+                }
+            }
+            $fieldsArray = $this->actionPaymentSystemData($item['code'], $paymentSystemsPpsData[$id]['way']);
 
-//            TODO: finish array sorting
+//            TODO: check array sorting
 
             if ($fieldsArray[0]) {
                 if ($fieldsArray[0]['currency'] && !empty($fieldsArray[0]['currency'])) {
@@ -220,8 +230,13 @@ class NotificationController extends Controller
                     && $fieldsArray[0]['methods'][0]['method'] && !empty($fieldsArray[0]['methods'][0]['method'])
                 ) {
                     $paymentSystemsPpsData[$id]['payment_method'] = $fieldsArray[0]['methods'][0]['method'];
-                    if (!empty($fieldsArray[0]['methods'][0]['fields'])) {
-                        $paymentSystemsPpsData[$id]['requisites'] = $fieldsArray[0]['methods'][0]['fields'];
+                    if ($fieldsArray[0]['methods'][0]['fields'] && !empty($fieldsArray[0]['methods'][0]['fields'])) {
+                        $fields = $fieldsArray[0]['methods'][0]['fields'];
+                        $fieldsSorted = [];
+                        foreach ($fields as $key => $value) {
+                            $fieldsSorted[$value] = '';
+                        }
+                        $paymentSystemsPpsData[$id]['requisites'] = $fieldsSorted;
                     }
                 }
             }
@@ -268,13 +283,21 @@ class NotificationController extends Controller
                 }
 
                 $active = 0;
+                $requestData = $data;
+                unset($requestData['name']);
+                if ($requestData['payment_system'] && $requestData['currency'] && $requestData['payment_method'] && $requestData['way']) {
 
-                $httpCode = 200;
-//                var_dump($httpCode);
+                    $response = $this->actionSendQuery($requestData);
+                    /**
+                     * @var $response pps\querybuilder\src\Query
+                     */
+                    $httpCode = $response->getInfo()['http_code'] ?? '';
 
-                if ($httpCode && $httpCode < 400) {
-                    $active = 1;
+                    if ($httpCode && $httpCode < 400) {
+                        $active = 1;
+                    }
                 }
+
                 $paymentSystemStatus->active = $active;
                 $paymentSystemStatus->name = $data['name'];
                 $paymentSystemStatus->payment_system_id = $id;
@@ -383,6 +406,7 @@ class NotificationController extends Controller
 
         $request['transaction_id'] = 'TA_' . date('mdGis') . rand(10, 99);
         $query = $this->query($path, $request, true);
+        return $query;
         $response = $query->getResponse(true);
 
         if (isset($response['errors'])) {
