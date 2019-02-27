@@ -16,6 +16,10 @@ class NotificationController extends Controller
 {
     const TRANSACTION_TRACKING_INTERVAL = 60;
 
+    const FAILED_STATUSES = [
+        404, 503, 500, 410
+    ];
+
     /**
      * Action for checking failed transaction and sending notification
      */
@@ -71,7 +75,6 @@ class NotificationController extends Controller
         $ps = $query->getResponse(true);
 
         $flag = 0;
-
         if (empty($ps)) {
             $flag = 4;
         }
@@ -136,12 +139,9 @@ class NotificationController extends Controller
     {
 
         $currencies = [];
-
         foreach ($ps as $key => $methods) {
-
             $c = strtolower($key);
             if (empty($accountMethods[$c])) continue;
-
             $currency = [
                 'currency' => $key,
                 'methods' => [],
@@ -157,14 +157,11 @@ class NotificationController extends Controller
                     'method' => $method,
                     'fields' => []
                 ];
-
                 foreach ($fields[$way] ?? [] as $field => $_) {
                     $m['fields'][] = $field;
                 }
-
                 $currency['methods'][] = $m;
             }
-
             $currencies[] = $currency;
         }
 
@@ -201,46 +198,49 @@ class NotificationController extends Controller
             if ($item['currencies'] === null || !$item['payment_system_id']) {
                 continue;
             }
-
+            $interim = [];
             $id = $item['payment_system_id'];
-            $paymentSystemsPpsData[$id]['amount'] = 1;
-            $paymentSystemsPpsData[$id]['name'] = $item['name'];
-            $paymentSystemsPpsData[$id]['payment_system'] = $item['code'];
-            $paymentSystemsPpsData[$id]['way'] = '';
+            $interim['amount'] = 1;
+            $interim['name'] = $item['name'];
+            $interim['payment_system'] = $item['code'];
 
             if ($item['currencies'] && !empty($item['currencies'])) {
                 $currenciesArr = json_decode($item['currencies']);
                 if ($currenciesArr[0]) {
                     $currencyArr = explode('_', $currenciesArr[0]);
                     if ($currencyArr[2]) {
-                        $paymentSystemsPpsData[$id]['way'] = $currencyArr[2];
+                        $interim['way'] = $currencyArr[2];
                     }
                 }
             }
-            $fieldsArray = $this->actionPaymentSystemData($item['code'], $paymentSystemsPpsData[$id]['way']);
+            $fieldsArray = null;
+            if ($interim['way']) {
+                $fieldsArray = $this->actionPaymentSystemData($item['code'], $interim['way']);
+            }
 
-//            TODO: check array sorting
-
-            if ($fieldsArray[0]) {
+            if ($fieldsArray && $fieldsArray[0]) {
                 if ($fieldsArray[0]['currency'] && !empty($fieldsArray[0]['currency'])) {
-                    $paymentSystemsPpsData[$id]['currency'] = $fieldsArray[0]['currency'];
+                    $interim['currency'] = $fieldsArray[0]['currency'];
                 }
                 if ($fieldsArray[0]['methods'] && !empty($fieldsArray[0]['methods'])
                     && $fieldsArray[0]['methods'][0] && !empty($fieldsArray[0]['methods'][0])
                     && $fieldsArray[0]['methods'][0]['method'] && !empty($fieldsArray[0]['methods'][0]['method'])
                 ) {
-                    $paymentSystemsPpsData[$id]['payment_method'] = $fieldsArray[0]['methods'][0]['method'];
+                    $interim['payment_method'] = $fieldsArray[0]['methods'][0]['method'];
                     if ($fieldsArray[0]['methods'][0]['fields'] && !empty($fieldsArray[0]['methods'][0]['fields'])) {
                         $fields = $fieldsArray[0]['methods'][0]['fields'];
                         $fieldsSorted = [];
                         foreach ($fields as $key => $value) {
                             $fieldsSorted[$value] = '';
                         }
-                        $paymentSystemsPpsData[$id]['requisites'] = $fieldsSorted;
+                        $interim['requisites'] = $fieldsSorted;
                     }
                 }
             }
+
+            $paymentSystemsPpsData[$id] = $interim;
         }
+
         return $paymentSystemsPpsData;
     }
 
@@ -268,7 +268,6 @@ class NotificationController extends Controller
 
         $command = $query->createCommand(\Yii::$app->db2);
         $paymentSystemsPpsSample = $command->queryAll();
-
         $paymentSystemsPpsData = $this->sortPaymentSystemsDataSort($paymentSystemsPpsSample);
 
         foreach ($paymentSystemsPpsData as $id => $data) {
@@ -281,27 +280,24 @@ class NotificationController extends Controller
                 } else {
                     $paymentSystemStatus = new PaymentSystemStatus();
                 }
-
+                $name = $data['name'];
                 $active = 0;
-                $requestData = $data;
-                unset($requestData['name']);
 
-
-                if ($requestData['payment_system'] && $requestData['currency'] && $requestData['payment_method'] && $requestData['way']) {
-
-                    $response = $this->actionSendQuery($requestData);
+                if ($data['payment_system'] && $data['currency'] && $data['amount'] && $data['payment_method'] && $data['way']) {
+                    $response = $this->actionSendQuery($data);
                     /**
                      * @var $response pps\querybuilder\src\Query
                      */
                     $httpCode = $response->getInfo()['http_code'] ?? '';
-
-                    if ($httpCode && $httpCode < 400) {
+                    if (!in_array($httpCode, self::FAILED_STATUSES)) {
                         $active = 1;
                     }
+                } else if ($data['payment_system'] || $data['currency'] || $data['amount'] || $data['payment_method'] || $data['way']){
+                    $active = 2;
                 }
 
                 $paymentSystemStatus->active = $active;
-                $paymentSystemStatus->name = $data['name'];
+                $paymentSystemStatus->name = $name;
                 $paymentSystemStatus->payment_system_id = $id;
                 $paymentSystemStatus->deleted = $id;
 
@@ -321,9 +317,9 @@ class NotificationController extends Controller
             }
         }
 
-        if (!empty($paymentSystemsPps)) {
-            foreach ($paymentSystemsPps as $pss) {
-                $ps = $paymentSystemsStatuses[$pss['id']];
+        if (!empty($paymentSystemsStatuses)) {
+            foreach ($paymentSystemsStatuses as $psID=>$data) {
+                $ps = $paymentSystemsStatuses[$psID];
                 $ps->deleted = 1;
                 $ps->save();
             }
