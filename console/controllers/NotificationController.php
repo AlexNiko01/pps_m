@@ -19,7 +19,7 @@ class NotificationController extends Controller
     const FAILED_STATUSES = [
         404, 503, 500, 410
     ];
-
+    const ERROR_NETWORK = 'Network Error!';
     /**
      * Action for checking failed transaction and sending notification
      */
@@ -280,7 +280,7 @@ class NotificationController extends Controller
                 }
 
                 $name = $data['name'];
-                $active = 0;
+                $active = 1;
                 if ($data['payment_system']
                     && $data['currency']
                     && $data['amount']
@@ -291,21 +291,27 @@ class NotificationController extends Controller
                      * @var $response pps\querybuilder\src\Query
                      */
                     $httpCode = $response->getInfo()['http_code'] ?? '';
-                    if (!in_array($httpCode, self::FAILED_STATUSES)) {
-                        $active = 1;
+
+                    if ($httpCode === 500) {
+                        $active = 0;
+                    } else if($httpCode === 422) {
+                        $responseDecoded = $response->getResponse(true);
+                        if(($errors = $responseDecoded['errors'])) {
+                            foreach ($errors as $error) {
+                                if($error['message'] === self::ERROR_NETWORK) {
+                                    $active = 0;
+                                }
+                            }
+                        }
                     }
-                } else if ($data['payment_system']
-                    || $data['currency']
-                    || $data['amount']
-                    || $data['payment_method']
-                    || $data['way']) {
+                } else {
                     $active = 2;
                 }
 
                 $paymentSystemStatus->active = $active;
                 $paymentSystemStatus->name = $name;
                 $paymentSystemStatus->payment_system_id = $id;
-                $paymentSystemStatus->deleted = $id;
+                $paymentSystemStatus->deleted = 0;
 
                 if ($paymentSystemStatus->save()) {
                     $transaction->commit();
