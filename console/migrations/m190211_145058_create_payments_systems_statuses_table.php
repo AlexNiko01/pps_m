@@ -16,7 +16,7 @@ class m190211_145058_create_payments_systems_statuses_table extends Migration
             'id' => $this->primaryKey(),
             'payment_system_id' => $this->integer(),
             'name' => $this->string(),
-            'active' => $this->boolean(),
+            'active' => $this->integer(),
             'deleted' => $this->boolean()
         ]);
     }
