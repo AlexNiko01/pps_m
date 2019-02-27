@@ -41,8 +41,6 @@ class NotificationController extends Controller
                 'Payment system: ' . $item->paymentSystem->name . '.'
             ]);
         };
-        Logger::recodeLog('test');
-
     }
 
     public function actionPaymentSystemData($code, $way)
