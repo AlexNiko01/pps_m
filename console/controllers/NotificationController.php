@@ -195,7 +195,7 @@ class NotificationController extends Controller
     {
         $paymentSystemsPpsData = [];
         foreach ($paymentSystemsPpsSample as $item) {
-            if ($item['currencies'] === null || !$item['payment_system_id']) {
+            if (!$item['payment_system_id']) {
                 continue;
             }
             $interim = [];
@@ -280,10 +280,14 @@ class NotificationController extends Controller
                 } else {
                     $paymentSystemStatus = new PaymentSystemStatus();
                 }
+
                 $name = $data['name'];
                 $active = 0;
-
-                if ($data['payment_system'] && $data['currency'] && $data['amount'] && $data['payment_method'] && $data['way']) {
+                if ($data['payment_system']
+                    && $data['currency']
+                    && $data['amount']
+                    && $data['payment_method']
+                    && $data['way']) {
                     $response = $this->actionSendQuery($data);
                     /**
                      * @var $response pps\querybuilder\src\Query
@@ -292,7 +296,11 @@ class NotificationController extends Controller
                     if (!in_array($httpCode, self::FAILED_STATUSES)) {
                         $active = 1;
                     }
-                } else if ($data['payment_system'] || $data['currency'] || $data['amount'] || $data['payment_method'] || $data['way']){
+                } else if ($data['payment_system']
+                    || $data['currency']
+                    || $data['amount']
+                    || $data['payment_method']
+                    || $data['way']) {
                     $active = 2;
                 }
 
@@ -318,7 +326,7 @@ class NotificationController extends Controller
         }
 
         if (!empty($paymentSystemsStatuses)) {
-            foreach ($paymentSystemsStatuses as $psID=>$data) {
+            foreach ($paymentSystemsStatuses as $psID => $data) {
                 $ps = $paymentSystemsStatuses[$psID];
                 $ps->deleted = 1;
                 $ps->save();
