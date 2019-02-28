@@ -2,7 +2,6 @@
 
 namespace backend\components\sender;
 
-use yii\db\ActiveRecord;
 
 class MessageSender extends \yii\base\Component
 {

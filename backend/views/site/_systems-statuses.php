@@ -31,10 +31,8 @@ echo GridView::widget([
                 ]
         ],
         [
-            'class' => BooleanColumn::className(),
+            'class' =>  DataColumn::className(),
             'attribute' => 'active',
-            'trueLabel' => 'Yes',
-            'falseLabel' => 'No'
         ]
     ],
 ]);
