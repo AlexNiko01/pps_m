@@ -36,7 +36,10 @@ class NotificationController extends Controller
         };
     }
 
-    public function actionPaymentSystem()
+    /**
+     * Determine payment systems efficiency
+     */
+    public function actionPaymentSystem(): void
     {
         $inquirer = \Yii::$app->inquirer;
         $sender = \Yii::$app->sender;
