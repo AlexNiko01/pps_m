@@ -43,8 +43,12 @@ class NotificationController extends Controller
         $notRespondedPaymentSystems = $inquirer->getNotRespondedPaymentSystems();
         if ($notRespondedPaymentSystems) {
             foreach ($notRespondedPaymentSystems as $ps) {
+                $message = 'unresponsive payment system ' . $ps['name'] . '.';
+                if ($ps->active === 2) {
+                    $message = 'Not enough data for determine payment system '. $ps['name'] .' efficiency.';
+                }
                 $sender->send([
-                    'Not responded Payment system: ' . $ps['name'] . '.'
+                    $message
                 ]);
             }
         }

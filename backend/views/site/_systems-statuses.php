@@ -15,7 +15,7 @@ Pjax::begin([
 
 echo GridView::widget([
     'dataProvider' => $dataProviderSystems,
-    'id'=>'status-grid',
+    'id' => 'status-grid',
     'summary' => false,
     'columns' => [
         [
@@ -31,8 +31,20 @@ echo GridView::widget([
                 ]
         ],
         [
-            'class' =>  DataColumn::className(),
+            'class' => DataColumn::className(),
             'attribute' => 'active',
+            'value' => function ($model) {
+                $val = 'disable';
+                switch (@$model->active) {
+                    case 1;
+                        $val = 'enable';
+                        break;
+                    case 2;
+                        $val = 'not enough data for determine payment system status';
+                        break;
+                };
+                return $val;
+            },
         ]
     ],
 ]);
