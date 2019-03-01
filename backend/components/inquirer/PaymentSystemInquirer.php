@@ -11,7 +11,8 @@ use pps\querybuilder\src\IQuery;
 
 class PaymentSystemInquirer
 {
-    const FAILED_STATUS = 500;
+    const STATUS_FAILED = 500;
+    const STATUS_PAYMENT_ERROR = 422;
     const ERROR_NETWORK = 'Network Error!';
     const TESTING_MERCHANT_ID = 5;
     const PAYMENT_SYSTEM_ACTIVITY = 1;
@@ -66,15 +67,15 @@ class PaymentSystemInquirer
                     && $data['amount']
                     && $data['payment_method']
                     && $data['way']) {
-                    $response = $this->actionSendQuery($data);
+                    $response = $this->sendQuery($data);
                     /**
                      * @var $response pps\querybuilder\src\Query
                      */
                     $httpCode = $response->getInfo()['http_code'] ?? '';
 
-                    if ($httpCode === self::FAILED_STATUS) {
+                    if ($httpCode === self::STATUS_FAILED) {
                         $active = 0;
-                    } else if ($httpCode === 422) {
+                    } else if ($httpCode === self::STATUS_PAYMENT_ERROR) {
                         $responseDecoded = $response->getResponse(true);
                         if (($errors = $responseDecoded['errors'])) {
                             foreach ($errors as $error) {
@@ -405,7 +406,7 @@ class PaymentSystemInquirer
      * @param $request
      * @return array|IQuery
      */
-    public function actionSendQuery($request): IQuery
+    public function sendQuery($request): IQuery
     {
         if ($request['way'] == 'deposit') {
             $path = 'deposit';

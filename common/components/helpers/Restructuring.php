@@ -2,7 +2,6 @@
 
 namespace common\components\helpers;
 
-use Mpdf\Tag\P;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -45,7 +44,11 @@ class Restructuring
         return $newPs;
     }
 
-    public static function secondCategory($ps)
+    /**
+     * @param $ps
+     * @return array
+     */
+    public static function secondCategory(array $ps): array
     {
         $currencyKey = [];
         $i = 0;
@@ -104,7 +107,12 @@ class Restructuring
         return $newPs;
     }
 
-    public static function thirdCategory($ps, $accountMethods)
+    /**
+     * @param $ps
+     * @param $accountMethods
+     * @return array
+     */
+    public static function thirdCategory(array $ps, array $accountMethods): array
     {
         $currencyKey = [];
         foreach ($accountMethods as $key => $val) {
@@ -122,13 +130,13 @@ class Restructuring
         return $newPs;
     }
 
-    public static function forEmptyPs($accountMethods)
+    /**
+     * @param $accountMethods
+     * @return array
+     */
+    public static function forEmptyPs(array $accountMethods): array
     {
-
         $newPs = [];
-        if ($accountMethods === null) {
-            echo 123;
-        }
         foreach ($accountMethods as $key => $val) {
             $newPs[strtoupper($key)] = $val;
         }
