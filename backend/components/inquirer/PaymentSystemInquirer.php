@@ -143,7 +143,7 @@ class PaymentSystemInquirer
 
             if ($item['currencies'] && !empty($item['currencies'])) {
                 $currenciesArr = json_decode($item['currencies']);
-                if ($currenciesArr[0]) {
+                if ($currenciesArr[0] ?? null) {
                     $currencyArr = explode('_', $currenciesArr[0]);
                     if ($currencyArr[2]) {
                         $interim['way'] = $currencyArr[2];
@@ -151,11 +151,11 @@ class PaymentSystemInquirer
                 }
             }
             $fieldsArray = null;
-            if ($interim['way']) {
+            if ($way = $interim['way'] ?? null) {
                 /**
                  * @var $fieldsArray array regulated data needed for committal transaction
                  */
-                $fieldsArray = $this->getPaymentSystemData($item['code'], $interim['way']);
+                $fieldsArray = $this->getPaymentSystemData($item['code'], $way);
             }
 
             if ($fieldsArray && $fieldsArray[0]) {
@@ -203,7 +203,7 @@ class PaymentSystemInquirer
          */
         $accountInfo = $this->query('account-info', [], false)->getResponse(true);
         /**
-         * @var $enabledMethods array
+         * @var $enabledMethods
          * Contains data (including transaction type and method) for each payment system
          * enshrined and enabled for the current merchant
          */
