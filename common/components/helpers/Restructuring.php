@@ -15,7 +15,7 @@ class Restructuring
      * @param $ps
      * @return array
      */
-    public static function firstCategory($ps)
+    public static function firstCategory(array $ps): array
     {
         $currencyKey = [];
         foreach ($ps as $methods) {

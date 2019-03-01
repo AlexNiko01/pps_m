@@ -7,221 +7,26 @@ use backend\models\PaymentSystemStatus;
 use common\components\helpers\Restructuring;
 use yii\db\Query;
 use pps\querybuilder\QueryBuilder;
+use pps\querybuilder\src\IQuery;
 
 class PaymentSystemInquirer
 {
-    const FAILED_STATUSES = [
-        404, 503, 500, 410
-    ];
+    const FAILED_STATUS = 500;
     const ERROR_NETWORK = 'Network Error!';
     const TESTING_MERCHANT_ID = 5;
     const PAYMENT_SYSTEM_ACTIVITY = 1;
-
-    public function actionPaymentSystemData($code, $way)
-    {
-        /**
-         * from file
-         */
-        $query = $this->query('api-info', ['code' => $code], false);
-        /**
-         * from DB
-         */
-        $accountInfo = $this->query('account-info', [], false)->getResponse(true);
-        /**
-         * from DB
-         */
-        $enabledMethods = $accountInfo['payment_systems'];
-        /**
-         * @var $accountMethods array. Keeping current Payment systems methods
-         */
-        $accountMethods = null;
-
-        foreach ($enabledMethods as $enabledMethod) {
-            if ($enabledMethod['code'] == $code) {
-                $accountMethods = $enabledMethod['currencies'];
-            }
-        }
-        /**
-         * from file:
-         */
-        $ps = $query->getResponse(true);
-
-        $flag = 0;
-        if (empty($ps)) {
-            $flag = 4;
-        }
-
-        $counter = 0;
-        $counter_empty_val = 0;
-        foreach ($ps as $key => $val) {
-            $lowerKey = strtolower($key);
-            /**
-             * @var $lowerKey string. This is Payment systems method!
-             */
-            if ($lowerKey == 'bitcoin') {
-                $flag = 3;
-                break;
-            }
-            /**
-             * @var $val array. Contains field for current transaction payment system
-             */
-            foreach ($val as $k => $v) {
-                $counter++;
-                $lK = strtolower($k);
-                if (isset($accountMethods[$lK])) {
-                    $flag = 2;
-                    break;
-                }
-                /**
-                 * @var $k string. Type of transaction: deposit or withdraw
-                 * @var $v string. Field for transaction request
-                 */
-                if (($k == "deposit" && empty($v)) || ($k == "withdraw" && empty($v))) {
-                    $counter_empty_val++;
-                }
-            }
-            if (isset($accountMethods[$lowerKey])) {
-                $flag = 1;
-                break;
-            }
-        }
-
-        if ($counter == $counter_empty_val) {
-            $flag = 4;
-        }
-
-        if ($flag == 1) {
-
-            return $this->currenciesApiInfoKey($ps, $accountMethods, $way);
-
-        } else {
-            $newPs = $this->restructuringPs($ps, $flag, $accountMethods);
-        }
-
-        return $this->currenciesApiInfoKey($newPs, $accountMethods, $way);
-    }
+    const QUERY_URL = 'http://master.api.paygate.xim.hattiko.pw/merchant/';
+    const CREDENTIALS = [
+        'publicKey' => 'qlZTm0U6YvF0QeEZ',
+        'privateKey' => 'pgweRDPuTssaDtwBI5EotpfZHw3hdYaY'
+    ];
 
     /**
-     * @param $ps
-     * @param $accountMethods
-     * @param $way
      * @return array
-     */
-    private function currenciesApiInfoKey($ps, $accountMethods, $way)
-    {
-
-        $currencies = [];
-        foreach ($ps as $key => $methods) {
-            $c = strtolower($key);
-            if (empty($accountMethods[$c])) continue;
-            $currency = [
-                'currency' => $key,
-                'methods' => [],
-            ];
-
-            foreach ($methods as $method => $fields) {
-                if ($way == 'deposit' && !isset($accountMethods[$c][$method]['way']['deposit'])) {
-                    continue;
-                }
-                if ($way == 'withdraw' && !isset($accountMethods[$c][$method]['way']['withdraw'])) continue;
-
-                $m = [
-                    'method' => $method,
-                    'fields' => []
-                ];
-                foreach ($fields[$way] ?? [] as $field => $_) {
-                    $m['fields'][] = $field;
-                }
-                $currency['methods'][] = $m;
-            }
-            $currencies[] = $currency;
-        }
-
-        return $currencies;
-    }
-
-    /**
-     * @param $ps
-     * @param $flag
-     * @param $accountMethods
-     * @return array
-     */
-    private function restructuringPs($ps, $flag, $accountMethods)
-    {
-        if ($flag == 0) {
-            return Restructuring::firstCategory($ps);
-        } elseif ($flag == 2) {
-            return Restructuring::secondCategory($ps);
-        } elseif ($flag == 3) {
-            return Restructuring::thirdCategory($ps, $accountMethods);
-        } elseif ($flag == 4) {
-            return Restructuring::forEmptyPs($accountMethods);
-        }
-    }
-
-    /**
-     * @param $paymentSystemsPpsSample
-     * @return array
-     */
-    private function sortPaymentSystemsDataSort($paymentSystemsPpsSample)
-    {
-        $paymentSystemsPpsData = [];
-        foreach ($paymentSystemsPpsSample as $item) {
-            if (!$item['payment_system_id']) {
-                continue;
-            }
-            $interim = [];
-            $id = $item['payment_system_id'];
-            $interim['amount'] = 1;
-            $interim['name'] = $item['name'];
-            $interim['payment_system'] = $item['code'];
-
-            if ($item['currencies'] && !empty($item['currencies'])) {
-                $currenciesArr = json_decode($item['currencies']);
-                if ($currenciesArr[0]) {
-                    $currencyArr = explode('_', $currenciesArr[0]);
-                    if ($currencyArr[2]) {
-                        $interim['way'] = $currencyArr[2];
-                    }
-                }
-            }
-            $fieldsArray = null;
-            if ($interim['way']) {
-                $fieldsArray = $this->actionPaymentSystemData($item['code'], $interim['way']);
-            }
-
-            if ($fieldsArray && $fieldsArray[0]) {
-                if ($fieldsArray[0]['currency'] && !empty($fieldsArray[0]['currency'])) {
-                    $interim['currency'] = $fieldsArray[0]['currency'];
-                }
-                if ($fieldsArray[0]['methods'] && !empty($fieldsArray[0]['methods'])
-                    && $fieldsArray[0]['methods'][0] && !empty($fieldsArray[0]['methods'][0])
-                    && $fieldsArray[0]['methods'][0]['method'] && !empty($fieldsArray[0]['methods'][0]['method'])
-                ) {
-                    $interim['payment_method'] = $fieldsArray[0]['methods'][0]['method'];
-                    if ($fieldsArray[0]['methods'][0]['fields'] && !empty($fieldsArray[0]['methods'][0]['fields'])) {
-                        $fields = $fieldsArray[0]['methods'][0]['fields'];
-                        $fieldsSorted = [];
-                        foreach ($fields as $key => $value) {
-                            $fieldsSorted[$value] = '';
-                        }
-                        $interim['requisites'] = $fieldsSorted;
-                    }
-                }
-            }
-
-            $paymentSystemsPpsData[$id] = $interim;
-        }
-
-        return $paymentSystemsPpsData;
-    }
-
-
-    /**
      * @throws \Throwable
      * @throws \yii\db\Exception
      */
-    public function getNotRespondedPaymentSystems()
+    public function getNotRespondedPaymentSystems(): array
     {
         $paymentSystemsStatuses = PaymentSystemStatus::find()->indexBy('payment_system_id')->all();
         $query = new Query;
@@ -267,7 +72,7 @@ class PaymentSystemInquirer
                      */
                     $httpCode = $response->getInfo()['http_code'] ?? '';
 
-                    if ($httpCode === 500) {
+                    if ($httpCode === self::FAILED_STATUS) {
                         $active = 0;
                     } else if ($httpCode === 422) {
                         $responseDecoded = $response->getResponse(true);
@@ -315,11 +120,221 @@ class PaymentSystemInquirer
                 $ps->save();
             }
         }
-
         return $notRespondingPaymentSystems;
-
     }
 
+    /**
+     * @param $paymentSystemsPpsSample
+     * @return array
+     * Sorting data for each payment system and getting fields necessary for transaction request
+     */
+    private function sortPaymentSystemsDataSort(array $paymentSystemsPpsSample): array
+    {
+        $paymentSystemsPpsData = [];
+        foreach ($paymentSystemsPpsSample as $item) {
+            if (!$item['payment_system_id']) {
+                continue;
+            }
+            $interim = [];
+            $id = $item['payment_system_id'];
+            $interim['amount'] = 1;
+            $interim['name'] = $item['name'];
+            $interim['payment_system'] = $item['code'];
+
+            if ($item['currencies'] && !empty($item['currencies'])) {
+                $currenciesArr = json_decode($item['currencies']);
+                if ($currenciesArr[0]) {
+                    $currencyArr = explode('_', $currenciesArr[0]);
+                    if ($currencyArr[2]) {
+                        $interim['way'] = $currencyArr[2];
+                    }
+                }
+            }
+            $fieldsArray = null;
+            if ($interim['way']) {
+                /**
+                 * @var $fieldsArray array regulated data needed for committal transaction
+                 */
+                $fieldsArray = $this->getPaymentSystemData($item['code'], $interim['way']);
+            }
+
+            if ($fieldsArray && $fieldsArray[0]) {
+                if ($fieldsArray[0]['currency'] && !empty($fieldsArray[0]['currency'])) {
+                    $interim['currency'] = $fieldsArray[0]['currency'];
+                }
+                if ($fieldsArray[0]['methods'] && !empty($fieldsArray[0]['methods'])
+                    && $fieldsArray[0]['methods'][0] && !empty($fieldsArray[0]['methods'][0])
+                    && $fieldsArray[0]['methods'][0]['method'] && !empty($fieldsArray[0]['methods'][0]['method'])
+                ) {
+                    $interim['payment_method'] = $fieldsArray[0]['methods'][0]['method'];
+                    if ($fieldsArray[0]['methods'][0]['fields'] && !empty($fieldsArray[0]['methods'][0]['fields'])) {
+                        $fields = $fieldsArray[0]['methods'][0]['fields'];
+                        $fieldsSorted = [];
+                        foreach ($fields as $key => $value) {
+                            $fieldsSorted[$value] = '';
+                        }
+                        $interim['requisites'] = $fieldsSorted;
+                    }
+                }
+            }
+            $paymentSystemsPpsData[$id] = $interim;
+        }
+
+        return $paymentSystemsPpsData;
+    }
+
+    /**
+     * @param string $code
+     * @param bool $way
+     * @return array
+     * Returns fields array (contains transaction request fields for enabled methods)
+     * leaded to the canonical form
+     */
+    public function getPaymentSystemData(string $code, bool $way)
+    {
+        /**
+         * @var $query pps\querybuilder\src\IQuery
+         * Request to pps api. Documentation http://master.frontend.paygate.xim.hattiko.pw/site/api-doc (api-info)
+         */
+        $query = $this->query('api-info', ['code' => $code], false);
+        /**
+         * @var $accountInfo array
+         * Request to pps api. Documentation http://master.frontend.paygate.xim.hattiko.pw/site/api-doc (account-info)
+         */
+        $accountInfo = $this->query('account-info', [], false)->getResponse(true);
+        /**
+         * @var $enabledMethods array
+         * Contains data (including transaction type and method) for each payment system
+         * enshrined and enabled for the current merchant
+         */
+        $enabledMethods = $accountInfo['payment_systems'];
+        /**
+         * @var $accountMethods array. Keeping current Payment systems methods
+         */
+        $accountMethods = null;
+
+        foreach ($enabledMethods as $enabledMethod) {
+            if ($enabledMethod['code'] == $code) {
+                $accountMethods = $enabledMethod['currencies'];
+            }
+        }
+        /**
+         * @var $ps array
+         * @var $query pps\querybuilder\src\IQuery
+         * Payment system fields from file present in the payment systems
+         */
+        $ps = $query->getResponse(true);
+        $flag = 0;
+        if (empty($ps)) {
+            $flag = 4;
+        }
+        $counter = 0;
+        $counterEmptyVal = 0;
+        foreach ($ps as $key => $val) {
+            $lowerKey = strtolower($key);
+            /**
+             * @var $lowerKey string. This is Payment systems method
+             */
+            if ($lowerKey == 'bitcoin') {
+                $flag = 3;
+                break;
+            }
+            /**
+             * @var $val array. Contains field for current transaction payment system
+             */
+            foreach ($val as $k => $v) {
+                $counter++;
+                $lK = strtolower($k);
+                if (isset($accountMethods[$lK])) {
+                    $flag = 2;
+                    break;
+                }
+                /**
+                 * @var $k string. Type of transaction: deposit or withdraw
+                 * @var $v string. Field for transaction request
+                 */
+                if (($k == 'deposit' && empty($v)) || ($k == 'withdraw' && empty($v))) {
+                    $counterEmptyVal++;
+                }
+            }
+            if (isset($accountMethods[$lowerKey])) {
+                $flag = 1;
+                break;
+            }
+        }
+
+        if ($counter == $counterEmptyVal) {
+            $flag = 4;
+        }
+
+        if ($flag == 1) {
+            return $this->currenciesApiInfoKey($ps, $accountMethods, $way);
+
+        } else {
+            $newPs = $this->restructuringPs($ps, $flag, $accountMethods);
+        }
+
+        return $this->currenciesApiInfoKey($newPs, $accountMethods, $way);
+    }
+
+    /**
+     * @param array $ps
+     * @param array $accountMethods
+     * @param string $way
+     * @return array
+     *
+     */
+    private function currenciesApiInfoKey(array $ps, array $accountMethods, string $way): array
+    {
+        $currencies = [];
+        foreach ($ps as $key => $methods) {
+            $c = strtolower($key);
+            if (empty($accountMethods[$c])) continue;
+            $currency = [
+                'currency' => $key,
+                'methods' => [],
+            ];
+
+            foreach ($methods as $method => $fields) {
+                if ($way == 'deposit' && !isset($accountMethods[$c][$method]['way']['deposit'])) {
+                    continue;
+                }
+                if ($way == 'withdraw' && !isset($accountMethods[$c][$method]['way']['withdraw'])) continue;
+
+                $m = [
+                    'method' => $method,
+                    'fields' => []
+                ];
+                foreach ($fields[$way] ?? [] as $field => $_) {
+                    $m['fields'][] = $field;
+                }
+                $currency['methods'][] = $m;
+            }
+            $currencies[] = $currency;
+        }
+
+        return $currencies;
+    }
+
+    /**
+     * @param $ps
+     * @param $flag
+     * @param $accountMethods
+     * @return array
+     */
+    private function restructuringPs(array $ps, int $flag, array $accountMethods): array
+    {
+        if ($flag == 0) {
+            return Restructuring::firstCategory($ps);
+        } elseif ($flag == 2) {
+            return Restructuring::secondCategory($ps);
+        } elseif ($flag == 3) {
+            return Restructuring::thirdCategory($ps, $accountMethods);
+        } elseif ($flag == 4) {
+            return Restructuring::forEmptyPs($accountMethods);
+        }
+        return [];
+    }
 
     /**
      * @param array $credentials
@@ -327,6 +342,9 @@ class PaymentSystemInquirer
      * @param string $date
      * @param bool $post
      * @return string
+     * Generate AuthKey by pps api.
+     * Url: http://master.frontend.paygate.xim.hattiko.pw/site/api-doc
+     * endpoint: Auth
      */
     private function genAuthKey(array $credentials, array $query, string $date, bool $post): string
     {
@@ -358,15 +376,16 @@ class PaymentSystemInquirer
         return "PPS {$publicKey}:{$signature}";
     }
 
-    private function query(string $endpoint, array $data = [], $isPost = true)
+    /**
+     * @param string $endpoint
+     * @param array $data
+     * @param bool $isPost
+     * @return IQuery
+     */
+    private function query(string $endpoint, array $data = [], $isPost = true): IQuery
     {
-
-        $url = 'http://master.api.paygate.xim.hattiko.pw/merchant/' . $endpoint;
-
-        $credentials = [
-            'publicKey' => 'qlZTm0U6YvF0QeEZ',
-            'privateKey' => 'pgweRDPuTssaDtwBI5EotpfZHw3hdYaY'
-        ];
+        $url = self::QUERY_URL . $endpoint;
+        $credentials = self::CREDENTIALS;
 
         $date = date('U');
         $authKey = $this->genAuthKey($credentials, $data, $date, $isPost);
@@ -379,11 +398,14 @@ class PaymentSystemInquirer
         if ($isPost) {
             $query->asPost()->json();
         }
-
         return $query->send();
     }
 
-    public function actionSendQuery($request)
+    /**
+     * @param $request
+     * @return array|IQuery
+     */
+    public function actionSendQuery($request): IQuery
     {
         if ($request['way'] == 'deposit') {
             $path = 'deposit';
@@ -399,7 +421,5 @@ class PaymentSystemInquirer
         $request['transaction_id'] = 'TA_' . date('mdGis') . rand(10, 99);
         $query = $this->query($path, $request, true);
         return $query;
-
     }
-
 }

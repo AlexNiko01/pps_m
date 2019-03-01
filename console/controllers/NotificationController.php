@@ -10,6 +10,7 @@ class NotificationController extends Controller
 {
     const TRANSACTION_TRACKING_INTERVAL = 60;
     const TESTING_MERCHANT_ID = 5;
+    const SUCCESSFULLY_PS_STATUSES = [0, 1, 2];
 
     /**
      * Action for checking failed transaction and sending notification
@@ -17,7 +18,7 @@ class NotificationController extends Controller
     public function actionTransaction(): void
     {
         $transactionsSample = Transaction::find()
-            ->filterWhere(['not in', 'status', [0, 1, 2]])
+            ->filterWhere(['not in', 'status', self::SUCCESSFULLY_PS_STATUSES])
             ->andFilterWhere(['>', 'updated_at', time() - self::TRANSACTION_TRACKING_INTERVAL])
             ->andFilterWhere(['!=', 'brand_id', self::TESTING_MERCHANT_ID])
             ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id', 'brand_id'])
@@ -48,7 +49,7 @@ class NotificationController extends Controller
             foreach ($notRespondedPaymentSystems as $ps) {
                 $message = 'unresponsive payment system ' . $ps['name'] . '.';
                 if ($ps->active === 2) {
-                    $message = 'Not enough data for determine payment system '. $ps['name'] .' efficiency.';
+                    $message = 'Not enough data for determine payment system ' . $ps['name'] . ' efficiency.';
                 }
                 $sender->send([
                     $message
