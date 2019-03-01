@@ -382,6 +382,7 @@ class PaymentSystemInquirer
      * @param array $data
      * @param bool $isPost
      * @return IQuery
+     * Helper method for making a request to the pps api
      */
     private function query(string $endpoint, array $data = [], $isPost = true): IQuery
     {
@@ -405,6 +406,7 @@ class PaymentSystemInquirer
     /**
      * @param $request
      * @return array|IQuery
+     * Sends final request to the payment system
      */
     public function sendQuery($request): IQuery
     {
