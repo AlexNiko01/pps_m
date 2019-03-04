@@ -115,10 +115,9 @@ class PaymentSystemInquirer
         }
 
         if (!empty($paymentSystemsStatuses)) {
-            foreach ($paymentSystemsStatuses as $psID => $data) {
-                $ps = $paymentSystemsStatuses[$psID];
-                $ps->deleted = 1;
-                $ps->save();
+            foreach ($paymentSystemsStatuses as $data) {
+                $data->deleted = 1;
+                $data->save();
             }
         }
         return $notRespondingPaymentSystems;

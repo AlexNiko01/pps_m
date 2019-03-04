@@ -20,6 +20,11 @@ class CronController extends Controller
                 'hour' => '12',
                 'command' => '/usr/local/bin/php /var/www/html/data/yii notification/payment-system',
             ],
+            [
+                'min' => '00',
+                'hour' => '12',
+                'command' => '/usr/local/bin/php /var/www/html/data/yii notification/pps-check',
+            ]
         ]);
         $cronTab->apply();
     }

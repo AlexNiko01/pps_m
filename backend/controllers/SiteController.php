@@ -63,7 +63,6 @@ class SiteController extends Controller
 
     /**
      * @param $searchModel TransactionSearch
-     * @param $queryParams
      * @param $children
      * @return mixed
      */
@@ -80,7 +79,6 @@ class SiteController extends Controller
 
     /**
      * @param $searchModel TransactionSearch
-     * @param $queryParams
      * @param $children
      * @return mixed
      */
@@ -110,14 +108,7 @@ class SiteController extends Controller
         $searchModel = new TransactionSearch();
 
         $dataProviderDeposit = $this->getDepositTransactions($searchModel, $children);
-//        $dataProviderDeposit->pagination->pageParam = 'first-dp-page';
-//        $dataProviderDeposit->sort->sortParam = 'first-dp-sort';
-
-
         $dataProviderWithdraw = $this->getWithdrawTransactions($searchModel, $children);
-//        $dataProviderWithdraw->pagination->pageParam = 'second-dp-page';
-//        $dataProviderWithdraw->sort->sortParam = 'second-dp-sort';
-
 
         $searchModelSystems = new PaymentSystemStatusSearch();
         $dataProviderSystems = $searchModelSystems->search(\Yii::$app->request->queryParams);
