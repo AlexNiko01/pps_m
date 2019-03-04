@@ -82,7 +82,6 @@ class NotificationController extends Controller
 
     /**
      * Check whether pps projects works
-     *
      */
     public function actionCheckProjects()
     {
@@ -105,7 +104,6 @@ class NotificationController extends Controller
         $nodesSample = $command->queryAll();
 
         foreach ($nodesSample as $project) {
-
             if (!$project['project_id']) {
                 continue;
             }
@@ -131,8 +129,6 @@ class NotificationController extends Controller
                 $sender->send([
                     $message
                 ]);
-//                var_dump($e->getMessage());
-//                throw $e;
             }
            $projectStatus->save();
         }

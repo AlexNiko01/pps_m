@@ -24,7 +24,12 @@ class CronController extends Controller
                 'min' => '00',
                 'hour' => '12',
                 'command' => '/usr/local/bin/php /var/www/html/data/yii notification/pps-check',
-            ]
+            ],
+//            [
+//                'min' => '00',
+//                'hour' => '12',
+//                'command' => '/usr/local/bin/php /var/www/html/data/yii notification/check-projects',
+//            ]
         ]);
         $cronTab->apply();
     }
