@@ -2,18 +2,15 @@
 
 namespace backend\controllers;
 
-use backend\components\sender\TelegramSender;
 use backend\models\Node;
 use backend\models\PaymentSystemStatusSearch;
-use common\models\Transaction;
+use backend\models\ProjectStatusSearch;
 use common\models\TransactionSearch;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
 use yii\web\ForbiddenHttpException;
-use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -113,13 +110,22 @@ class SiteController extends Controller
         $searchModelSystems = new PaymentSystemStatusSearch();
         $dataProviderSystems = $searchModelSystems->search(\Yii::$app->request->queryParams);
 
+        $searchModelProjects = new ProjectStatusSearch();
+        $dataProviderProjects = $searchModelProjects->search(\Yii::$app->request->queryParams);
+
         return $this->render('index', [
             'searchModelWithdraw' => $searchModel,
             'dataProviderWithdraw' => $dataProviderWithdraw,
+
             'searchModelDeposit' => $searchModel,
             'dataProviderDeposit' => $dataProviderDeposit,
+
             'searchModelSystems' => $searchModelSystems,
-            'dataProviderSystems' => $dataProviderSystems
+            'dataProviderSystems' => $dataProviderSystems,
+
+            'searchModelProjects' => $searchModelProjects,
+            'dataProviderProjects' => $dataProviderProjects
+
         ]);
 
     }

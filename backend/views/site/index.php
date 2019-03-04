@@ -43,6 +43,12 @@ $this->title = 'Dashboard';
             'dataProviderSystems' => $dataProviderSystems
         ]); ?>
     </div>
+    <div class="col-lg-6 col-xs-12">
+        <?php echo $this->render('_projects-statuses', [
+            'searchModelProjects' => $searchModelProjects,
+            'dataProviderProjects' => $dataProviderProjects
+        ]); ?>
+    </div>
 </div>
 <div class="row">
     <div class="col-lg-6 col-xs-12">
