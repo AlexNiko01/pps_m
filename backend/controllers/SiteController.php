@@ -202,7 +202,6 @@ class SiteController extends Controller
             'countOfDepositStatuses' => $countOfDepositStatuses,
             'countOfWithdrawStatuses' => $countOfWithdrawStatuses,
         ]);
-
     }
 
 
