@@ -66,5 +66,40 @@ $this->title = 'Dashboard';
             'dataProviderWithdraw' => $dataProviderWithdraw,
         ]); ?>
     </div>
-
 </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="statuses">
+            <h4 class="text-center" style="padding: 4px;">Count of deposit transactions for <?= $days ?> days</h4>
+            <?php if (!empty($countOfDepositTxsByMinutes)): ?>
+                <canvas id="txs-by-minutes-deposit" width="900" height="260"></canvas>
+            <?php else: ?>
+                <h5 class="text-center" style="padding: 20px;">Deposit transactions not found</h5>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<?php if (!empty($countOfDepositTxsByMinutes)): ?>
+    <script>
+        new Chart(document.getElementById("txs-by-minutes-deposit").getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: JSON.parse('<?=json_encode(array_keys($countOfDepositTxsByMinutes))?>'),
+                datasets: [
+                    {
+                        label: 'Deposit',
+                        data: JSON.parse('<?=json_encode(array_values($countOfDepositTxsByMinutes))?>'),
+                        backgroundColor: 'rgba(48, 155, 223, 0.6)',
+                        borderColor: '#3498db',
+                        lineTension: 0.1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{ticks: {suggestedMin: 0, stepSize: <?=$stepDeposit?>}}]
+                }
+            }
+        });
+    </script>
+<?php endif; ?>

@@ -5,6 +5,7 @@ namespace backend\controllers;
 use backend\models\Node;
 use backend\models\PaymentSystemStatusSearch;
 use backend\models\ProjectStatusSearch;
+use common\models\Transaction;
 use common\models\TransactionSearch;
 use Yii;
 use yii\web\Controller;
@@ -113,6 +114,28 @@ class SiteController extends Controller
         $searchModelProjects = new ProjectStatusSearch();
         $dataProviderProjects = $searchModelProjects->search(\Yii::$app->request->queryParams);
 
+
+
+//          TODO: add to constants
+
+        $days = 1;
+        $cacheTime = 600;
+        $cache =  Yii::$app->cache;
+        $brands = Node::getCurrentNode()->getChildrenList();
+        $brandsId = array_keys($brands);
+        $countOfDepositTxsByMinutes = $cache->getOrSet(['actionIndex', 'countOfTxsByMinutes', 'deposit', $brandsId, 'v2'], function() use ($days, $brandsId) {
+            return Transaction::getCountOfTxsByMinutes($days, 60, ['way' => 'deposit', 'brand_id' => $brandsId]);
+        }, $cacheTime);
+        if (!count($countOfDepositTxsByMinutes)) {
+            $maxDeposit = 1;
+        } else {
+            $maxDeposit = max(array_values($countOfDepositTxsByMinutes));
+        }
+
+        $stepDeposit = round($maxDeposit / 20);
+        if ($stepDeposit < 1) {
+            $stepDeposit = 1;
+        }
         return $this->render('index', [
             'searchModelWithdraw' => $searchModel,
             'dataProviderWithdraw' => $dataProviderWithdraw,
@@ -124,8 +147,11 @@ class SiteController extends Controller
             'dataProviderSystems' => $dataProviderSystems,
 
             'searchModelProjects' => $searchModelProjects,
-            'dataProviderProjects' => $dataProviderProjects
+            'dataProviderProjects' => $dataProviderProjects,
 
+            'days' => $days,
+            'stepDeposit' => $stepDeposit,
+            'countOfDepositTxsByMinutes' => $countOfDepositTxsByMinutes,
         ]);
 
     }
