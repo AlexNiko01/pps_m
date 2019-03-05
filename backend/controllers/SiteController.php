@@ -12,12 +12,17 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
+use pps\payment\Payment;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    const DEPOSIT_INTERVAL = 1440;
+    const WITHDRAW_INTERVAL = 30;
+    const CACHE_TIME = 600;
+
     /**
      * {@inheritdoc}
      */
@@ -92,6 +97,7 @@ class SiteController extends Controller
         return $searchModel->search($queryParams);
     }
 
+
     /**
      * @return string|\yii\web\Response
      * @throws ForbiddenHttpException
@@ -115,27 +121,51 @@ class SiteController extends Controller
         $dataProviderProjects = $searchModelProjects->search(\Yii::$app->request->queryParams);
 
 
-
 //          TODO: add to constants
 
         $days = 1;
-        $cacheTime = 600;
-        $cache =  Yii::$app->cache;
+        $cache = Yii::$app->cache;
         $brands = Node::getCurrentNode()->getChildrenList();
         $brandsId = array_keys($brands);
-        $countOfDepositTxsByMinutes = $cache->getOrSet(['actionIndex', 'countOfTxsByMinutes', 'deposit', $brandsId, 'v2'], function() use ($days, $brandsId) {
-            return Transaction::getCountOfTxsByMinutes($days, 60, ['way' => 'deposit', 'brand_id' => $brandsId]);
-        }, $cacheTime);
+        $countOfDepositTxsByMinutes = $cache->getOrSet(['actionIndex', 'countOfTxsByMinutes', 'deposit', $brandsId, 'v2'], function () use ($days, $brandsId) {
+            return Transaction::getCountOfTxsByMinutes($days, self::DEPOSIT_INTERVAL, ['way' => 'deposit', 'brand_id' => $brandsId]);
+        }, self::CACHE_TIME);
+        $countOfWithdrawTxsByMinutes = $cache->getOrSet(['actionIndex', 'countOfTxsByMinutes', 'withdraw', $brandsId, 'v2'], function () use ($days, $brandsId) {
+            return Transaction::getCountOfTxsByMinutes($days, self::WITHDRAW_INTERVAL, ['way' => 'withdraw', 'brand_id' => $brandsId]);
+        }, self::CACHE_TIME);
+
         if (!count($countOfDepositTxsByMinutes)) {
             $maxDeposit = 1;
         } else {
             $maxDeposit = max(array_values($countOfDepositTxsByMinutes));
         }
 
+        if (!count($countOfWithdrawTxsByMinutes)) {
+            $maxWithdraw = 1;
+        } else {
+            $maxWithdraw = max(array_values($countOfWithdrawTxsByMinutes));
+        }
+
         $stepDeposit = round($maxDeposit / 20);
         if ($stepDeposit < 1) {
             $stepDeposit = 1;
         }
+        $stepWithdraw = round($maxWithdraw / 20);
+        if ($stepWithdraw < 1) {
+            $stepWithdraw = 1;
+        }
+        $countOfStatuses = Transaction::getCountOfStatuses([
+            'brand_id' => $brandsId
+        ]);
+        $countOfDepositStatuses = Transaction::getCountOfStatuses([
+            'way' => Payment::WAY_DEPOSIT,
+            'brand_id' => $brandsId
+        ]);
+
+        $countOfWithdrawStatuses = Transaction::getCountOfStatuses([
+            'way' => Payment::WAY_WITHDRAW,
+            'brand_id' => $brandsId
+        ]);
         return $this->render('index', [
             'searchModelWithdraw' => $searchModel,
             'dataProviderWithdraw' => $dataProviderWithdraw,
@@ -151,7 +181,12 @@ class SiteController extends Controller
 
             'days' => $days,
             'stepDeposit' => $stepDeposit,
+            'stepWithdraw' => $stepWithdraw,
             'countOfDepositTxsByMinutes' => $countOfDepositTxsByMinutes,
+            'countOfWithdrawTxsByMinutes' => $countOfWithdrawTxsByMinutes,
+            'countOfStatuses' => $countOfStatuses,
+            'countOfDepositStatuses' => $countOfDepositStatuses,
+            'countOfWithdrawStatuses' => $countOfWithdrawStatuses,
         ]);
 
     }

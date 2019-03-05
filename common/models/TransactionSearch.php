@@ -52,6 +52,7 @@ class TransactionSearch extends Transaction
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => $sort,
+            'pagination' => [ 'pageSize' => 10 ]
         ]);
 
         $this->load($params);

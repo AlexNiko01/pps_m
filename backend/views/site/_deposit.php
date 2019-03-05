@@ -10,8 +10,6 @@ use yii\helpers\Html;
 use yii\widgets\Pjax;
 
 $node = Node::getCurrentNode();
-$this->title = "Deposit {$node->name}";
-$this->params['breadcrumbs'][] = $this->title;
 $isSuperAdmin = Yii::$app->user->isSuperAdmin;
 ?>
 

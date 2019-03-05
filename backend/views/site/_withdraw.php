@@ -12,8 +12,6 @@ use pps\payment\Payment;
 use yii\widgets\Pjax;
 
 $node = Node::getCurrentNode();
-$this->title = "Withdraw {$node->name}";
-$this->params['breadcrumbs'][] = $this->title;
 $isSuperAdmin = Yii::$app->user->isSuperAdmin;
 ?>
 
