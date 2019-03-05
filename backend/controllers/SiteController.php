@@ -22,6 +22,7 @@ class SiteController extends Controller
     const DEPOSIT_INTERVAL = 1440;
     const WITHDRAW_INTERVAL = 30;
     const CACHE_TIME = 600;
+    const SUCCESSFULLY_PS_STATUSES = [0, 1, 2];
 
     /**
      * {@inheritdoc}
@@ -154,9 +155,7 @@ class SiteController extends Controller
         if ($stepWithdraw < 1) {
             $stepWithdraw = 1;
         }
-        $countOfStatuses = Transaction::getCountOfStatuses([
-            'brand_id' => $brandsId
-        ]);
+
         $countOfDepositStatuses = Transaction::getCountOfStatuses([
             'way' => Payment::WAY_DEPOSIT,
             'brand_id' => $brandsId
@@ -184,7 +183,6 @@ class SiteController extends Controller
             'stepWithdraw' => $stepWithdraw,
             'countOfDepositTxsByMinutes' => $countOfDepositTxsByMinutes,
             'countOfWithdrawTxsByMinutes' => $countOfWithdrawTxsByMinutes,
-            'countOfStatuses' => $countOfStatuses,
             'countOfDepositStatuses' => $countOfDepositStatuses,
             'countOfWithdrawStatuses' => $countOfWithdrawStatuses,
         ]);

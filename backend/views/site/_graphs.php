@@ -47,43 +47,6 @@
         char.update();
     }
 
-    //let all = new Chart(document.getElementById("statuses").getContext('2d'), {
-    //    type: 'pie',
-    //    data: {
-    //        labels: JSON.parse('<?//=json_encode(array_keys($countOfStatuses))?>//'),
-    //        datasets: [{
-    //            label: '# of Votes',
-    //            data: JSON.parse('<?//=json_encode(array_values($countOfStatuses))?>//'),
-    //            backgroundColor: [
-    //                '#95a5a6',
-    //                'grey',
-    //                '#3498db',
-    //                '#27ae60',
-    //                '#9b59b6',
-    //                '#e67e22',
-    //                '#e74c3c',
-    //                'brown',
-    //                'green',
-    //                'tomato'
-    //            ],
-    //            borderWidth: 1
-    //        }]
-    //    },
-    //    options: {
-    //        cutoutPercentage: 25,
-    //        title: {
-    //            display: true,
-    //            text: 'All statuses',
-    //            fontSize: 16
-    //        },
-    //        legend: {
-    //            display: false,
-    //            labels: {
-    //                boxWidth: 20
-    //            }
-    //        }
-    //    }
-    //});
     let deposit = new Chart(document.getElementById("deposit-statuses").getContext('2d'), {
         type: 'pie',
         data: {
@@ -159,9 +122,6 @@
         }
     });
 
-    // document.querySelector('.all-statuses').addEventListener('click', (e) => {
-    //     changeDetailView(e, all);
-    // });
 
     document.querySelector('.deposit-statuses').addEventListener('click', (e) => {
         changeDetailView(e, deposit);
