@@ -5,6 +5,7 @@ namespace console\controllers;
 use backend\models\Node;
 use backend\models\ProjectStatus;
 use common\models\Transaction;
+use pps\payment\Payment;
 use yii\db\Query;
 use yii\console\Controller;
 use yii\web\ForbiddenHttpException;
@@ -14,7 +15,6 @@ class NotificationController extends Controller
 {
     const TRANSACTION_TRACKING_INTERVAL = 60;
     const TESTING_MERCHANT_ID = 5;
-    const SUCCESSFULLY_PS_STATUSES = [0, 1, 2];
     const PPS_URL = 'http://master.backend.paygate.xim.hattiko.pw';
     const SUCCESSFUL_SERVES_CODE = 200;
 
@@ -23,8 +23,13 @@ class NotificationController extends Controller
      */
     public function actionTransaction(): void
     {
+        $successfullyPsStatuses =  [
+            Payment::STATUS_CREATED,
+            Payment::STATUS_PENDING,
+            Payment::STATUS_SUCCESS
+        ];
         $transactionsSample = Transaction::find()
-            ->filterWhere(['not in', 'status', self::SUCCESSFULLY_PS_STATUSES])
+            ->filterWhere(['not in', 'status', $successfullyPsStatuses])
             ->andFilterWhere(['>', 'updated_at', time() - self::TRANSACTION_TRACKING_INTERVAL])
             ->andFilterWhere(['!=', 'brand_id', self::TESTING_MERCHANT_ID])
             ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id', 'brand_id'])

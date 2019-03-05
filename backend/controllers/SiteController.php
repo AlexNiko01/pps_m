@@ -22,7 +22,7 @@ class SiteController extends Controller
     const DEPOSIT_INTERVAL = 1440;
     const WITHDRAW_INTERVAL = 30;
     const CACHE_TIME = 600;
-    const SUCCESSFULLY_PS_STATUSES = [0, 1, 2];
+    const SUCCESSFULLY_PS_STATUSES = ['Created', 'Pending', 'Success'];
 
     /**
      * {@inheritdoc}
