@@ -22,7 +22,6 @@ class SiteController extends Controller
     const DEPOSIT_INTERVAL = 1440;
     const WITHDRAW_INTERVAL = 30;
     const CACHE_TIME = 600;
-    const SUCCESSFULLY_PS_STATUSES = ['Created', 'Pending', 'Success'];
 
     /**
      * {@inheritdoc}
@@ -98,6 +97,19 @@ class SiteController extends Controller
         return $searchModel->search($queryParams);
     }
 
+    private function getSuccesfullPsStatusesNames($arr)
+    {
+        $successfullyPsStatuses = [
+            Payment::STATUS_CREATED,
+            Payment::STATUS_PENDING,
+            Payment::STATUS_SUCCESS
+        ];
+
+        foreach ($successfullyPsStatuses as $status) {
+            unset($arr[Payment::getStatuses()[$status]]);
+        }
+        return $arr;
+    }
 
     /**
      * @return string|\yii\web\Response
@@ -156,15 +168,19 @@ class SiteController extends Controller
             $stepWithdraw = 1;
         }
 
+
         $countOfDepositStatuses = Transaction::getCountOfStatuses([
             'way' => Payment::WAY_DEPOSIT,
             'brand_id' => $brandsId
         ]);
+        $countOfDepositStatuses = $this->getSuccesfullPsStatusesNames($countOfDepositStatuses);
 
         $countOfWithdrawStatuses = Transaction::getCountOfStatuses([
             'way' => Payment::WAY_WITHDRAW,
             'brand_id' => $brandsId
         ]);
+        $countOfWithdrawStatuses = $this->getSuccesfullPsStatusesNames($countOfWithdrawStatuses);
+
         return $this->render('index', [
             'searchModelWithdraw' => $searchModel,
             'dataProviderWithdraw' => $dataProviderWithdraw,
