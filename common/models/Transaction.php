@@ -581,11 +581,8 @@ class Transaction extends ActiveRecord
         return ArrayHelper::map($items, 'date', 'count');
     }
 
-    /**
-     * @param array $query
-     * @return array
-     */
-    public static function getCountOfStatuses($query = []): array
+
+    public static function getCountOfStatuses($query = [], array $andWhere): array
     {
         $statusesQuery = self::find()
             ->select(['COUNT(id) as count', 'status'])
@@ -594,6 +591,9 @@ class Transaction extends ActiveRecord
 
         if (!empty($query)) {
             $statusesQuery->where($query);
+        }
+        if($andWhere){
+            $statusesQuery->andWhere($andWhere);
         }
 
         $statuses = Yii::$app->cache->getOrSet(['getCountOfStatuses', $query], function () use ($statusesQuery) {

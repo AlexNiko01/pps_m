@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="statuses">
-            <h4 class="text-center" style="padding: 4px;">Count of deposit transactions for <?= $days ?> days</h4>
+            <h4 class="text-center" style="padding: 4px;">Count of deposit transactions for 1 day</h4>
             <?php if (!empty($countOfDepositTxsByMinutes)): ?>
                 <canvas id="txs-by-minutes-deposit" width="900" height="260"></canvas>
             <?php else: ?>
@@ -27,7 +27,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="statuses">
-            <h4 class="text-center" style="padding: 4px;">Count of withdraw transactions for <?= $days ?> days</h4>
+            <h4 class="text-center" style="padding: 4px;">Count of withdraw transactions for last 30 minutes days</h4>
             <?php if (!empty($countOfWithdrawTxsByMinutes)): ?>
                 <canvas id="txs-by-minutes-withdraw" width="900" height="260"></canvas>
             <?php else: ?>
@@ -36,6 +36,7 @@
         </div>
     </div>
 </div>
+<?php var_dump(time()); ?>
 <script>
     function changeDetailView(e, char) {
         char.options.legend.display = !char.options.legend.display;

@@ -19,9 +19,16 @@ use pps\payment\Payment;
  */
 class SiteController extends Controller
 {
-    const DEPOSIT_INTERVAL = 1440;
-    const WITHDRAW_INTERVAL = 30;
+    const DEPOSIT_DAYS = 1;
+    const WITHDRAW_DAYS = 1 / 48;
     const CACHE_TIME = 600;
+
+    const GRAPH_INTERVAL = 60;
+    const MAX_WITHDRAW = 1;
+    const MAX_DEPOSIT = 1;
+    const MIN_STEP_WITHDRAW = 1;
+    const MIN_STEP_DEPOSIT = 1;
+    const SECONDS_IN_DAY = 86400;
 
     /**
      * {@inheritdoc}
@@ -97,8 +104,24 @@ class SiteController extends Controller
         return $searchModel->search($queryParams);
     }
 
-    private function getSuccesfullPsStatusesNames($arr)
+    /**
+     * @param array $brandsId
+     * @param string $transactionType
+     * @param integer $interval
+     * @return array
+     */
+    private function getStatuses(array $brandsId, string $transactionType, int $interval): array
     {
+        $way = Payment::WAY_WITHDRAW;
+        if ($transactionType === 'deposit') {
+            $way = Payment::WAY_DEPOSIT;
+        }
+        $andWere = [' > ', 'created_at', (time() - $interval)];
+        $arr = Transaction::getCountOfStatuses([
+            'way' => $way,
+            'brand_id' => $brandsId,
+
+        ], $andWere);
         $successfullyPsStatuses = [
             Payment::STATUS_CREATED,
             Payment::STATUS_PENDING,
@@ -134,52 +157,47 @@ class SiteController extends Controller
         $dataProviderProjects = $searchModelProjects->search(\Yii::$app->request->queryParams);
 
 
-//          TODO: add to constants
-
-        $days = 1;
+        $daysDeposit = self::DEPOSIT_DAYS;
+        $daysWithdraw = self::WITHDRAW_DAYS;
         $cache = Yii::$app->cache;
         $brands = Node::getCurrentNode()->getChildrenList();
         $brandsId = array_keys($brands);
-        $countOfDepositTxsByMinutes = $cache->getOrSet(['actionIndex', 'countOfTxsByMinutes', 'deposit', $brandsId, 'v2'], function () use ($days, $brandsId) {
-            return Transaction::getCountOfTxsByMinutes($days, self::DEPOSIT_INTERVAL, ['way' => 'deposit', 'brand_id' => $brandsId]);
-        }, self::CACHE_TIME);
-        $countOfWithdrawTxsByMinutes = $cache->getOrSet(['actionIndex', 'countOfTxsByMinutes', 'withdraw', $brandsId, 'v2'], function () use ($days, $brandsId) {
-            return Transaction::getCountOfTxsByMinutes($days, self::WITHDRAW_INTERVAL, ['way' => 'withdraw', 'brand_id' => $brandsId]);
-        }, self::CACHE_TIME);
+        $countOfDepositTxsByMinutes = $cache->getOrSet(
+            ['actionIndex', 'countOfTxsByMinutes', 'deposit', $brandsId, 'v2'],
+            function () use ($daysDeposit, $brandsId) {
+                return Transaction::getCountOfTxsByMinutes($daysDeposit, self::GRAPH_INTERVAL, ['way' => 'deposit', 'brand_id' => $brandsId]);
+            },
+            self::CACHE_TIME);
+        $countOfWithdrawTxsByMinutes = $cache->getOrSet(
+            ['actionIndex', 'countOfTxsByMinutes', 'withdraw', $brandsId, 'v2'],
+            function () use ($daysWithdraw, $brandsId) {
+                return Transaction::getCountOfTxsByMinutes($daysWithdraw, self::GRAPH_INTERVAL, ['way' => 'withdraw', 'brand_id' => $brandsId]);
+            },
+            self::CACHE_TIME);
 
         if (!count($countOfDepositTxsByMinutes)) {
-            $maxDeposit = 1;
+            $maxDeposit = self::MAX_DEPOSIT;
         } else {
             $maxDeposit = max(array_values($countOfDepositTxsByMinutes));
         }
 
         if (!count($countOfWithdrawTxsByMinutes)) {
-            $maxWithdraw = 1;
+            $maxWithdraw = self::MAX_WITHDRAW;
         } else {
             $maxWithdraw = max(array_values($countOfWithdrawTxsByMinutes));
         }
 
         $stepDeposit = round($maxDeposit / 20);
         if ($stepDeposit < 1) {
-            $stepDeposit = 1;
+            $stepDeposit = self::MIN_STEP_DEPOSIT;
         }
         $stepWithdraw = round($maxWithdraw / 20);
         if ($stepWithdraw < 1) {
-            $stepWithdraw = 1;
+            $stepWithdraw = self::MIN_STEP_WITHDRAW;
         }
 
-
-        $countOfDepositStatuses = Transaction::getCountOfStatuses([
-            'way' => Payment::WAY_DEPOSIT,
-            'brand_id' => $brandsId
-        ]);
-        $countOfDepositStatuses = $this->getSuccesfullPsStatusesNames($countOfDepositStatuses);
-
-        $countOfWithdrawStatuses = Transaction::getCountOfStatuses([
-            'way' => Payment::WAY_WITHDRAW,
-            'brand_id' => $brandsId
-        ]);
-        $countOfWithdrawStatuses = $this->getSuccesfullPsStatusesNames($countOfWithdrawStatuses);
+        $countOfDepositStatuses = $this->getStatuses($brandsId, 'deposit', self::DEPOSIT_DAYS * self::SECONDS_IN_DAY);
+        $countOfWithdrawStatuses = $this->getStatuses($brandsId, 'withdraw', self::WITHDRAW_DAYS * self::SECONDS_IN_DAY);
 
         return $this->render('index', [
             'searchModelWithdraw' => $searchModel,
@@ -194,7 +212,6 @@ class SiteController extends Controller
             'searchModelProjects' => $searchModelProjects,
             'dataProviderProjects' => $dataProviderProjects,
 
-            'days' => $days,
             'stepDeposit' => $stepDeposit,
             'stepWithdraw' => $stepWithdraw,
             'countOfDepositTxsByMinutes' => $countOfDepositTxsByMinutes,
@@ -204,7 +221,9 @@ class SiteController extends Controller
         ]);
     }
 
-
+    /**
+     * @return string
+     */
     public function actionLogin()
     {
         return $this->render('log');
