@@ -16,7 +16,9 @@
     <div class="col-md-12">
         <div class="statuses">
             <h4 class="text-center" style="padding: 4px;">Count of deposit transactions for 1 day</h4>
-            <?php if (!empty($countOfDepositTxsByMinutes)): ?>
+            <?php use pps\payment\Payment;
+
+            if (!empty($countOfDepositTxsByMinutes)): ?>
                 <canvas id="txs-by-minutes-deposit" width="900" height="260"></canvas>
             <?php else: ?>
                 <h5 class="text-center" style="padding: 20px;">Deposit transactions not found</h5>
@@ -36,7 +38,7 @@
         </div>
     </div>
 </div>
-<?php var_dump(time()); ?>
+
 <script>
     function changeDetailView(e, char) {
         char.options.legend.display = !char.options.legend.display;

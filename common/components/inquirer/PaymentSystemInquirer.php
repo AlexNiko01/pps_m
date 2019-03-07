@@ -1,7 +1,7 @@
 <?php
 
 
-namespace backend\components\inquirer;
+namespace common\components\inquirer;
 
 use backend\models\PaymentSystemStatus;
 use common\components\helpers\Restructuring;

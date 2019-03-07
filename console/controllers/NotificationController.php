@@ -2,13 +2,11 @@
 
 namespace console\controllers;
 
-use backend\models\Node;
 use backend\models\ProjectStatus;
 use common\models\Transaction;
 use pps\payment\Payment;
 use yii\db\Query;
 use yii\console\Controller;
-use yii\web\ForbiddenHttpException;
 
 
 class NotificationController extends Controller
@@ -21,8 +19,10 @@ class NotificationController extends Controller
     /**
      * Action for checking failed transaction and sending notification
      */
-    public function actionTransaction(): void
+
+    public function actionTransaction()
     {
+        echo 'test';
         $successfullyPsStatuses =  [
             Payment::STATUS_CREATED,
             Payment::STATUS_PENDING,
@@ -35,6 +35,9 @@ class NotificationController extends Controller
             ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id', 'brand_id'])
             ->all();
 
+        if(!$transactionsSample){
+            return false;
+        }
         foreach ($transactionsSample as $item) {
             \Yii::$app->sender->send([
                 'Failed transaction id: ' . $item->id . ';',

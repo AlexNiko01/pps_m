@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\components\sender;
+namespace common\components\sender;
 
 
 interface Sender

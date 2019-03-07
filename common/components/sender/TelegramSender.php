@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\components\sender;
+namespace common\components\sender;
 
 use backend\models\Settings;
 

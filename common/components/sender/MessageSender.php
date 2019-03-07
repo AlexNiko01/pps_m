@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\components\sender;
+namespace common\components\sender;
 
 
 class MessageSender extends \yii\base\Component

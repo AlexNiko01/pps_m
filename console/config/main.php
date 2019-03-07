@@ -35,14 +35,14 @@ return [
             'botToken' => '703592142:AAGedZspWYQ9Ba7h29JOjWr_NfjtFCumy5Y',
         ],
         'sender' => function () {
-            $sender = new backend\components\sender\MessageSender;
-            $sender->addSender(new backend\components\sender\RocketChatSender);
-            $sender->addSender(new backend\components\sender\TelegramSender);
+            $sender = new common\components\sender\MessageSender;
+            $sender->addSender(new common\components\sender\RocketChatSender);
+            $sender->addSender(new common\components\sender\TelegramSender);
 
             return $sender;
         },
         'inquirer' => [
-            'class' => 'backend\components\inquirer\PaymentSystemInquirer'
+            'class' => 'common\components\inquirer\PaymentSystemInquirer'
         ]
     ],
     'params' => $params,
