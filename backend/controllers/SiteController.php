@@ -29,6 +29,7 @@ class SiteController extends Controller
     const MIN_STEP_WITHDRAW = 1;
     const MIN_STEP_DEPOSIT = 1;
     const SECONDS_IN_DAY = 86400;
+    const OBSCURE_DIVIDER = 20;
 
     /**
      * {@inheritdoc}
@@ -144,7 +145,6 @@ class SiteController extends Controller
             return Yii::$app->user->loginRequired();
         }
         $children = Node::getCurrentNode()->getChildrenList(true, false);
-
         $searchModel = new TransactionSearch();
 
         $dataProviderDeposit = $this->getDepositTransactions($searchModel, $children);
@@ -156,7 +156,6 @@ class SiteController extends Controller
         $searchModelProjects = new ProjectStatusSearch();
         $dataProviderProjects = $searchModelProjects->search(\Yii::$app->request->queryParams);
 
-
         $daysDeposit = self::DEPOSIT_DAYS;
         $daysWithdraw = self::WITHDRAW_DAYS;
         $cache = Yii::$app->cache;
@@ -166,32 +165,29 @@ class SiteController extends Controller
             ['actionIndex', 'countOfTxsByMinutes', 'deposit', $brandsId, 'v2'],
             function () use ($daysDeposit, $brandsId) {
                 return Transaction::getCountOfTxsByMinutes($daysDeposit, self::GRAPH_INTERVAL, ['way' => 'deposit', 'brand_id' => $brandsId]);
-            },
-            self::CACHE_TIME);
+            }, self::CACHE_TIME);
         $countOfWithdrawTxsByMinutes = $cache->getOrSet(
             ['actionIndex', 'countOfTxsByMinutes', 'withdraw', $brandsId, 'v2'],
             function () use ($daysWithdraw, $brandsId) {
                 return Transaction::getCountOfTxsByMinutes($daysWithdraw, self::GRAPH_INTERVAL, ['way' => 'withdraw', 'brand_id' => $brandsId]);
-            },
-            self::CACHE_TIME);
+            }, self::CACHE_TIME);
 
         if (!count($countOfDepositTxsByMinutes)) {
             $maxDeposit = self::MAX_DEPOSIT;
         } else {
             $maxDeposit = max(array_values($countOfDepositTxsByMinutes));
         }
-
         if (!count($countOfWithdrawTxsByMinutes)) {
             $maxWithdraw = self::MAX_WITHDRAW;
         } else {
             $maxWithdraw = max(array_values($countOfWithdrawTxsByMinutes));
         }
 
-        $stepDeposit = round($maxDeposit / 20);
+        $stepDeposit = round($maxDeposit / self::OBSCURE_DIVIDER);
         if ($stepDeposit < 1) {
             $stepDeposit = self::MIN_STEP_DEPOSIT;
         }
-        $stepWithdraw = round($maxWithdraw / 20);
+        $stepWithdraw = round($maxWithdraw / self::OBSCURE_DIVIDER);
         if ($stepWithdraw < 1) {
             $stepWithdraw = self::MIN_STEP_WITHDRAW;
         }
