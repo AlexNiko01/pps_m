@@ -96,13 +96,6 @@ class PaymentSystem extends ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUserPaymentSystem()
-    {
-        return $this->hasOne(UserPaymentSystem::className(), ['payment_system_id' => 'id']);
-    }
 
     /**
      * @return array

@@ -97,11 +97,9 @@ class SiteController extends Controller
     {
         $queryParams = \Yii::$app->request->queryParams;
         $queryParams['TransactionSearch']['way'] = 'deposit';
-
         if ($children) {
             $queryParams['TransactionSearch']['brands'] = implode(',', array_keys($children));
         }
-
         return $searchModel->search($queryParams);
     }
 

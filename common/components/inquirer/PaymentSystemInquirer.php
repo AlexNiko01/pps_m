@@ -4,6 +4,7 @@
 namespace common\components\inquirer;
 
 use backend\models\PaymentSystemStatus;
+use backend\models\Settings;
 use common\components\helpers\Restructuring;
 use yii\db\Query;
 use pps\querybuilder\QueryBuilder;
@@ -14,13 +15,9 @@ class PaymentSystemInquirer
     const STATUS_FAILED = 500;
     const STATUS_PAYMENT_ERROR = 422;
     const ERROR_NETWORK = 'Network Error!';
-    const TESTING_MERCHANT_ID = 5;
     const PAYMENT_SYSTEM_ACTIVITY = 1;
     const QUERY_URL = 'http://master.api.paygate.xim.hattiko.pw/merchant/';
-    const CREDENTIALS = [
-        'publicKey' => 'qlZTm0U6YvF0QeEZ',
-        'privateKey' => 'pgweRDPuTssaDtwBI5EotpfZHw3hdYaY'
-    ];
+
 
     /**
      * @return array
@@ -30,6 +27,9 @@ class PaymentSystemInquirer
     public function getNotRespondedPaymentSystems(): array
     {
         $paymentSystemsStatuses = PaymentSystemStatus::find()->indexBy('payment_system_id')->all();
+//        TO DO: throw exceptions for Settings::getValue create my own exception class
+        $testingMerchantId = Settings::getValue('testing_merchant_id');
+
         $query = new Query;
         $query->select([
             'user_payment_system.payment_system_id',
@@ -42,7 +42,7 @@ class PaymentSystemInquirer
                 'payment_system.id =user_payment_system.payment_system_id'
             )
             ->where(['payment_system.active' => self::PAYMENT_SYSTEM_ACTIVITY])
-            ->andWhere(['user_payment_system.node_id' => self::TESTING_MERCHANT_ID]);
+            ->andWhere(['user_payment_system.node_id' => $testingMerchantId]);
 
         $command = $query->createCommand(\Yii::$app->db2);
         $paymentSystemsPpsSample = $command->queryAll();
@@ -337,7 +337,6 @@ class PaymentSystemInquirer
     }
 
     /**
-     * @param array $credentials
      * @param array $query
      * @param string $date
      * @param bool $post
@@ -346,11 +345,11 @@ class PaymentSystemInquirer
      * Url: http://master.frontend.paygate.xim.hattiko.pw/site/api-doc
      * endpoint: Auth
      */
-    private function genAuthKey(array $credentials, array $query, string $date, bool $post): string
+    private function genAuthKey(array $query, string $date, bool $post): string
     {
-        $publicKey = $credentials['publicKey'];
-        $privateKey = $credentials['privateKey'];
-
+        //        TO DO: throw exceptions for Settings::getValue
+        $publicKey = Settings::getValue('publicKey');
+        $privateKey = Settings::getValue('privateKey');
         $flags = 0;
 
         if ($post) {
@@ -386,10 +385,9 @@ class PaymentSystemInquirer
     private function query(string $endpoint, array $data = [], $isPost = true): IQuery
     {
         $url = self::QUERY_URL . $endpoint;
-        $credentials = self::CREDENTIALS;
 
         $date = date('U');
-        $authKey = $this->genAuthKey($credentials, $data, $date, $isPost);
+        $authKey = $this->genAuthKey($data, $date, $isPost);
 
         $query = (new QueryBuilder($url))
             ->setParams($data)
@@ -416,7 +414,6 @@ class PaymentSystemInquirer
         } else {
             return ['error' => 'Incorrect way'];
         }
-
         unset($request['way']);
         unset($request['_csrf']);
 

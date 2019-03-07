@@ -144,39 +144,6 @@ class Transaction extends ActiveRecord
         return $this->hasOne(PaymentSystem::className(), ['id' => 'payment_system_id']);
     }
 
-    public function addToRedisQueue()
-    {
-        $data = self::getNoteStructure($this);
-
-        $paymentSystem = PaymentSystem::find()
-            ->select(['code'])
-            ->where(['id' => $this->payment_system_id])
-            ->asArray()
-            ->one();
-
-        //ApiProxy::setMerchant($this->brand_id);
-        $PPS = ApiProxy::loadPPS($paymentSystem['code'], $this->payment_system_id, $this->brand_id, $this->currency);
-
-        $sendData = [
-            'transaction_id' => $this->id,
-            'brand_id' => $this->brand_id,
-            'status' => $this->status,
-            'data' => [
-                'data' => $data
-            ],
-        ];
-
-        if (($PPS instanceof ICryptoCurrency) && CurrencyList::isCrypto($this->currency)) {
-            $sendData['data']['type'] = self::TYPE_CRYPTO;
-        }
-
-        Requests::saveData($this->id, 10, json_encode($sendData));
-        try {
-            Yii::$app->queue->push(new NotifyMerchantJob($sendData));
-        } catch (\RedisException $e) {
-            Requests::saveData($this->id, 501, 'Error push to Redis queue. Transaction ID = ' . $this->id);
-        }
-    }
 
     /**
      * @param Transaction $transaction
@@ -262,13 +229,6 @@ class Transaction extends ActiveRecord
     {
         $requisites = (!empty($transaction->callback_data)) ? json_decode($transaction->callback_data, true) : [];
 
-        /*foreach ($requisites as $ps => $req) {
-            foreach ($req as $key => $value) {
-                if (is_integer($value) && $value > 10**8 || is_string($value) && intval($value) > 10**8) {
-                    unset($requisites[$ps][$key]);
-                }
-            }
-        }*/
 
         return $requisites;
     }

@@ -44,4 +44,15 @@ class Settings extends \yii\db\ActiveRecord
             'value' => 'Value',
         ];
     }
+
+    /**
+     * @param $key
+     * @return mixed|string
+     */
+    public static function getValue($key)
+    {
+        $sample = Settings::find()->where(['key' => $key])->select('value')->asArray()->one();
+        return $sample ? $sample['value'] : null;
+
+    }
 }

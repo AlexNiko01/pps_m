@@ -50,36 +50,6 @@ class SettingsController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-//TODO:: do something with this comments:
-//    private function renderQueryParams($group){
-//        $searchModel = new SettingsSearch();
-//        $queryParams = Yii::$app->request->queryParams;
-//        $queryParams['SettingsSearch']['group'] = $group;
-//        return  $searchModel->search($queryParams);
-//    }
-//
-//
-//    public function actionTelegram()
-//    {
-//        $searchModel = new SettingsSearch();
-//        $dataProvider = $this->renderQueryParams('telegram');
-//
-//        return $this->render('telegram', [
-//            'searchModel' => $searchModel,
-//            'dataProvider' => $dataProvider,
-//        ]);
-//    }
-//
-//    public function actionRocketChat()
-//    {
-//        $searchModel = new SettingsSearch();
-//        $dataProvider = $this->renderQueryParams('rocket_chat');
-//
-//        return $this->render('rocket_chat', [
-//            'searchModel' => $searchModel,
-//            'dataProvider' => $dataProvider,
-//        ]);
-//    }
 
     /**
      * Displays a single Settings model.
@@ -133,11 +103,11 @@ class SettingsController extends Controller
     }
 
     /**
-     * Deletes an existing Settings model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {

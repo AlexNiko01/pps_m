@@ -13,13 +13,13 @@ class RocketChatSender implements Sender
      */
     public function send($messageArr)
     {
-        $url = Settings::find()->where(['key' => 'rocket_chat_url'])->select('value')->asArray()->one()['value'];
+        $url = Settings::getValue('rocket_chat_url');
         define('REST_API_ROOT', '/api/v1/');
         define('ROCKET_CHAT_INSTANCE', $url);
         new \RocketChat\Client();
 
-        $userName = Settings::find()->where(['key' => 'rocket_chat_user'])->select('value')->asArray()->one()['value'];
-        $password = Settings::find()->where(['key' => 'rocket_chat_password'])->select('value')->asArray()->one()['value'];
+        $userName = Settings::getValue('rocket_chat_user');
+        $password = Settings::getValue('rocket_chat_password');
         $user = new \RocketChat\User($userName, $password);
         if (!$user->login(true)) {
             $user->create();

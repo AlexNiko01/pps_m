@@ -8,6 +8,10 @@ use yii\console\Controller;
 class CronController extends Controller
 {
 
+    /**
+     * Activates all cron tasks.
+     * Run this action when installing the project on the server
+     */
     public function actionIndex()
     {
         $cronTab = new CronTab();
@@ -25,11 +29,11 @@ class CronController extends Controller
                 'hour' => '12',
                 'command' => '/usr/local/bin/php /var/www/html/data/yii notification/pps-check',
             ],
-//            [
-//                'min' => '00',
-//                'hour' => '12',
-//                'command' => '/usr/local/bin/php /var/www/html/data/yii notification/check-projects',
-//            ]
+            [
+                'min' => '05',
+                'hour' => '12',
+                'command' => '/usr/local/bin/php /var/www/html/data/yii notification/check-projects',
+            ]
         ]);
         $cronTab->apply();
     }

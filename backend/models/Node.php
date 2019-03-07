@@ -43,9 +43,11 @@ class Node extends \webvimark\components\BaseActiveRecord
     /**
      * @return mixed|\yii\db\Connection
      */
-    public static function getDb() {
+    public static function getDb()
+    {
         return Yii::$app->db2;
     }
+
     /**
      * @return string
      */
@@ -238,21 +240,6 @@ class Node extends \webvimark\components\BaseActiveRecord
      */
     protected function _getChildrenListRecursive($nodeId, array &$nodes, $onlyDomains)
     {
-        /*$children = Node::mainCache(function () use ($nodeId, $onlyDomains) {
-            $query = Node::find()
-                ->active()
-                ->andWhere([
-                    'parent_id' => $nodeId
-                ])
-                ->asArray();
-
-            if ($onlyDomains) {
-                $query->andWhere(['type' => Node::TYPE_DOMAIN]);
-            }
-
-            return $query->all();
-        });*/
-
         $children = Yii::$app->cache->getOrSet(['_getChildrenListRecursive', $nodeId, $onlyDomains], function () use ($nodeId, $onlyDomains) {
             $query = Node::find()
                 ->active()
@@ -388,12 +375,6 @@ class Node extends \webvimark\components\BaseActiveRecord
                 ->one();
         });
 
-        //		$node = Yii::app()->db->createCommand()
-        //			->from('node')
-        //			->andWhere('id = :node_id', array(':node_id'=>$parentId))
-        //			->andWhere(['in', 'id', Yii::app()->session->get(Node::SESSION_PREFIX_AVAILABLE_NODE_ID, [])])
-        //			->queryRow();
-
         if ($node && $node->isCurrentUserHasAccessToNode()) {
             $arrayOfNodes[$node['id']] = $node;
 
@@ -428,8 +409,6 @@ class Node extends \webvimark\components\BaseActiveRecord
         $result = '<ul>';
         static::getHtmlTreeRecursive($result, static::getTree(), $fullAccess, $relations, $availableNodeIds);
         $result .= '</ul>';
-
-        //		Yii::app()->session->add(Node::SESSION_PREFIX_AVAILABLE_NODE_ID, $availableNodeIds);
 
         return $result;
     }
@@ -483,7 +462,6 @@ class Node extends \webvimark\components\BaseActiveRecord
      */
     public static function getTree()
     {
-        //		Yii::$app->cache->flush();
         $models = Node::mainCache(function () {
             return Node::find()
                 ->active()
