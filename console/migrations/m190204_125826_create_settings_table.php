@@ -38,6 +38,22 @@ class m190204_125826_create_settings_table extends Migration
             'group' => 'rocket_chat',
             'key' => 'rocket_chat_password',
         ]);
+        $this->insert('settings', [
+            'group' => 'notification',
+            'key' => 'testing_merchant_id',
+        ]);
+        $this->insert('settings', [
+            'group' => 'notification',
+            'key' => 'publicKey',
+        ]);
+        $this->insert('settings', [
+            'group' => 'notification',
+            'key' => 'privateKey',
+        ]);
+        $this->insert('settings', [
+            'group' => 'pps_url',
+            'key' => 'privateKey',
+        ]);
 
     }
 
@@ -65,6 +81,22 @@ class m190204_125826_create_settings_table extends Migration
         $this->delete('settings', [
             'group' => 'rocket_chat',
             'key' => 'rocket_chat_password',
+        ]);
+        $this->delete('settings', [
+            'group' => 'notification',
+            'key' => 'testing_merchant_id',
+        ]);
+        $this->delete('settings', [
+            'group' => 'notification',
+            'key' => 'publicKey',
+        ]);
+        $this->delete('settings', [
+            'group' => 'notification',
+            'key' => 'privateKey',
+        ]);
+        $this->delete('settings', [
+            'group' => 'notification',
+            'key' => 'pps_url',
         ]);
         $this->dropTable('{{%settings}}');
     }
