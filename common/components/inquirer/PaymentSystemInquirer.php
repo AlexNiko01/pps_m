@@ -25,8 +25,12 @@ class PaymentSystemInquirer
     public function getNotRespondedPaymentSystems(): array
     {
         $paymentSystemsStatuses = PaymentSystemStatus::find()->indexBy('payment_system_id')->all();
-//        TO DO: throw exceptions for Settings::getValue create my own exception class
-        $testingMerchantId = Settings::getValue('testing_merchant_id');
+        try {
+            $testingMerchantId = Settings::getValue('testing_merchant_id');
+
+        } catch (\SettingsException  $e) {
+            \Yii::$app->sender->send($e->getMessage());
+        }
 
         $query = new Query;
         $query->select([
@@ -345,9 +349,18 @@ class PaymentSystemInquirer
      */
     private function genAuthKey(array $query, string $date, bool $post): string
     {
-        //        TO DO: throw exceptions for Settings::getValue
-        $publicKey = Settings::getValue('publicKey');
-        $privateKey = Settings::getValue('privateKey');
+        try {
+            $publicKey = Settings::getValue('publicKey');
+        } catch (\SettingsException  $e) {
+            \Yii::$app->sender->send($e->getMessage());
+        }
+
+        try {
+            $privateKey = Settings::getValue('privateKey');
+        } catch (\SettingsException  $e) {
+            \Yii::$app->sender->send($e->getMessage());
+        }
+
         $flags = 0;
 
         if ($post) {
@@ -382,8 +395,12 @@ class PaymentSystemInquirer
      */
     private function query(string $endpoint, array $data = [], $isPost = true): IQuery
     {
-//        TODO: try catch
-        $ppsUrl = Settings::getValue('pps_url');
+        try {
+            $ppsUrl = Settings::getValue('pps_url');
+        } catch (\SettingsException  $e) {
+            \Yii::$app->sender->send($e->getMessage());
+        }
+
         $url = $ppsUrl . '/' . $endpoint;
         $date = date('U');
         $authKey = $this->genAuthKey($data, $date, $isPost);

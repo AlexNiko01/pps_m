@@ -16,7 +16,11 @@ class TelegramSender implements Sender
         /**
          * @var \Yii::$app->telegram aki\telegram\Telegram
          */
-        $chatIdSample = Settings::find()->where(['key' => 'chatId'])->select('value')->asArray()->one();
+        try {
+            $chatId = Settings::getValue('chatId');
+        } catch (\SettingsException $e) {
+            \Yii::$app->sender->send($e->getMessage());
+        }
 
         $message = '';
         foreach ($messageArr as $item) {
@@ -24,10 +28,9 @@ class TelegramSender implements Sender
         }
 
         \Yii::$app->telegram->sendMessage([
-            'chat_id' => $chatIdSample['value'],
+            'chat_id' => $chatId,
             'text' => $message,
             'parse_mode' => 'HTML',
         ]);
-
     }
 }

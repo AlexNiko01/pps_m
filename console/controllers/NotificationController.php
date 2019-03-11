@@ -83,8 +83,11 @@ class NotificationController extends Controller
     {
         $sender = \Yii::$app->sender;
         $client = new \GuzzleHttp\Client();
-//        TODO: try catch
-        $ppsUrl = Settings::getValue('pps_url');
+        try {
+            $ppsUrl = Settings::getValue('pps_url');
+        } catch (\SettingsException  $e) {
+            \Yii::$app->sender->send($e->getMessage());
+        }
         $res = $client->request('GET', $ppsUrl);
         if ($res->getStatusCode() != self::SUCCESSFUL_SERVES_CODE) {
             $message = 'Pps does`not work';
