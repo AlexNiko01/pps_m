@@ -32,7 +32,13 @@ return [
         ],
         'telegram' => [
             'class' => 'aki\telegram\Telegram',
-            'botToken' => '703592142:AAGedZspWYQ9Ba7h29JOjWr_NfjtFCumy5Y',
+            'botToken' => function () {
+                try {
+                    $botToken = \backend\models\Settings::getValue('bot_token');
+                } catch (SettingsException $e) {
+                }
+                return $botToken;
+            },
         ],
         'sender' => function () {
             $sender = new common\components\sender\MessageSender;

@@ -17,7 +17,7 @@ class TelegramSender implements Sender
          * @var \Yii::$app->telegram aki\telegram\Telegram
          */
         try {
-            $chatId = Settings::getValue('chatId');
+            $chatId = Settings::getValue('chat_id');
         } catch (\SettingsException $e) {
             \Yii::$app->sender->send($e->getMessage());
         }

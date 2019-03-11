@@ -350,13 +350,13 @@ class PaymentSystemInquirer
     private function genAuthKey(array $query, string $date, bool $post): string
     {
         try {
-            $publicKey = Settings::getValue('publicKey');
+            $publicKey = Settings::getValue('public_key');
         } catch (\SettingsException  $e) {
             \Yii::$app->sender->send($e->getMessage());
         }
 
         try {
-            $privateKey = Settings::getValue('privateKey');
+            $privateKey = Settings::getValue('private_key');
         } catch (\SettingsException  $e) {
             \Yii::$app->sender->send($e->getMessage());
         }

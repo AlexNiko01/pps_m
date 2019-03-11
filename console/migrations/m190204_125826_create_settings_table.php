@@ -20,11 +20,11 @@ class m190204_125826_create_settings_table extends Migration
         ]);
         $this->insert('settings', [
             'group' => 'telegram',
-            'key' => 'botToken'
+            'key' => 'bot_token'
         ]);
         $this->insert('settings', [
             'group' => 'telegram',
-            'key' => 'chatId',
+            'key' => 'chat_id',
         ]);
         $this->insert('settings', [
             'group' => 'rocket_chat',
@@ -44,11 +44,11 @@ class m190204_125826_create_settings_table extends Migration
         ]);
         $this->insert('settings', [
             'group' => 'notification',
-            'key' => 'publicKey',
+            'key' => 'public_key',
         ]);
         $this->insert('settings', [
             'group' => 'notification',
-            'key' => 'privateKey',
+            'key' => 'private_key',
         ]);
         $this->insert('settings', [
             'group' => 'pps_url',
@@ -64,11 +64,11 @@ class m190204_125826_create_settings_table extends Migration
     {
         $this->delete('settings', [
             'group' => 'telegram',
-            'key' => 'botToken'
+            'key' => 'bot_token'
         ]);
         $this->delete('settings', [
             'group' => 'telegram',
-            'key' => 'chatId',
+            'key' => 'chat_id',
         ]);
         $this->delete('settings', [
             'group' => 'rocket_chat',
@@ -88,11 +88,11 @@ class m190204_125826_create_settings_table extends Migration
         ]);
         $this->delete('settings', [
             'group' => 'notification',
-            'key' => 'publicKey',
+            'key' => 'public_key',
         ]);
         $this->delete('settings', [
             'group' => 'notification',
-            'key' => 'privateKey',
+            'key' => 'private_key',
         ]);
         $this->delete('settings', [
             'group' => 'notification',
