@@ -26,6 +26,7 @@ class NotificationController extends Controller
             Payment::STATUS_PENDING,
             Payment::STATUS_SUCCESS
         ];
+//        TODO: define $testingMerchantId
         try {
             $testingMerchantId = Settings::getValue('testing_merchant_id');
         } catch (\SettingsException  $e) {

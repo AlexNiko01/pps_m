@@ -30,6 +30,7 @@ return [
                 ],
             ],
         ],
+//        TODO: re wright conf for telegram as closure
         'telegram' => [
             'class' => 'aki\telegram\Telegram',
             'botToken' => '703592142:AAGedZspWYQ9Ba7h29JOjWr_NfjtFCumy5Y'

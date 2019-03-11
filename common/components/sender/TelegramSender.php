@@ -11,6 +11,8 @@ class TelegramSender implements Sender
      * @param array $messageArr
      * @return mixed|void
      */
+    //        TODO:  in catch remove "\Yii::$app->sender->send($e->getMessage())". return false if not \Yii::$app->telegram
+
     public function send($messageArr)
     {
         /**

@@ -14,6 +14,8 @@ class RocketChatSender implements Sender
      */
     public function send($messageArr)
     {
+//        TODO: group all tryCatches in one. Return null in catch remove "\Yii::$app->sender->send($e->getMessage())"
+
         try {
             $url = Settings::getValue('rocket_chat_url');
         } catch (\SettingsException  $e) {
