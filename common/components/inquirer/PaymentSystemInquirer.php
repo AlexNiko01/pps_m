@@ -16,8 +16,6 @@ class PaymentSystemInquirer
     const STATUS_PAYMENT_ERROR = 422;
     const ERROR_NETWORK = 'Network Error!';
     const PAYMENT_SYSTEM_ACTIVITY = 1;
-    const QUERY_URL = 'http://master.api.paygate.xim.hattiko.pw/merchant/';
-
 
     /**
      * @return array
@@ -384,8 +382,9 @@ class PaymentSystemInquirer
      */
     private function query(string $endpoint, array $data = [], $isPost = true): IQuery
     {
-        $url = self::QUERY_URL . $endpoint;
-
+//        TODO: try catch
+        $ppsUrl = Settings::getValue('pps_url');
+        $url = $ppsUrl . '/' . $endpoint;
         $date = date('U');
         $authKey = $this->genAuthKey($data, $date, $isPost);
 

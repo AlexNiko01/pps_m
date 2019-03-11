@@ -3,6 +3,7 @@
 namespace console\controllers;
 
 use backend\models\ProjectStatus;
+use backend\models\Settings;
 use common\models\Transaction;
 use pps\payment\Payment;
 use yii\db\Query;
@@ -12,10 +13,6 @@ use yii\console\Controller;
 class NotificationController extends Controller
 {
     const TRANSACTION_TRACKING_INTERVAL = 60;
-    //        TO DO: get this val from DB: Settings::getValue
-    const TESTING_MERCHANT_ID = 5;
-    //        TO DO: set to DB
-    const PPS_URL = 'http://master.backend.paygate.xim.hattiko.pw';
     const SUCCESSFUL_SERVES_CODE = 200;
 
     /**
@@ -29,11 +26,16 @@ class NotificationController extends Controller
             Payment::STATUS_PENDING,
             Payment::STATUS_SUCCESS
         ];
-        //TO DO: self::TESTING_MERCHANT_ID get this val from DB: Settings::getValue
+        try {
+            $testingMerchantId = Settings::getValue('testing_merchant_id');
+        } catch (\SettingsException  $e) {
+            \Yii::$app->sender->send($e->getMessage());
+        }
+
         $transactionsSample = Transaction::find()
             ->filterWhere(['not in', 'status', $successfullyPsStatuses])
             ->andFilterWhere(['>', 'updated_at', time() - self::TRANSACTION_TRACKING_INTERVAL])
-            ->andFilterWhere(['!=', 'brand_id', self::TESTING_MERCHANT_ID])
+            ->andFilterWhere(['!=', 'brand_id', $testingMerchantId])
             ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id', 'brand_id'])
             ->all();
 
@@ -81,7 +83,9 @@ class NotificationController extends Controller
     {
         $sender = \Yii::$app->sender;
         $client = new \GuzzleHttp\Client();
-        $res = $client->request('GET', self::PPS_URL);
+//        TODO: try catch
+        $ppsUrl = Settings::getValue('pps_url');
+        $res = $client->request('GET', $ppsUrl);
         if ($res->getStatusCode() != self::SUCCESSFUL_SERVES_CODE) {
             $message = 'Pps does`not work';
             $sender->send([

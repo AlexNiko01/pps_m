@@ -52,6 +52,14 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                    'pattern' => '',
+                    'route' => 'site/index'
+                ],
+                [
+                    'pattern' => 'settings',
+                    'route' => 'settings/index'
+                ]
             ],
         ]
     ],
