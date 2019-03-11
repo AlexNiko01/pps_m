@@ -22,7 +22,6 @@ class RocketChatSender implements Sender
 
         define('REST_API_ROOT', '/api/v1/');
         define('ROCKET_CHAT_INSTANCE', $url);
-        new \RocketChat\Client();
 
         try {
             $userName = Settings::getValue('rocket_chat_user');

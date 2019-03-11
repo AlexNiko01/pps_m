@@ -52,6 +52,7 @@ class NotificationController extends Controller
                 'Status: ' . \pps\payment\Payment::getStatusDescription($item->status) . ';',
                 'Payment system: ' . $item->paymentSystem->name . '.'
             ]);
+//            die();
         };
     }
 
