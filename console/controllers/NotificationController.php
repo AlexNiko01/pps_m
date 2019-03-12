@@ -26,11 +26,13 @@ class NotificationController extends Controller
             Payment::STATUS_PENDING,
             Payment::STATUS_SUCCESS
         ];
-//        TODO: define $testingMerchantId
+
         try {
             $testingMerchantId = Settings::getValue('testing_merchant_id');
         } catch (\SettingsException  $e) {
             \Yii::$app->sender->send($e->getMessage());
+            \Yii::info($e->getMessage());
+            return false;
         }
 
         $transactionsSample = Transaction::find()
@@ -53,7 +55,6 @@ class NotificationController extends Controller
                 'Status: ' . \pps\payment\Payment::getStatusDescription($item->status) . ';',
                 'Payment system: ' . $item->paymentSystem->name . '.'
             ]);
-//            die();
         };
     }
 
@@ -79,6 +80,8 @@ class NotificationController extends Controller
     }
 
     /**
+     * @return null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * Check whether pps works
      */
     public function actionPpsCheck()
@@ -88,7 +91,9 @@ class NotificationController extends Controller
         try {
             $ppsUrl = Settings::getValue('pps_url');
         } catch (\SettingsException  $e) {
+            \Yii::info($e->getMessage());
             \Yii::$app->sender->send($e->getMessage());
+            return null;
         }
         $res = $client->request('GET', $ppsUrl);
         if ($res->getStatusCode() != self::SUCCESSFUL_SERVES_CODE) {
@@ -122,6 +127,9 @@ class NotificationController extends Controller
         $command = $query->createCommand(\Yii::$app->db2);
         $nodesSample = $command->queryAll();
 
+        if(!$nodesSample){
+            return null;
+        }
         foreach ($nodesSample as $project) {
             if (!$project['project_id']) {
                 continue;

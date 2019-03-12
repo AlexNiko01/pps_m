@@ -30,14 +30,19 @@ return [
                 ],
             ],
         ],
-//        TODO: re wright conf for telegram as closure
-        'telegram' => [
-            'class' => 'aki\telegram\Telegram',
-            'botToken' => '703592142:AAGedZspWYQ9Ba7h29JOjWr_NfjtFCumy5Y'
-//            'botToken' => function () {
-//                return \backend\models\Settings::getValue('bot_token');
-//            }
-        ],
+        'telegram' => function () {
+            $telegram = new aki\telegram\Telegram;
+            try {
+                $botToken = \backend\models\Settings::getValue('bot_token');
+            } catch (SettingsException $e) {
+                \Yii::info($e->getMessage());
+                return null;
+            }
+
+            $telegram->botToken = $botToken;
+            return $telegram;
+        }
+        ,
         'sender' => function () {
             $sender = new common\components\sender\MessageSender;
             $sender->addSender(new common\components\sender\RocketChatSender);
