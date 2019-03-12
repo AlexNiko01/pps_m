@@ -6,6 +6,7 @@ use backend\models\ProjectStatus;
 use backend\models\Settings;
 use common\models\Transaction;
 use pps\payment\Payment;
+use common\components\exception\SettingsException;
 use yii\db\Query;
 use yii\console\Controller;
 
@@ -15,12 +16,14 @@ class NotificationController extends Controller
     const TRANSACTION_TRACKING_INTERVAL = 60;
     const SUCCESSFUL_SERVES_CODE = 200;
 
+
     /**
+     * @return null
      * Action for checking failed transaction and sending notification
      */
-
     public function actionTransaction()
     {
+
         $successfullyPsStatuses = [
             Payment::STATUS_CREATED,
             Payment::STATUS_PENDING,
@@ -29,10 +32,10 @@ class NotificationController extends Controller
 
         try {
             $testingMerchantId = Settings::getValue('testing_merchant_id');
-        } catch (\SettingsException  $e) {
+        } catch (SettingsException  $e) {
             \Yii::$app->sender->send($e->getMessage());
             \Yii::info($e->getMessage());
-            return false;
+            return null;
         }
 
         $transactionsSample = Transaction::find()
@@ -43,7 +46,7 @@ class NotificationController extends Controller
             ->all();
 
         if (!$transactionsSample) {
-            return false;
+            return null;
         }
         foreach ($transactionsSample as $item) {
             \Yii::$app->sender->send([
@@ -90,7 +93,7 @@ class NotificationController extends Controller
         $client = new \GuzzleHttp\Client();
         try {
             $ppsUrl = Settings::getValue('pps_url');
-        } catch (\SettingsException  $e) {
+        } catch (SettingsException  $e) {
             \Yii::info($e->getMessage());
             \Yii::$app->sender->send($e->getMessage());
             return null;
@@ -104,7 +107,9 @@ class NotificationController extends Controller
         };
     }
 
-    /**
+    /* @return null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \yii\db\Exception
      * Check whether pps projects works
      */
     public function actionCheckProjects()
@@ -127,7 +132,7 @@ class NotificationController extends Controller
         $command = $query->createCommand(\Yii::$app->db2);
         $nodesSample = $command->queryAll();
 
-        if(!$nodesSample){
+        if (!$nodesSample) {
             return null;
         }
         foreach ($nodesSample as $project) {

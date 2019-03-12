@@ -3,6 +3,7 @@
 namespace common\components\sender;
 
 use backend\models\Settings;
+use common\components\exception\SettingsException;
 
 class TelegramSender implements Sender
 {
@@ -22,7 +23,7 @@ class TelegramSender implements Sender
         }
         try {
             $chatId = Settings::getValue('chat_id');
-        } catch (\SettingsException $e) {
+        } catch (SettingsException $e) {
             \Yii::info($e->getMessage());
             return null;
         }

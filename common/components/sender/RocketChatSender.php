@@ -4,6 +4,7 @@ namespace common\components\sender;
 
 
 use backend\models\Settings;
+use common\components\exception\SettingsException;
 
 class RocketChatSender implements Sender
 {
@@ -18,7 +19,7 @@ class RocketChatSender implements Sender
             $url = Settings::getValue('rocket_chat_url');
             $userName = Settings::getValue('rocket_chat_user');
             $password = Settings::getValue('rocket_chat_password');
-        } catch (\SettingsException  $e) {
+        } catch (SettingsException  $e) {
             \Yii::info($e->getMessage());
             return null;
         }

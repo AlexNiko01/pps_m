@@ -26,7 +26,11 @@ return [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error', 'warning', 'info'],
+                    'categories' => [
+                        'common\components\exception\*',
+//                        'catTest',
+                    ],
                 ],
             ],
         ],
@@ -34,7 +38,7 @@ return [
             $telegram = new aki\telegram\Telegram;
             try {
                 $botToken = \backend\models\Settings::getValue('bot_token');
-            } catch (SettingsException $e) {
+            } catch (common\components\exception\SettingsException $e) {
                 \Yii::info($e->getMessage());
                 return null;
             }
@@ -47,7 +51,6 @@ return [
             $sender = new common\components\sender\MessageSender;
             $sender->addSender(new common\components\sender\RocketChatSender);
             $sender->addSender(new common\components\sender\TelegramSender);
-
             return $sender;
         },
         'inquirer' => [

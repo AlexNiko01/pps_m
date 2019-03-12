@@ -2,8 +2,7 @@
 
 namespace backend\models;
 
-use Yii;
-use yii\db\Exception;
+use common\components\exception\SettingsException;
 
 /**
  * This is the model class for table "settings".
@@ -49,7 +48,7 @@ class Settings extends \yii\db\ActiveRecord
     /**
      * @param $key
      * @return mixed|null
-     * @throws \SettingsException
+     * @throws SettingsException
      */
     public static function getValue($key)
     {
@@ -57,7 +56,7 @@ class Settings extends \yii\db\ActiveRecord
         $val = $sample ? $sample['value'] : null;
 
         if ($val === null) {
-            throw new \SettingsException('value '.$key.' is not exist in settings');
+            throw new SettingsException('value ' . $key . ' is not exist in settings');
         }
         return $val;
     }

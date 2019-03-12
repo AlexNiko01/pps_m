@@ -6,6 +6,7 @@ namespace common\components\inquirer;
 use backend\models\PaymentSystemStatus;
 use backend\models\Settings;
 use common\components\helpers\Restructuring;
+use common\components\exception\SettingsException;
 use yii\db\Query;
 use pps\querybuilder\QueryBuilder;
 use pps\querybuilder\src\IQuery;
@@ -27,8 +28,8 @@ class PaymentSystemInquirer
         $paymentSystemsStatuses = PaymentSystemStatus::find()->indexBy('payment_system_id')->all();
         try {
             $testingMerchantId = Settings::getValue('testing_merchant_id');
-
-        } catch (\SettingsException  $e) {
+        } catch (SettingsException  $e) {
+            \Yii::info($e->getMessage());
             \Yii::$app->sender->send($e->getMessage());
         }
 
@@ -351,13 +352,13 @@ class PaymentSystemInquirer
     {
         try {
             $publicKey = Settings::getValue('public_key');
-        } catch (\SettingsException  $e) {
+        } catch (SettingsException  $e) {
             \Yii::$app->sender->send($e->getMessage());
         }
 
         try {
             $privateKey = Settings::getValue('private_key');
-        } catch (\SettingsException  $e) {
+        } catch (SettingsException  $e) {
             \Yii::$app->sender->send($e->getMessage());
         }
 
@@ -397,7 +398,7 @@ class PaymentSystemInquirer
     {
         try {
             $ppsUrl = Settings::getValue('pps_url');
-        } catch (\SettingsException  $e) {
+        } catch (SettingsException  $e) {
             \Yii::$app->sender->send($e->getMessage());
         }
 

@@ -23,6 +23,7 @@ return [
                 ],
             ],
         ],
+
     ],
     'modules' => [
         'user-management' => [
