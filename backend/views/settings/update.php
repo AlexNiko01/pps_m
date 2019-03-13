@@ -11,7 +11,9 @@ $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' 
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="settings-update">
-
+    <p>
+        <?= Html::a('Settings', ['index'], ['class' => 'btn btn-primary']) ?>
+    </p>
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
