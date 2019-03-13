@@ -24,7 +24,7 @@ class TelegramSender implements Sender
         try {
             $chatId = Settings::getValue('chat_id');
         } catch (SettingsException $e) {
-            \Yii::info($e->getMessage());
+            \Yii::info($e->getMessage(),'settings');
             return null;
         }
 

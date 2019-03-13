@@ -23,7 +23,6 @@ class NotificationController extends Controller
      */
     public function actionTransaction()
     {
-
         $successfullyPsStatuses = [
             Payment::STATUS_CREATED,
             Payment::STATUS_PENDING,
@@ -33,17 +32,18 @@ class NotificationController extends Controller
         try {
             $testingMerchantId = Settings::getValue('testing_merchant_id');
         } catch (SettingsException  $e) {
-            \Yii::$app->sender->send($e->getMessage());
-            \Yii::info($e->getMessage());
+            \Yii::$app->sender->send(['exception' => $e->getMessage()]);
+            \Yii::info($e->getMessage(), 'settings');
             return null;
         }
-
         $transactionsSample = Transaction::find()
             ->filterWhere(['not in', 'status', $successfullyPsStatuses])
             ->andFilterWhere(['>', 'updated_at', time() - self::TRANSACTION_TRACKING_INTERVAL])
             ->andFilterWhere(['!=', 'brand_id', $testingMerchantId])
             ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id', 'brand_id'])
             ->all();
+
+
 
         if (!$transactionsSample) {
             return null;
@@ -94,7 +94,7 @@ class NotificationController extends Controller
         try {
             $ppsUrl = Settings::getValue('pps_url');
         } catch (SettingsException  $e) {
-            \Yii::info($e->getMessage());
+            \Yii::info($e->getMessage(), 'settings');
             \Yii::$app->sender->send($e->getMessage());
             return null;
         }

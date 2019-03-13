@@ -27,10 +27,9 @@ return [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning', 'info'],
-                    'categories' => [
-                        'common\components\exception\*',
-//                        'catTest',
-                    ],
+                    'categories' => ['settings'],
+                    'logFile' => '@runtime/logs/settings/settings.log',
+                    'enabled' => YII_DEBUG,
                 ],
             ],
         ],
@@ -39,7 +38,7 @@ return [
             try {
                 $botToken = \backend\models\Settings::getValue('bot_token');
             } catch (common\components\exception\SettingsException $e) {
-                \Yii::info($e->getMessage());
+                \Yii::info($e->getMessage(), 'settings');
                 return null;
             }
 

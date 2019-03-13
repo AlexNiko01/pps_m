@@ -54,8 +54,7 @@ class Settings extends \yii\db\ActiveRecord
     {
         $sample = Settings::find()->where(['key' => $key])->select('value')->asArray()->one();
         $val = $sample ? $sample['value'] : null;
-
-        if ($val === null) {
+        if (!$val) {
             throw new SettingsException('value ' . $key . ' is not exist in settings');
         }
         return $val;

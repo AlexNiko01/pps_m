@@ -29,7 +29,7 @@ class PaymentSystemInquirer
         try {
             $testingMerchantId = Settings::getValue('testing_merchant_id');
         } catch (SettingsException  $e) {
-            \Yii::info($e->getMessage());
+            \Yii::info($e->getMessage(), 'settings');
             \Yii::$app->sender->send($e->getMessage());
         }
 
@@ -353,12 +353,14 @@ class PaymentSystemInquirer
         try {
             $publicKey = Settings::getValue('public_key');
         } catch (SettingsException  $e) {
+            \Yii::info($e->getMessage(), 'settings');
             \Yii::$app->sender->send($e->getMessage());
         }
 
         try {
             $privateKey = Settings::getValue('private_key');
         } catch (SettingsException  $e) {
+            \Yii::info($e->getMessage(), 'settings');
             \Yii::$app->sender->send($e->getMessage());
         }
 
@@ -399,6 +401,7 @@ class PaymentSystemInquirer
         try {
             $ppsUrl = Settings::getValue('pps_url');
         } catch (SettingsException  $e) {
+            \Yii::info($e->getMessage(), 'settings');
             \Yii::$app->sender->send($e->getMessage());
         }
 

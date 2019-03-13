@@ -20,7 +20,7 @@ class RocketChatSender implements Sender
             $userName = Settings::getValue('rocket_chat_user');
             $password = Settings::getValue('rocket_chat_password');
         } catch (SettingsException  $e) {
-            \Yii::info($e->getMessage());
+            \Yii::info($e->getMessage(), 'settings');
             return null;
         }
 
