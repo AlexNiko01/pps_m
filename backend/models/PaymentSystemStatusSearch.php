@@ -5,6 +5,8 @@ namespace backend\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\PaymentSystemStatus;
+use yii\db\Query;
+use \backend\models\Node;
 
 /**
  * PaymentSystemStatusSearch represents the model behind the search form of `backend\models\PaymentSystemStatus`.
@@ -27,23 +29,35 @@ class PaymentSystemStatusSearch extends PaymentSystemStatus
      */
     public function scenarios()
     {
-        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
+
     public function search($params)
     {
+        $nodeId = null;
+        try {
+            $nodeId = Node::getCurrentNode()->id;
+        } catch (\yii\web\ForbiddenHttpException $e) {
+            echo $e->getMessage();
+        };
+        $nodePsQuery = new Query;
+        $nodePsQuery->select([
+            'payment_system_id'
+        ])
+            ->from('user_payment_system')
+            ->where(['node_id' => $nodeId]);
+        $command = $nodePsQuery->createCommand(\Yii::$app->db2);
+        $nodePsQuerySample = $command->queryAll();
+        $nodesPsIds = [];
+        if (!empty($nodePsQuerySample)) {
+            foreach ($nodePsQuerySample as $psId) {
+                if ($psId['payment_system_id'] ?? null) {
+                    $nodesPsIds[] = $psId['payment_system_id'];
+                }
+            }
+        }
         $query = PaymentSystemStatus::find();
-
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => ['pageSize' => 10]
@@ -52,8 +66,6 @@ class PaymentSystemStatusSearch extends PaymentSystemStatus
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
@@ -64,8 +76,8 @@ class PaymentSystemStatusSearch extends PaymentSystemStatus
             'active' => $this->active,
             'deleted' => $this->deleted,
         ]);
-
         $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['in', 'id', $nodesPsIds]);
 
         return $dataProvider;
     }

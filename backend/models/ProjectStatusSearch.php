@@ -40,9 +40,14 @@ class ProjectStatusSearch extends ProjectStatus
      */
     public function search($params)
     {
+        $nodeId = null;
+        try {
+            $nodeId = Node::getCurrentNode()->id;
+        } catch (\yii\web\ForbiddenHttpException $e) {
+            echo $e->getMessage();
+        };
         $query = ProjectStatus::find();
 
-        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -61,7 +66,7 @@ class ProjectStatusSearch extends ProjectStatus
         $query->andFilterWhere([
             'id' => $this->id,
             'active' => $this->active,
-            'node_id' => $this->node_id,
+            'node_id' => $nodeId,
             'deleted' => $this->deleted,
         ]);
 

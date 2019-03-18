@@ -7,8 +7,8 @@ use backend\models\PaymentSystemStatusSearch;
 use backend\models\ProjectStatusSearch;
 use common\models\Transaction;
 use common\models\TransactionSearch;
+use webvimark\components\BaseController;
 use Yii;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
@@ -17,7 +17,7 @@ use pps\payment\Payment;
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends BaseController
 {
     const DEPOSIT_DAYS = 1;
     const WITHDRAW_DAYS = 1 / 48;
@@ -31,45 +31,21 @@ class SiteController extends Controller
     const SECONDS_IN_DAY = 86400;
     const OBSCURE_DIVIDER = 20;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
+    public $freeAccessActions = ['index', 'set-timezone'];
 
     /**
      * {@inheritdoc}
      */
     public function actions()
     {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
+        if (!Yii::$app->user->isGuest) {
+
+            return [
+                'error' => [
+                    'class' => 'yii\web\ErrorAction',
+                ],
+            ];
+        }
     }
 
     /**

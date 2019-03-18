@@ -43,8 +43,6 @@ class NotificationController extends Controller
             ->select(['updated_at', 'id', 'merchant_transaction_id', 'status', 'currency', 'payment_system_id', 'brand_id'])
             ->all();
 
-
-
         if (!$transactionsSample) {
             return null;
         }
@@ -66,6 +64,9 @@ class NotificationController extends Controller
      */
     public function actionPaymentSystem(): void
     {
+        /**
+         * @var $inquirer common\components\inquirer\PaymentSystemInquirer
+         */
         $inquirer = \Yii::$app->inquirer;
         $sender = \Yii::$app->sender;
         $notRespondedPaymentSystems = $inquirer->getNotRespondedPaymentSystems();

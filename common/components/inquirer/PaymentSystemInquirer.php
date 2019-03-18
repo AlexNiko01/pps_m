@@ -7,6 +7,7 @@ use backend\models\PaymentSystemStatus;
 use backend\models\Settings;
 use common\components\helpers\Restructuring;
 use common\components\exception\SettingsException;
+use yii\base\ErrorException;
 use yii\db\Query;
 use pps\querybuilder\QueryBuilder;
 use pps\querybuilder\src\IQuery;
@@ -49,7 +50,9 @@ class PaymentSystemInquirer
 
         $command = $query->createCommand(\Yii::$app->db2);
         $paymentSystemsPpsSample = $command->queryAll();
+
         $paymentSystemsPpsData = $this->sortPaymentSystemsDataSort($paymentSystemsPpsSample);
+
 
         $notRespondingPaymentSystems = [];
         foreach ($paymentSystemsPpsData as $id => $data) {
@@ -188,12 +191,12 @@ class PaymentSystemInquirer
 
     /**
      * @param string $code
-     * @param bool $way
+     * @param string $way
      * @return array
      * Returns fields array (contains transaction request fields for enabled methods)
      * leaded to the canonical form
      */
-    public function getPaymentSystemData(string $code, bool $way)
+    public function getPaymentSystemData(string $code, string $way): array
     {
         /**
          * @var $query pps\querybuilder\src\IQuery
@@ -210,17 +213,21 @@ class PaymentSystemInquirer
          * Contains data (including transaction type and method) for each payment system
          * enshrined and enabled for the current merchant
          */
-        $enabledMethods = $accountInfo['payment_systems'];
-        /**
-         * @var $accountMethods array. Keeping current Payment systems methods
-         */
-        $accountMethods = null;
 
-        foreach ($enabledMethods as $enabledMethod) {
-            if ($enabledMethod['code'] == $code) {
-                $accountMethods = $enabledMethod['currencies'];
+        if ($accountInfo != null) {
+            $enabledMethods = $accountInfo['payment_systems'];
+            /**
+             * @var $accountMethods array. Keeping current Payment systems methods
+             */
+            $accountMethods = null;
+
+            foreach ($enabledMethods as $enabledMethod) {
+                if ($enabledMethod['code'] == $code) {
+                    $accountMethods = $enabledMethod['currencies'];
+                }
             }
         }
+
         /**
          * @var $ps array
          * @var $query pps\querybuilder\src\IQuery
@@ -408,6 +415,7 @@ class PaymentSystemInquirer
         $url = $ppsUrl . '/' . $endpoint;
         $date = date('U');
         $authKey = $this->genAuthKey($data, $date, $isPost);
+
 
         $query = (new QueryBuilder($url))
             ->setParams($data)

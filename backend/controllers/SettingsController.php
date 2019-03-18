@@ -2,32 +2,19 @@
 
 namespace backend\controllers;
 
+use webvimark\components\BaseController;
 use Yii;
 use backend\models\Settings;
 use backend\models\SettingsSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * SettingsController implements the CRUD actions for Settings model.
  */
-class SettingsController extends Controller
+class SettingsController extends BaseController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+    public $freeAccessActions = ['switch-node'];
 
     /**
      * Lists all Settings models.

@@ -521,7 +521,6 @@ class Node extends \webvimark\components\BaseActiveRecord
     public static function getCurrentNode(): Node
     {
         $nodeId = Yii::$app->session->get('current_node_id');
-
         if ($nodeId === null) {
             if (Yii::$app->user->isSuperadmin) {
                 $nodeId = self::getRoot()->id;
