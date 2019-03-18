@@ -158,10 +158,16 @@ class PaymentSystemInquirer
             }
             $fieldsArray = null;
             if ($way = $interim['way'] ?? null) {
-                /**
-                 * @var $fieldsArray array regulated data needed for committal transaction
-                 */
-                $fieldsArray = $this->getPaymentSystemData($item['code'], $way);
+                try {
+                    /**
+                     * @var $fieldsArray array regulated data needed for committal transaction
+                     */
+                    $fieldsArray = $this->getPaymentSystemData($item['code'], $way);
+                } catch (\Exception $exception) {
+                    var_dump($item['code'], $exception->getMessage());
+                    continue;
+                }
+
             }
 
             if ($fieldsArray && $fieldsArray[0]) {
@@ -361,14 +367,14 @@ class PaymentSystemInquirer
             $publicKey = Settings::getValue('public_key');
         } catch (SettingsException  $e) {
             \Yii::info($e->getMessage(), 'settings');
-            \Yii::$app->sender->send($e->getMessage());
+            \Yii::$app->sender->send([$e->getMessage()]);
         }
 
         try {
             $privateKey = Settings::getValue('private_key');
         } catch (SettingsException  $e) {
             \Yii::info($e->getMessage(), 'settings');
-            \Yii::$app->sender->send($e->getMessage());
+            \Yii::$app->sender->send([$e->getMessage()]);
         }
 
         $flags = 0;

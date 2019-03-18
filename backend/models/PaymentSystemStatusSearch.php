@@ -77,7 +77,7 @@ class PaymentSystemStatusSearch extends PaymentSystemStatus
             'deleted' => $this->deleted,
         ]);
         $query->andFilterWhere(['like', 'name', $this->name]);
-        $query->andFilterWhere(['in', 'id', $nodesPsIds]);
+        $query->andFilterWhere(['in', 'payment_system_id', $nodesPsIds]);
 
         return $dataProvider;
     }
