@@ -110,8 +110,9 @@ class SiteController extends BaseController
     }
 
     /**
-     * @return string|\yii\web\Response
+     * @return string
      * @throws ForbiddenHttpException
+     * @throws \yii\db\Exception
      */
     public function actionIndex()
     {

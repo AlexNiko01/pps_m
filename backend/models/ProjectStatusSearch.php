@@ -51,18 +51,17 @@ class ProjectStatusSearch extends ProjectStatus
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [ 'pageSize' => 10 ]
+            'pagination' => ['pageSize' => 10]
         ]);
 
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
-
-        // grid filtering conditions
+        if ($nodeId === 1) {
+            $nodeId = $this->node_id;
+        }
         $query->andFilterWhere([
             'id' => $this->id,
             'active' => $this->active,

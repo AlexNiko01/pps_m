@@ -32,7 +32,11 @@ class PaymentSystemStatusSearch extends PaymentSystemStatus
         return Model::scenarios();
     }
 
-
+    /**
+     * @param $params
+     * @return ActiveDataProvider
+     * @throws \yii\db\Exception
+     */
     public function search($params)
     {
         $nodeId = null;
@@ -41,15 +45,24 @@ class PaymentSystemStatusSearch extends PaymentSystemStatus
         } catch (\yii\web\ForbiddenHttpException $e) {
             echo $e->getMessage();
         };
-        $nodePsQuery = new Query;
-        $nodePsQuery->select([
-            'payment_system_id'
-        ])
-            ->from('user_payment_system')
-            ->where(['node_id' => $nodeId]);
-        $command = $nodePsQuery->createCommand(\Yii::$app->db2);
-        $nodePsQuerySample = $command->queryAll();
+
+        $children = Node::find()
+            ->andWhere([
+                'parent_id' => $nodeId,
+            ])
+            ->asArray()
+            ->all();
+
         $nodesPsIds = [];
+        $nodePsQuerySample = [];
+        if (!empty($children)) {
+            foreach ($children as $child) {
+                $nodePsQuerySample += $this->getPsSample($child['id']);
+            }
+        } else {
+            $nodePsQuerySample = $this->getPsSample($nodeId);
+        }
+
         if (!empty($nodePsQuerySample)) {
             foreach ($nodePsQuerySample as $psId) {
                 if ($psId['payment_system_id'] ?? null) {
@@ -57,6 +70,10 @@ class PaymentSystemStatusSearch extends PaymentSystemStatus
                 }
             }
         }
+//        echo '<pre>';
+//        var_dump(array_unique($nodesPsIds));
+//        echo '</pre>';
+//        die();
         $query = PaymentSystemStatus::find();
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -69,7 +86,6 @@ class PaymentSystemStatusSearch extends PaymentSystemStatus
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'payment_system_id' => $this->payment_system_id,
@@ -80,5 +96,25 @@ class PaymentSystemStatusSearch extends PaymentSystemStatus
         $query->andFilterWhere(['in', 'payment_system_id', $nodesPsIds]);
 
         return $dataProvider;
+    }
+
+    /**
+     * @param $id
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    private function getPsSample($id): array
+    {
+        $nodePsQuery = new Query;
+        $nodePsQuery->select([
+            'user_payment_system.payment_system_id', 'node.id', 'node.type'])
+            ->from('user_payment_system')
+            ->leftJoin('node', 'node.id = user_payment_system.node_id')
+            ->where(['user_payment_system.node_id' => $id])
+            ->orWhere(['node.parent_id' => $id]);
+        $command = $nodePsQuery->createCommand(\Yii::$app->db2);
+        $nodePsQuerySample = $command->queryAll();
+
+        return $nodePsQuerySample;
     }
 }
