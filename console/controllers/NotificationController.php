@@ -96,7 +96,7 @@ class NotificationController extends Controller
             $ppsUrl = Settings::getValue('pps_url');
         } catch (SettingsException  $e) {
             \Yii::info($e->getMessage(), 'settings');
-            \Yii::$app->sender->send($e->getMessage());
+            \Yii::$app->sender->send([$e->getMessage()]);
             return null;
         }
         $res = $client->request('GET', $ppsUrl);
@@ -172,8 +172,4 @@ class NotificationController extends Controller
         }
     }
 
-    public function actionTest()
-    {
-        echo 'test 123';
-    }
 }
