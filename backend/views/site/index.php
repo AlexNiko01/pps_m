@@ -1,11 +1,11 @@
 <?php
 /**
- * @var $searchModelSystems \backend\models\PaymentSystemStatusSearch
+ * @var $searchModelSystems \backend\models\search\PaymentSystemStatusSearch
  * @var $dataProviderSystems \yii\data\ActiveDataProvider
- * @var $searchModelProjects \backend\models\ProjectStatusSearch
- * @var $dataProviderProjects \backend\models\PaymentSystemStatusSearch
- * @var $searchModelDeposit common\models\TransactionSearch
- * @var $searchModelWithdraw common\models\TransactionSearch
+ * @var $searchModelProjects \backend\models\search\ProjectStatusSearch
+ * @var $dataProviderProjects \\yii\data\ActiveDataProvider
+ * @var $searchModelDeposit common\models\search\TransactionSearch
+ * @var $searchModelWithdraw common\models\search\TransactionSearch
  * @var $dataProviderDeposit \yii\data\ActiveDataProvider
  * @var $dataProviderWithdraw \yii\data\ActiveDataProvider
  * @var $days integer

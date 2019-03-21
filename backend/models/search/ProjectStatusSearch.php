@@ -1,7 +1,8 @@
 <?php
 
-namespace backend\models;
+namespace backend\models\search;
 
+use backend\models\Node;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\ProjectStatus;

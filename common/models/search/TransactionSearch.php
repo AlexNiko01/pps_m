@@ -1,7 +1,8 @@
 <?php
 
-namespace common\models;
+namespace common\models\search;
 
+use common\models\Transaction;
 use pps\payment\Payment;
 use yii\data\ActiveDataProvider;
 
@@ -42,7 +43,6 @@ class TransactionSearch extends Transaction
 
         $query = Transaction::find();
         $query->joinWith('paymentSystem');
-        // add conditions that should always apply here
         $sort = [
             'defaultOrder' => [
                 'created_at' => SORT_DESC
@@ -52,7 +52,7 @@ class TransactionSearch extends Transaction
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => $sort,
-            'pagination' => [ 'pageSize' => 10 ]
+            'pagination' => ['pageSize' => 10]
         ]);
 
         $this->load($params);
@@ -68,15 +68,11 @@ class TransactionSearch extends Transaction
         }
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'transaction.id' => $this->id,
-//            'way' => $way,
             'way' => $this->way,
             'payment_system_id' => $this->payment_system_id,
             'amount' => $this->amount,
@@ -85,7 +81,6 @@ class TransactionSearch extends Transaction
             'receive' => $this->receive,
             'merchant_transaction_id' => $this->merchant_transaction_id,
             'buyer_id' => $this->buyer_id,
-//            'status' => $this->status,
             'updated_at' => $this->updated_at,
         ]);
 
@@ -106,7 +101,6 @@ class TransactionSearch extends Transaction
             ->andFilterWhere(['like', 'result_data', $this->result_data])
             ->andFilterWhere(['like', 'query_data', $this->query_data]);
 
-        /* Фільтр по даті */
         if ($this->created_at) :
             $date_range = explode(' - ', $this->created_at);
 

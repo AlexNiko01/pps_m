@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $total array */
 /* @var $currencies array */
+
 /* @var $searchDataProvider object */
 
 use backend\models\Node;
@@ -121,6 +122,12 @@ $isSuperAdmin = Yii::$app->user->isSuperAdmin;
             'contentOptions' => [
                 'class' => 'status-column'
             ],
+        ],
+        [
+            'attribute' => 'updated_at',
+            'value' => function ($model) {
+                return date("M d Y H:i:s", $model->updated_at);
+            }
         ],
         'way'
 

@@ -132,7 +132,6 @@ class NotificationController extends Controller
             ->andWhere(['not', ['merchant.node_id' => null]]);
         $command = $query->createCommand(\Yii::$app->db2);
         $nodesSample = $command->queryAll();
-
         if (!$nodesSample) {
             return null;
         }
@@ -171,5 +170,10 @@ class NotificationController extends Controller
                 $projectStatus->save();
             }
         }
+    }
+
+    public function actionTest()
+    {
+        echo 'test 123';
     }
 }

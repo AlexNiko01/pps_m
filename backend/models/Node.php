@@ -159,8 +159,8 @@ class Node extends \webvimark\components\BaseActiveRecord
     }
 
     /**
-     * List of nodes that can be parent for edited node. Used in front-node/createOrEdit
      * @return array
+     * @throws ForbiddenHttpException
      */
     public static function getListOfAvailableParentNodes()
     {
@@ -183,9 +183,9 @@ class Node extends \webvimark\components\BaseActiveRecord
     }
 
     /**
-     * If current node has been changed (let say in another tab) throw exception
-     * @param int $nodeId
-     * @throws \yii\web\ConflictHttpException
+     * @param $nodeId
+     * @throws ConflictHttpException
+     * @throws ForbiddenHttpException
      */
     public static function ensureCurrentNodeHasNotBeenChanged($nodeId)
     {
@@ -318,8 +318,8 @@ class Node extends \webvimark\components\BaseActiveRecord
     }
 
     /**
-     * Get breadcrumbs string
      * @return string
+     * @throws ForbiddenHttpException
      */
     public static function getNodeBreadcrumbs()
     {

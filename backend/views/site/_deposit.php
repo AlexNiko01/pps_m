@@ -1,6 +1,7 @@
 <?php
 /* @var $total array */
 /* @var $currencies array */
+
 /* @var $searchDataProvider object */
 
 use backend\models\Node;
@@ -98,21 +99,6 @@ $isSuperAdmin = Yii::$app->user->isSuperAdmin;
             ],
         ],
         [
-            'attribute' => 'external_id',
-            'label' => 'External ID',
-            'format' => 'raw',
-            'value' => function ($model) {
-                return $model->id ? '<span class="text-overflow">' . Html::encode($model->external_id) . '</span>' : '';
-            },
-            'headerOptions' => [
-                'class' => 'external_id-column-header'
-            ],
-            'contentOptions' => [
-                'class' => 'external_id-column'
-            ],
-            'visible' => $isSuperAdmin
-        ],
-        [
             'attribute' => 'status',
             'format' => 'raw',
             'value' => function ($model) {
@@ -134,6 +120,12 @@ $isSuperAdmin = Yii::$app->user->isSuperAdmin;
             'contentOptions' => [
                 'class' => 'status-column'
             ],
+        ],
+        [
+            'attribute' => 'updated_at',
+            'value' => function ($model) {
+                return date("M d Y H:i:s", $model->updated_at);
+            }
         ],
         'way'
     ],

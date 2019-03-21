@@ -3,14 +3,12 @@
 namespace backend\controllers;
 
 use backend\models\Node;
-use backend\models\PaymentSystemStatusSearch;
-use backend\models\ProjectStatusSearch;
+use backend\models\search\PaymentSystemStatusSearch;
+use backend\models\search\ProjectStatusSearch;
 use common\models\Transaction;
-use common\models\TransactionSearch;
+use common\models\search\TransactionSearch;
 use webvimark\components\BaseController;
 use Yii;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
 use pps\payment\Payment;
 
@@ -22,7 +20,6 @@ class SiteController extends BaseController
     const DEPOSIT_DAYS = 1;
     const WITHDRAW_DAYS = 1 / 48;
     const CACHE_TIME = 600;
-
     const GRAPH_INTERVAL = 60;
     const MAX_WITHDRAW = 1;
     const MAX_DEPOSIT = 1;

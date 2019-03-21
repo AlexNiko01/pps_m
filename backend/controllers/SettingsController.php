@@ -7,7 +7,6 @@ use Yii;
 use backend\models\Settings;
 use backend\models\SettingsSearch;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * SettingsController implements the CRUD actions for Settings model.
