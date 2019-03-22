@@ -164,7 +164,7 @@ class PaymentSystemInquirer
                      */
                     $fieldsArray = $this->getPaymentSystemData($item['code'], $way);
                 } catch (\Exception $exception) {
-                    var_dump($item['code'], $exception->getMessage());
+                    \Yii::info($exception->getMessage());
                     continue;
                 }
 
@@ -412,7 +412,7 @@ class PaymentSystemInquirer
     private function query(string $endpoint, array $data = [], $isPost = true): IQuery
     {
         try {
-            $ppsUrl = Settings::getValue('pps_url');
+            $ppsUrl = Settings::getValue('pps_api_url');
         } catch (SettingsException  $e) {
             \Yii::info($e->getMessage(), 'settings');
             \Yii::$app->sender->send($e->getMessage());
