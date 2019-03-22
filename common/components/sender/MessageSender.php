@@ -26,7 +26,21 @@ class MessageSender extends \yii\base\Component
     public function send(array $messageArr)
     {
         foreach ($this->senders as $sender) {
-            $sender->send($messageArr);
+            try {
+                $this->setInterval(300000, $sender, $messageArr);
+//                $sender->send($messageArr);
+            } catch (\Exception $exception) {
+                \Yii::info($exception->getMessage(), 'settings');
+            }
+        }
+    }
+
+    private function setInterval($milliseconds, $sender, $messageArr)
+    {
+        $seconds = (int)$milliseconds / 1000;
+        while (true) {
+            call_user_func_array([$sender, 'send'], [$messageArr]);
+            sleep($seconds);
         }
     }
 }

@@ -40,4 +40,6 @@ class RocketChatSender implements Sender
         }
         $channel->postMessage($message);
     }
+
+
 }
