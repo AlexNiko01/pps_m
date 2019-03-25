@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c61aa2bb0b20d439cda0c92f88350c7",
+    "content-hash": "50dfd5e7f616490c8d8702330cb3dc7b",
     "packages": [
         {
             "name": "aki/yii2-bot-telegram",
@@ -5772,6 +5772,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
+        "ext-json": "*",
         "php": ">=5.4.0"
     },
     "platform-dev": []

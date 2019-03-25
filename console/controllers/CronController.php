@@ -20,18 +20,15 @@ class CronController extends Controller
                 'command' => '/usr/local/bin/php /var/www/html/data/yii notification/transaction',
             ],
             [
-                'min' => '00',
-                'hour' => '12',
+                'min' => '*/15',
                 'command' => '/usr/local/bin/php /var/www/html/data/yii notification/payment-system',
             ],
             [
-                'min' => '05',
-                'hour' => '12',
+                'min' => '*/3',
                 'command' => '/usr/local/bin/php /var/www/html/data/yii notification/pps-check',
             ],
             [
-                'min' => '10',
-                'hour' => '12',
+                'min' => '*/30',
                 'command' => '/usr/local/bin/php /var/www/html/data/yii notification/check-projects',
             ]
         ]);
