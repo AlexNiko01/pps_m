@@ -6,8 +6,8 @@ namespace common\components\sender;
 interface Sender
 {
     /**
-     * @param $message
+     * @param string $message
      * @return mixed
      */
-    public function send($message);
+    public function send(string $message);
 }

@@ -21,13 +21,13 @@ class MessageSender extends \yii\base\Component
     }
 
     /**
-     * @param array $messageArr
+     * @param string $message
      */
-    public function send(array $messageArr)
+    public function send(string $message)
     {
         foreach ($this->senders as $sender) {
             try {
-                $sender->send($messageArr);
+                $sender->send($message);
             } catch (\Exception $exception) {
                 \Yii::info($exception->getMessage(), 'settings');
             }

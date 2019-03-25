@@ -4,6 +4,8 @@ namespace console\controllers;
 
 use backend\models\ProjectStatus;
 use backend\models\Settings;
+use common\components\inquirer\PaymentSystemInquirer;
+use common\components\sender\MessageSender;
 use common\models\Transaction;
 use pps\payment\Payment;
 use common\components\exception\SettingsException;
@@ -46,17 +48,19 @@ class NotificationController extends Controller
         if (!$transactionsSample) {
             return null;
         }
+        $message = '';
         foreach ($transactionsSample as $item) {
-            \Yii::$app->sender->send([
-                'Failed transaction id: ' . $item->id . ';',
-                'Merchant transaction id: ' . $item->merchant_transaction_id . ';',
-                'Brand id: ' . $item->brand_id . ';',
-                'Time: ' . date('m-d-Y h:i:s', $item->updated_at) . ';',
-                'Currency: ' . $item->currency . ';',
-                'Status: ' . \pps\payment\Payment::getStatusDescription($item->status) . ';',
-                'Payment system: ' . $item->paymentSystem->name . '.'
-            ]);
+            $message .=
+                'Failed transaction id: ' . $item->id . ';' . PHP_EOL .
+                'Merchant transaction id: ' . $item->merchant_transaction_id . ';' . PHP_EOL .
+                'Brand id: ' . $item->brand_id . ';' . PHP_EOL .
+                'Time: ' . date('m-d-Y h:i:s', $item->updated_at) . ';' . PHP_EOL .
+                'Currency: ' . $item->currency . ';' . PHP_EOL .
+                'Status: ' . \pps\payment\Payment::getStatusDescription($item->status) . ';' . PHP_EOL .
+                'Payment system: ' . $item->paymentSystem->name . '.' . PHP_EOL . PHP_EOL;
         };
+
+        \Yii::$app->sender->send($message);
     }
 
     /**
@@ -65,21 +69,26 @@ class NotificationController extends Controller
     public function actionPaymentSystem(): void
     {
         /**
-         * @var $inquirer common\components\inquirer\PaymentSystemInquirer
+         * @var PaymentSystemInquirer $inquirer
          */
+
+
         $inquirer = \Yii::$app->inquirer;
+        /**
+         * @var MessageSender $sender
+         */
         $sender = \Yii::$app->sender;
         $notRespondedPaymentSystems = $inquirer->getNotRespondedPaymentSystems();
         if ($notRespondedPaymentSystems) {
+            $message = '';
             foreach ($notRespondedPaymentSystems as $ps) {
-                $message = 'Unresponsive payment system ' . $ps['name'] . '.';
+                $messageItem = 'Unresponsive payment system ' . $ps['name'] . '. ';
                 if ($ps->active === 2) {
-                    $message = 'Not enough data for determine payment system ' . $ps['name'] . ' efficiency.';
+                    $messageItem = 'Not enough data for determine payment system ' . $ps['name'] . ' efficiency. ';
                 }
-                $sender->send([
-                    $message
-                ]);
+                $message .= $messageItem . PHP_EOL;
             }
+            $sender->send($message);
         }
     }
 
@@ -88,6 +97,7 @@ class NotificationController extends Controller
      * @throws \GuzzleHttp\Exception\GuzzleException
      * Check whether pps works
      */
+
     public function actionPpsCheck()
     {
         $sender = \Yii::$app->sender;
@@ -102,9 +112,7 @@ class NotificationController extends Controller
         $res = $client->request('GET', $ppsUrl);
         if ($res->getStatusCode() != self::SUCCESSFUL_SERVES_CODE) {
             $message = 'Pps does`not work';
-            $sender->send([
-                $message
-            ]);
+            $sender->send($message);
         };
     }
 
@@ -135,6 +143,7 @@ class NotificationController extends Controller
         if (!$nodesSample) {
             return null;
         }
+        $message = '';
         foreach ($nodesSample as $project) {
             if (!$project['project_id']) {
                 continue;
@@ -157,13 +166,16 @@ class NotificationController extends Controller
 
             } catch (\Exception $e) {
                 $projectStatus->active = 0;
-                $message = 'Project ' . $projectStatus->name . ' does not work';
-                $sender->send([
-                    $message
-                ]);
+                $message .= 'Project ' . $projectStatus->name . ' does not work' . PHP_EOL;
             }
             $projectStatus->save();
         }
+        if ($message) {
+//            $message = preg_replace('/(<script>.*</script>)/s', '', $message);
+            $message = strip_tags($message);
+            $sender->send($message);
+        }
+
         if (!empty($projectsStatuses)) {
             foreach ($projectsStatuses as $projectStatus) {
                 $projectStatus->deleted = 1;

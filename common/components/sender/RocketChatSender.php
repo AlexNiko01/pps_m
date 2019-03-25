@@ -10,10 +10,10 @@ class RocketChatSender implements Sender
 {
 
     /**
-     * @param $messageArr
+     * @param string $message
      * @return mixed|void
      */
-    public function send($messageArr)
+    public function send(string $message)
     {
         try {
             $url = Settings::getValue('rocket_chat_url');
@@ -34,9 +34,8 @@ class RocketChatSender implements Sender
 
         $channel = new \RocketChat\Channel('pps_monitoring', array($user));
 
-        $message = '';
-        foreach ($messageArr as $item) {
-            $message .= $item . PHP_EOL;
+        if (!$message) {
+            return null;
         }
         $channel->postMessage($message);
     }

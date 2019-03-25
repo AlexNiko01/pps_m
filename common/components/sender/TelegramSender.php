@@ -9,11 +9,11 @@ class TelegramSender implements Sender
 {
 
     /**
-     * @param array $messageArr
+     * @param string $message
      * @return mixed|void
      */
 
-    public function send($messageArr)
+    public function send(string $message)
     {
         /**
          * @var \Yii::$app->telegram aki\telegram\Telegram
@@ -24,15 +24,13 @@ class TelegramSender implements Sender
         try {
             $chatId = Settings::getValue('chat_id');
         } catch (SettingsException $e) {
-            \Yii::info($e->getMessage(),'settings');
+            \Yii::info($e->getMessage(), 'settings');
             return null;
         }
 
-        $message = '';
-        foreach ($messageArr as $item) {
-            $message .= '<pre>' . $item . '</pre>' . PHP_EOL;
+        if (!$message) {
+            return null;
         }
-
         \Yii::$app->telegram->sendMessage([
             'chat_id' => $chatId,
             'text' => $message,

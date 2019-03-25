@@ -49,7 +49,7 @@ return [
         'sender' => function () {
             $sender = new common\components\sender\MessageSender;
             $sender->addSender(new common\components\sender\RocketChatSender);
-//            $sender->addSender(new common\components\sender\TelegramSender);
+            $sender->addSender(new common\components\sender\TelegramSender);
             return $sender;
         },
         'inquirer' => [
