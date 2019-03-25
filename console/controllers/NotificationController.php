@@ -34,7 +34,7 @@ class NotificationController extends Controller
         try {
             $testingMerchantId = Settings::getValue('testing_merchant_id');
         } catch (SettingsException  $e) {
-            \Yii::$app->sender->send(['exception' => $e->getMessage()]);
+            \Yii::$app->sender->send( $e->getMessage());
             \Yii::info($e->getMessage(), 'settings');
             return null;
         }
@@ -106,7 +106,7 @@ class NotificationController extends Controller
             $ppsUrl = Settings::getValue('pps_url');
         } catch (SettingsException  $e) {
             \Yii::info($e->getMessage(), 'settings');
-            \Yii::$app->sender->send([$e->getMessage()]);
+            \Yii::$app->sender->send($e->getMessage());
             return null;
         }
         $res = $client->request('GET', $ppsUrl);
@@ -171,7 +171,6 @@ class NotificationController extends Controller
             $projectStatus->save();
         }
         if ($message) {
-//            $message = preg_replace('/(<script>.*</script>)/s', '', $message);
             $message = strip_tags($message);
             $sender->send($message);
         }
