@@ -68,8 +68,8 @@ pre code.hljs {
 }
 /* adjust comment color of hljs, because comments are important! */
 .hljs-comment {
-    color: #ff6900;
-    font-style: normal;
+  color: #ff6900;
+  font-style: normal;
 }
 
 blockquote {

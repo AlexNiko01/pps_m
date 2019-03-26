@@ -74,6 +74,14 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
+    public function actionCommonComponentsExceptionSettingsexception()
+    {
+        return $this->render('common-components-exception-settingsexception');
+    }
+    public function actionCommonComponentsHelpersLogger()
+    {
+        return $this->render('common-components-helpers-logger');
+    }
 
     /**
      * Logs in a user.
