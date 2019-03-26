@@ -44,10 +44,12 @@
     "yii2mod/yii2-chosen-select": "^1.0",
     "kartik-v/yii2-export": "^1.2.9",
     "kartik-v/yii2-dialog": "*",
-    "cebe/markdown": "~1.1.0",
+    "cebe/markdown": "~1.0.0",
     "kartik-v/yii2-krajee-base": "1.9.4",
     "kartik-v/yii2-widget-activeform": "1.5.2",
-    "kartik-v/yii2-grid": "3.2.1"
+    "kartik-v/yii2-grid": "3.2.1",
+    "cebe/markdown-latex": "~1.0",
+    "yiisoft/yii2-apidoc": "~2.1.0"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",
