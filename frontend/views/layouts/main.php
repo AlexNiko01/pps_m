@@ -74,7 +74,6 @@ AppAsset::register($this);
 
 <?php $this->endBody() ?>
 
-<script src="/assets/cbc64f1a/jssearch.js"></script>
 <script>jQuery(function ($) {
         var shiftWindow = function () {
             scrollBy(0, -50)
@@ -82,6 +81,7 @@ AppAsset::register($this);
         if (location.hash) setTimeout(shiftWindow, 1);
         window.addEventListener("hashchange", shiftWindow);
         var element = document.createElement("script");
+        console.log(element, 123);
         element.src = "./jssearch.index.js";
         document.body.appendChild(element);
 
