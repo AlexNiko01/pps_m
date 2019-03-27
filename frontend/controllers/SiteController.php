@@ -1,4 +1,5 @@
 <?php
+
 namespace frontend\controllers;
 
 use Yii;
@@ -74,14 +75,89 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
+
+    /**
+     * @return string
+     */
     public function actionCommonComponentsExceptionSettingsexception()
     {
         return $this->render('common-components-exception-settingsexception');
     }
+
+    /**
+     * @return string
+     */
     public function actionCommonComponentsHelpersLogger()
     {
+        Yii::$app->cache->flush();
+
         return $this->render('common-components-helpers-logger');
     }
+
+    /**
+     * @return string
+     */
+    public function actionCommonComponentsHelpersRestructuring()
+    {
+        return $this->render('common-components-helpers-restructuring');
+    }
+
+    /**
+     * @return string
+     */
+    public function actionCommonComponentsInquirerPaymentsysteminquirer()
+    {
+        return $this->render('common-components-inquirer-paymentsysteminquirer');
+    }
+
+    /**
+     * @return string
+     */
+    public function actionCommonComponentsSenderMessagesender()
+    {
+        return $this->render('common-components-sender-messagesender');
+    }
+
+    /**
+     * @return string
+     */
+    public function actionCommonComponentsSenderRocketchatsender()
+    {
+        return $this->render('common-components-sender-rocketchatsender');
+    }
+
+    /**
+     * @return string
+     */
+    public function actionCommonComponentsSenderSender()
+    {
+        return $this->render('common-components-sender-sender');
+    }
+
+    /**
+     * @return string
+     */
+    public function actionCommonComponentsSenderTelegramsender()
+    {
+        return $this->render('common-components-sender-telegramsender');
+    }
+
+    /**
+     * @return string
+     */
+    public function actionConsoleControllersCroncontroller()
+    {
+        return $this->render('console-controllers-croncontroller');
+    }
+
+    /**
+     * @return string
+     */
+    public function actionConsoleControllersNotificationcontroller()
+    {
+        return $this->render('console-controllers-notificationcontroller');
+    }
+
 
     /**
      * Logs in a user.
@@ -118,38 +194,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
 
     /**
      * Signs user up.

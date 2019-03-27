@@ -20,7 +20,6 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
@@ -35,10 +34,14 @@ AppAsset::register($this);
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span></button>
-            <a class="navbar-brand" href="./index.html">Yii Framework 2.0 API Documentation</a></div>
+            <?= Html::a('Yii Framework 2.0 API Documentation', ['/site/index'], ['class'=>"navbar-brand"]) ?>
+
+        </div>
         <div id="w82-collapse" class="collapse navbar-collapse">
             <ul id="w83" class="navbar-nav nav">
-                <li><a href="./index.html">Class reference</a></li>
+                <li>
+                    <?= Html::a('Class reference', ['/site/index']) ?>
+                </li>
             </ul>
             <div class="navbar-form navbar-left" role="search">
                 <div class="form-group">
@@ -54,7 +57,7 @@ AppAsset::register($this);
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                <?php $this->render('navigation'); ?>
+                <?php echo $this->render('navigation'); ?>
             </div>
             <div class="col-md-9 api-content" role="main">
                 <?= $content ?>
@@ -71,7 +74,6 @@ AppAsset::register($this);
     Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a>
 </footer>
 
-
 <?php $this->endBody() ?>
 
 <script>jQuery(function ($) {
@@ -81,8 +83,7 @@ AppAsset::register($this);
         if (location.hash) setTimeout(shiftWindow, 1);
         window.addEventListener("hashchange", shiftWindow);
         var element = document.createElement("script");
-        console.log(element, 123);
-        element.src = "./jssearch.index.js";
+        element.src = "/js/jssearch.index.js";
         document.body.appendChild(element);
 
         var searchBox = $('#searchbox');
