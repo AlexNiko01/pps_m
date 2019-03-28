@@ -22,22 +22,22 @@ $this->title = 'SettingsException, common\components\exception\SettingsException
     </tr>
     <tr>
         <td>
-            <?= Html::a('common\components\exception\SettingsException', ['/site/common-components-exception-settingsexception']) ?>
-            <!--            <a href="common-components-exception-settingsexception.html">common\components\exception\SettingsException</a>-->
+            <!--            --><? //= Html::a('common\components\exception\SettingsException', ['/site/common-components-exception-settingsexception']) ?>
+            <a class="get-content" href="/docs_dist/common-components-exception-settingsexception.html">common\components\exception\SettingsException</a>
         </td>
         <td></td>
     </tr>
     <tr>
         <td>
-            <?= Html::a('common\components\helpers\Logger', ['/site/common-components-helpers-logger']) ?>
-            <!--            <a href="common-components-helpers-logger.html">common\components\helpers\Logger</a>-->
+            <!--            --><? //= Html::a('common\components\helpers\Logger', ['/site/common-components-helpers-logger']) ?>
+            <a class="get-content" href="/docs_dist/common-components-helpers-logger.html">common\components\helpers\Logger</a>
         </td>
         <td></td>
     </tr>
     <tr>
         <td>
-            <?= Html::a('common\components\helpers\Restructuring', ['/site/common-components-helpers-restructuring']) ?>
-            <!--            <a href="common-components-helpers-restructuring.html">common\components\helpers\Restructuring</a>-->
+            <!--            --><? //= Html::a('common\components\helpers\Restructuring', ['/site/common-components-helpers-restructuring']) ?>
+            <a class="get-content" href="/docs_dist/ccommon-components-helpers-restructuring.html">common\components\helpers\Restructuring</a>
         </td>
         <td>Class Restructuring</td>
     </tr>

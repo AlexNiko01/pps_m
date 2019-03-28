@@ -59,7 +59,7 @@ AppAsset::register($this);
             <div class="col-md-3">
                 <?php echo $this->render('navigation'); ?>
             </div>
-            <div class="col-md-9 api-content" role="main">
+            <div class="col-md-9 api-content" role="main" id="apiContent">
                 <?= $content ?>
             </div>
 
