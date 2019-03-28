@@ -1,8 +1,3 @@
-<?php
-
-use yii\helpers\Html;
-
-; ?>
 <div id="navigation" class="list-group">
     <a class="list-group-item" href="#navigation-77" data-toggle="collapse" data-parent="#navigation">
         common\components\exception<b class="caret"></b>
