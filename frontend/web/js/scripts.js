@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             let apiContent = document.getElementById('apiContent');
             getContent[i].addEventListener('click', (e) => {
+                if (getContent[i].getAttribute('href').indexOf('site/index') === 1) {
+                    return true;
+                }
                 e.preventDefault();
                 if (getContent[i].getAttribute('href').indexOf('#') !== -1) {
                     return true;
