@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (getContent[i].getAttribute('href').indexOf('#') !== -1) {
                     return true;
                 }
-                ;
 
                 let src = '/docs_dist/' + getContent[i].getAttribute('href');
                 sendRequest(src).then((res) => {
@@ -44,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
-
 
     init();
 })
