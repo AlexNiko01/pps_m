@@ -56,25 +56,4 @@ Array
             [message] => No docblock for element 'common\components\sender\TelegramSender'
         )
 
-    [8] => Array
-        (
-            [line] => 8
-            [file] => console/controllers/CronController.php
-            [message] => No docblock for element 'console\controllers\CronController'
-        )
-
-    [9] => Array
-        (
-            [line] => 16
-            [file] => console/controllers/NotificationController.php
-            [message] => No docblock for element 'console\controllers\NotificationController'
-        )
-
-    [10] => Array
-        (
-            [line] => 124
-            [file] => console/controllers/NotificationController.php
-            [message] => No docblock for element 'actionCheckProjects'
-        )
-
 )
