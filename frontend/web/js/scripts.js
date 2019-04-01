@@ -18,7 +18,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 let src = '/docs_dist/' + getContent[i].getAttribute('href');
                 sendRequest(src).then((res) => {
-                    let newContent = res.getElementsByClassName('api-content')[0].innerHTML;
+                    let newContent = '';
+                    if (res.getElementsByClassName('api-content').length > 0) {
+                        newContent = (res.getElementsByClassName('api-content')[0].length > 0) ? '' : res.getElementsByClassName('api-content')[0].innerHTML;
+                    }
+                    if (res.getElementsByClassName('guide-content').length > 0) {
+                        newContent = (res.getElementsByClassName('guide-content')[0]).length > 0 ? '' : res.getElementsByClassName('guide-content')[0].innerHTML;
+                        console.log(res.getElementsByClassName('guide-content')[0].innerHTML);
+                    }
                     apiContent.innerHTML = '';
                     apiContent.innerHTML = newContent;
                     init();
