@@ -198,7 +198,10 @@ class SiteController extends BaseController
         ]);
     }
 
-
+    /**
+     * @return bool|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     private function getPpsStatus()
     {
         $client = new \GuzzleHttp\Client();
