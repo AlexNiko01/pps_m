@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if (res.getElementsByClassName('guide-content').length > 0) {
                         newContent = (res.getElementsByClassName('guide-content')[0]).length > 0 ? '' : res.getElementsByClassName('guide-content')[0].innerHTML;
-                        console.log(res.getElementsByClassName('guide-content')[0].innerHTML);
                     }
                     apiContent.innerHTML = '';
                     apiContent.innerHTML = newContent;

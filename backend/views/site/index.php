@@ -41,6 +41,31 @@ $this->title = 'Dashboard';
                 'dataProviderProjects' => $dataProviderProjects
             ]); ?>
         </div>
+        <div class="col-lg-3 col-xs-12">
+            <h3>Pss status</h3>
+            <table class="kv-grid-table table table-bordered table-striped kv-table-wrap">
+                <thead>
+                <tr>
+                    <th style="width:5%">#</th>
+                    <th data-col-seq="1"><a href="/?dp-3-sort=name" data-sort="name">Name</a></th>
+                    <th class="kv-align-center" style="width:90px;" data-col-seq="2">
+                        <a href="/?dp-3-sort=active" data-sort="active">Active</a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-key="1">
+                    <td>1</td>
+                    <td style="text-align: left;" data-col-seq="1">Pps</td>
+                    <td class="kv-align-center" style="width:90px;" data-col-seq="2">
+                        <?php if ($ppsClass) : ?>
+                            <span class="glyphicon <?php echo $ppsClass; ?>"></span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-6 col-xs-12">

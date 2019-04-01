@@ -5,8 +5,11 @@ namespace backend\controllers;
 use backend\models\Node;
 use backend\models\search\PaymentSystemStatusSearch;
 use backend\models\search\ProjectStatusSearch;
+use backend\models\Settings;
+use common\components\exception\SettingsException;
 use common\models\Transaction;
 use common\models\search\TransactionSearch;
+use console\controllers\NotificationController;
 use webvimark\components\BaseController;
 use Yii;
 use yii\web\ForbiddenHttpException;
@@ -167,7 +170,13 @@ class SiteController extends BaseController
         $countOfDepositStatuses = $this->getStatuses($brandsId, 'deposit', self::DEPOSIT_DAYS * self::SECONDS_IN_DAY);
         $countOfWithdrawStatuses = $this->getStatuses($brandsId, 'withdraw', self::WITHDRAW_DAYS * self::SECONDS_IN_DAY);
 
+        $ppsClass = 'glyphicon-remove text-danger';
+        if ($this->getPpsStatus()) {
+            $ppsClass = 'glyphicon-ok text-success';
+        }
+
         return $this->render('index', [
+            'ppsClass' => $ppsClass,
             'searchModelWithdraw' => $searchModel,
             'dataProviderWithdraw' => $dataProviderWithdraw,
 
@@ -187,6 +196,24 @@ class SiteController extends BaseController
             'countOfDepositStatuses' => $countOfDepositStatuses,
             'countOfWithdrawStatuses' => $countOfWithdrawStatuses,
         ]);
+    }
+
+
+    private function getPpsStatus()
+    {
+        $client = new \GuzzleHttp\Client();
+        try {
+            $ppsUrl = Settings::getValue('pps_url');
+        } catch (SettingsException  $e) {
+            \Yii::info($e->getMessage(), 'settings');
+            return null;
+        }
+        $res = $client->request('GET', $ppsUrl);
+        if ($res->getStatusCode() != NotificationController::SUCCESSFUL_SERVES_CODE) {
+            return false;
+        }else{
+            return true;
+        }
     }
 
     /**
