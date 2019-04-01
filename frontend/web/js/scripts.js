@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             let apiContent = document.getElementById('apiContent');
             getContent[i].addEventListener('click', (e) => {
-                if (getContent[i].getAttribute('href').indexOf('site/index') === 1) {
+                if (getContent[i].getAttribute('href').indexOf('documentation') === 1) {
                     return true;
                 }
                 e.preventDefault();
