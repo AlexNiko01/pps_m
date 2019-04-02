@@ -8,6 +8,7 @@ use backend\models\{
 use webvimark\modules\UserManagement\models\search\UserSearch;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\db\Query;
 
 class FrontUserSearch extends UserSearch
 {
@@ -60,7 +61,6 @@ class FrontUserSearch extends UserSearch
                 'node_has_user.node_id' => Node::getCurrentNode()->id,
             ]);
 
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
@@ -97,18 +97,30 @@ class FrontUserSearch extends UserSearch
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws \yii\web\ForbiddenHttpException
      */
     public function searchOnBranch($params)
     {
         $query = static::find();
+////
+//        $query->with('roles');
+//        $query->joinWith(['nodes']);
+//
+//        $query->andWhere(['superadmin' => 0])
+//            ->andWhere(['<>', 'user.id', Yii::$app->user->id])
+//            ->andWhere(['in', 'node.id', array_keys(Node::getCurrentNode()->getChildrenList(false))])
+//            ->andWhere(['<>', 'node.id', Node::getCurrentNode()->id]);
 
-        $query->with('roles');
-        $query->joinWith(['nodes']);
-
-        $query->andWhere(['superadmin' => 0])
-            ->andWhere(['<>', 'user.id', Yii::$app->user->id])
-            ->andWhere(['in', 'node.id', array_keys(Node::getCurrentNode()->getChildrenList(false))])
-            ->andWhere(['<>', 'node.id', Node::getCurrentNode()->id]);
+//        $query = new Query;
+        $query->select('*')
+//            ->from('user')
+            ->rightJoin('node_has_user',
+                'node_has_user.user_id =user.id'
+            );
+        $query->andWhere(['user.superadmin' => 0])
+            ->andWhere(['!=', 'user.id', Yii::$app->user->id])
+            ->andWhere(['in', 'node_has_user.node_id', array_keys(Node::getCurrentNode()->getChildrenList(false))])
+            ->andWhere(['!=', 'node_has_user.node_id', Node::getCurrentNode()->id]);
 
 
         $dataProvider = new ActiveDataProvider([
@@ -116,11 +128,11 @@ class FrontUserSearch extends UserSearch
             'pagination' => [
                 'pageSize' => Yii::$app->request->cookies->getValue('_grid_page_size', 20),
             ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ],
-            ],
+//            'sort' => [
+//                'defaultOrder' => [
+//                    'id' => SORT_DESC,
+//                ],
+//            ],
         ]);
 
         if (!($this->load($params) && $this->validate())) {

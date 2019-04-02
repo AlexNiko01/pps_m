@@ -51,8 +51,12 @@ class m190204_125826_create_settings_table extends Migration
             'key' => 'private_key',
         ]);
         $this->insert('settings', [
-            'group' => 'pps_url',
-            'key' => 'privateKey',
+            'group' => 'notification',
+            'key' => 'pps_url',
+        ]);
+        $this->insert('settings', [
+            'group' => 'notification',
+            'key' => 'pps_api_url',
         ]);
 
     }
@@ -97,6 +101,10 @@ class m190204_125826_create_settings_table extends Migration
         $this->delete('settings', [
             'group' => 'notification',
             'key' => 'pps_url',
+        ]);
+        $this->delete('settings', [
+            'group' => 'notification',
+            'key' => 'pps_api_url',
         ]);
         $this->dropTable('{{%settings}}');
     }
