@@ -10,6 +10,7 @@ use common\components\exception\SettingsException;
 use common\models\Transaction;
 use common\models\search\TransactionSearch;
 use console\controllers\NotificationController;
+use GuzzleHttp\Exception\GuzzleException;
 use webvimark\components\BaseController;
 use Yii;
 use yii\web\ForbiddenHttpException;
@@ -171,8 +172,11 @@ class SiteController extends BaseController
         $countOfWithdrawStatuses = $this->getStatuses($brandsId, 'withdraw', self::WITHDRAW_DAYS * self::SECONDS_IN_DAY);
 
         $ppsClass = 'glyphicon-remove text-danger';
-        if ($this->getPpsStatus()) {
-            $ppsClass = 'glyphicon-ok text-success';
+        try {
+            if ($this->getPpsStatus()) {
+                $ppsClass = 'glyphicon-ok text-success';
+            }
+        } catch (GuzzleException $e) {
         }
 
         return $this->render('index', [

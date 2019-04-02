@@ -24,10 +24,10 @@ use webvimark\modules\UserManagement\UserManagementModule;
                     'label' => 'On selected node',
                     'url' => ['/front-user/index'],
                 ],
-                [
-                    'label' => 'On branch',
-                    'url' => ['/front-user/on-branch'],
-                ],
+//                [
+//                    'label' => 'On branch',
+//                    'url' => ['/front-user/on-branch'],
+//                ],
             ],
         ],
 

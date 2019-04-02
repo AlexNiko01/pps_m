@@ -34,7 +34,6 @@ $searchModel = new FrontUserSearch();
     </div>
 </div>
 
-
 <?php Pjax::begin([
     'id' => 'user-grid-pjax',
 ]) ?>
