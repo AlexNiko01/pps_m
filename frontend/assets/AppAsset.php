@@ -16,7 +16,6 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
-        'js/jssearch.js',
         'js/bootstrap.js',
         'js/scripts.js'
 

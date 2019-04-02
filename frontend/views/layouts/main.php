@@ -34,20 +34,8 @@ AppAsset::register($this);
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span></button>
-            <?= Html::a('Yii Framework 2.0 API Documentation', ['/site/index'], ['class'=>"navbar-brand"]) ?>
+            <?= Html::a('Monitoring Documentation', ['/site/index'], ['class' => "navbar-brand"]) ?>
 
-        </div>
-        <div id="w82-collapse" class="collapse navbar-collapse">
-            <ul id="w83" class="navbar-nav nav">
-                <li>
-                    <?= Html::a('Class reference', ['/site/index']) ?>
-                </li>
-            </ul>
-            <div class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input id="searchbox" type="text" class="form-control" placeholder="Search">
-                </div>
-            </div>
         </div>
     </nav>
     <div id="search-resultbox" style="display: none;" class="modal-content">
@@ -76,99 +64,7 @@ AppAsset::register($this);
 
 <?php $this->endBody() ?>
 
-<script>jQuery(function ($) {
-        var shiftWindow = function () {
-            scrollBy(0, -50)
-        };
-        if (location.hash) setTimeout(shiftWindow, 1);
-        window.addEventListener("hashchange", shiftWindow);
-        var element = document.createElement("script");
-        element.src = "/js/jssearch.index.js";
-        document.body.appendChild(element);
 
-        var searchBox = $('#searchbox');
-
-// search when typing in search field
-        searchBox.on("keyup", function (event) {
-            var query = $(this).val();
-
-            if (query == '' || event.which == 27) {
-                $('#search-resultbox').hide();
-                return;
-            } else if (event.which == 13) {
-                var selectedLink = $('#search-resultbox a.selected');
-                if (selectedLink.length != 0) {
-                    document.location = selectedLink.attr('href');
-                    return;
-                }
-            } else if (event.which == 38 || event.which == 40) {
-                $('#search-resultbox').show();
-
-                var selected = $('#search-resultbox a.selected');
-                if (selected.length == 0) {
-                    $('#search-results').find('a').first().addClass('selected');
-                } else {
-                    var next;
-                    if (event.which == 40) {
-                        next = selected.parent().next().find('a').first();
-                    } else {
-                        next = selected.parent().prev().find('a').first();
-                    }
-                    if (next.length != 0) {
-                        var resultbox = $('#search-results');
-                        var position = next.position();
-
-//              TODO scrolling is buggy and jumps around
-//                resultbox.scrollTop(Math.floor(position.top));
-//                console.log(position.top);
-
-                        selected.removeClass('selected');
-                        next.addClass('selected');
-                    }
-                }
-
-                return;
-            }
-            $('#search-resultbox').show();
-            $('#search-results').html('<li><span class="no-results">No results</span></li>');
-
-            var result = jssearch.search(query);
-
-            if (result.length > 0) {
-                var i = 0;
-                var resHtml = '';
-
-                for (var key in result) {
-                    if (i++ > 20) {
-                        break;
-                    }
-                    resHtml = resHtml +
-                        '<li><a href="' + result[key].file.u.substr(3) + '"><span class="title">' + result[key].file.t + '</span>' +
-                        '<span class="description">' + result[key].file.d + '</span></a></li>';
-                }
-                $('#search-results').html(resHtml);
-            }
-        });
-
-// hide the search results on ESC
-        $(document).on("keyup", function (event) {
-            if (event.which == 27) {
-                $('#search-resultbox').hide();
-            }
-        });
-// hide search results on click to document
-        $(document).bind('click', function (e) {
-            $('#search-resultbox').hide();
-        });
-// except the following:
-        searchBox.bind('click', function (e) {
-            e.stopPropagation();
-        });
-        $('#search-resultbox').bind('click', function (e) {
-            e.stopPropagation();
-        });
-
-    });</script>
 <script type="text/javascript">
     /*<![CDATA[*/
     jQuery("a.toggle").on('click', function () {
@@ -185,19 +81,6 @@ AppAsset::register($this);
 
         return false;
     });
-    /*
-     $(".sourceCode a.show").toggle(function () {
-     $(this).text($(this).text().replace(/show/,'hide'));
-     $(this).parents(".sourceCode").find("div.code").show();
-     },function () {
-     $(this).text($(this).text().replace(/hide/,'show'));
-     $(this).parents(".sourceCode").find("div.code").hide();
-     });
-     $("a.sourceLink").click(function () {
-     $(this).attr('target','_blank');
-     });
-     */
-    /*]]>*/
 </script>
 
 </body>
