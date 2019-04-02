@@ -73,90 +73,91 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        Yii::$app->cache->flush();
         return $this->render('index');
     }
 
-    /**
-     * @return string
-     */
-    public function actionCommonComponentsExceptionSettingsexception()
-    {
-        return $this->render('common-components-exception-settingsexception');
-    }
-
-    /**
-     * @return string
-     */
-    public function actionCommonComponentsHelpersLogger()
-    {
-        Yii::$app->cache->flush();
-
-        return $this->render('common-components-helpers-logger');
-    }
-
-    /**
-     * @return string
-     */
-    public function actionCommonComponentsHelpersRestructuring()
-    {
-        return $this->render('common-components-helpers-restructuring');
-    }
-
-    /**
-     * @return string
-     */
-    public function actionCommonComponentsInquirerPaymentsysteminquirer()
-    {
-        return $this->render('common-components-inquirer-paymentsysteminquirer');
-    }
-
-    /**
-     * @return string
-     */
-    public function actionCommonComponentsSenderMessagesender()
-    {
-        return $this->render('common-components-sender-messagesender');
-    }
-
-    /**
-     * @return string
-     */
-    public function actionCommonComponentsSenderRocketchatsender()
-    {
-        return $this->render('common-components-sender-rocketchatsender');
-    }
-
-    /**
-     * @return string
-     */
-    public function actionCommonComponentsSenderSender()
-    {
-        return $this->render('common-components-sender-sender');
-    }
-
-    /**
-     * @return string
-     */
-    public function actionCommonComponentsSenderTelegramsender()
-    {
-        return $this->render('common-components-sender-telegramsender');
-    }
-
-    /**
-     * @return string
-     */
-    public function actionConsoleControllersCroncontroller()
-    {
-        return $this->render('console-controllers-croncontroller');
-    }
-
-    /**
-     * @return string
-     */
-    public function actionConsoleControllersNotificationcontroller()
-    {
-        return $this->render('console-controllers-notificationcontroller');
-    }
+//    /**
+//     * @return string
+//     */
+//    public function actionCommonComponentsExceptionSettingsexception()
+//    {
+//        return $this->render('common-components-exception-settingsexception');
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function actionCommonComponentsHelpersLogger()
+//    {
+//        Yii::$app->cache->flush();
+//
+//        return $this->render('common-components-helpers-logger');
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function actionCommonComponentsHelpersRestructuring()
+//    {
+//        return $this->render('common-components-helpers-restructuring');
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function actionCommonComponentsInquirerPaymentsysteminquirer()
+//    {
+//        return $this->render('common-components-inquirer-paymentsysteminquirer');
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function actionCommonComponentsSenderMessagesender()
+//    {
+//        return $this->render('common-components-sender-messagesender');
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function actionCommonComponentsSenderRocketchatsender()
+//    {
+//        return $this->render('common-components-sender-rocketchatsender');
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function actionCommonComponentsSenderSender()
+//    {
+//        return $this->render('common-components-sender-sender');
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function actionCommonComponentsSenderTelegramsender()
+//    {
+//        return $this->render('common-components-sender-telegramsender');
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function actionConsoleControllersCroncontroller()
+//    {
+//        return $this->render('console-controllers-croncontroller');
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function actionConsoleControllersNotificationcontroller()
+//    {
+//        return $this->render('console-controllers-notificationcontroller');
+//    }
 
 
     /**
