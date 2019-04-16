@@ -19,7 +19,7 @@ For the project to work successfully, you must fill in the fields on the page do
     | notification | pps_url | http://master.backend.paygate.xim.hattiko.pw/ |  
     | notification | pps_api_url | http://master.api.paygate.xim.hattiko.pw/merchant |
     
-    To check certain payment systems you mast create new testing merchant on PPS than add on setting page of this monitoring next field for created 
+    To check certain payment systems you mast create new testing merchant on PPS than add on setting page of this monitoring next fields for created 
     merchant:
     testing_merchant_id,
     public_key,

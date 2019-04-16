@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "950e48e4dadedb04878aa049649cc96a",
+    "content-hash": "8773f36e39e04f107f58c16286da6686",
     "packages": [
         {
             "name": "aki/yii2-bot-telegram",
@@ -603,6 +603,43 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "Rocket Chat REST API client in PHP.",
             "time": "2017-05-03T20:07:04+00:00"
+        },
+        {
+            "name": "giannisdag/yii2-check-login-attempts",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/giannisdag/yii2-check-login-attempts.git",
+                "reference": "6fbe750f4c4147ccc2033ac8e213dc70e9d6efeb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/giannisdag/yii2-check-login-attempts/zipball/6fbe750f4c4147ccc2033ac8e213dc70e9d6efeb",
+                "reference": "6fbe750f4c4147ccc2033ac8e213dc70e9d6efeb",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "giannisdag\\yii2CheckLoginAttempts\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Giannis Dagkoulis",
+                    "email": "giannisdag@yahoo.gr"
+                }
+            ],
+            "description": "Disable login after multiple failures.",
+            "keywords": [
+                "Behavior",
+                "yii2"
+            ],
+            "time": "2018-01-08T08:55:07+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3458,6 +3495,59 @@
                 "yii2"
             ],
             "time": "2018-08-20T14:45:21+00:00"
+        },
+        {
+            "name": "yii2tech/authlog",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yii2tech/authlog.git",
+                "reference": "1a2a1bb1cc2d47803cdc8c78b1cc5d929b0d34a4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yii2tech/authlog/zipball/1a2a1bb1cc2d47803cdc8c78b1cc5d929b0d34a4",
+                "reference": "1a2a1bb1cc2d47803cdc8c78b1cc5d929b0d34a4",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "~2.0.0"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii2tech\\authlog\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Klimov",
+                    "email": "klimov.paul@gmail.com"
+                }
+            ],
+            "description": "Provides support for Identity auth tracking and brute-force protection",
+            "keywords": [
+                "auth",
+                "authenticate",
+                "brute",
+                "brute-force",
+                "force",
+                "identity",
+                "log",
+                "logging",
+                "tracking",
+                "yii2"
+            ],
+            "time": "2018-03-02T20:06:14+00:00"
         },
         {
             "name": "yii2tech/crontab",

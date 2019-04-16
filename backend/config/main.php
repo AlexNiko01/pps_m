@@ -10,7 +10,9 @@ return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
-    'bootstrap' => ['log'],
+    'bootstrap' => [
+        'log'
+    ],
     'modules' => [
         'user-management' => [
             'class' => webvimark\modules\UserManagement\UserManagementModule::class,
@@ -29,7 +31,10 @@ return [
             'class' => webvimark\modules\UserManagement\components\UserConfig::class,
             'on afterLogin' => function ($event) {
                 \webvimark\modules\UserManagement\models\UserVisitLog::newVisitor($event->identity->id);
-            }
+            },
+            'as authLog' => [
+                'class' => 'yii2tech\authlog\AuthLogWebUserBehavior'
+            ]
         ],
 
         'session' => [
