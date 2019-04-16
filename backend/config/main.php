@@ -11,7 +11,8 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => [
-        'log'
+        'log',
+        'common\components\bootstrap\EventBootstrap',
     ],
     'modules' => [
         'user-management' => [
@@ -31,10 +32,7 @@ return [
             'class' => webvimark\modules\UserManagement\components\UserConfig::class,
             'on afterLogin' => function ($event) {
                 \webvimark\modules\UserManagement\models\UserVisitLog::newVisitor($event->identity->id);
-            },
-            'as authLog' => [
-                'class' => 'yii2tech\authlog\AuthLogWebUserBehavior'
-            ]
+            }
         ],
 
         'session' => [
