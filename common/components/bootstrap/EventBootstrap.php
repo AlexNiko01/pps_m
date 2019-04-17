@@ -22,20 +22,13 @@ class EventBootstrap implements BootstrapInterface
      */
     public function bootstrap($app): void
     {
-        $events = [Model::EVENT_BEFORE_VALIDATE, User::EVENT_AFTER_LOGIN];
 
-        foreach ($events as $eventName) {
-            Event::on(Model::class, $eventName, function ($event) {
-                if ($event->sender instanceof LoginForm) {
-                    $this->addAuthLog();
-                }
-            });
-            Event::on(User::class, $eventName, function ($event) {
-                if ($event->sender instanceof UserConfig) {
-                    $this->removeAuthLog();
-                }
-            });
-        }
+        Event::on(LoginForm::class, Model::EVENT_BEFORE_VALIDATE, function ($event) {
+            $this->addAuthLog();
+        });
+        Event::on(UserConfig::class, User::EVENT_AFTER_LOGIN, function ($event) {
+            $this->removeAuthLog();
+        });
     }
 
 
@@ -87,7 +80,7 @@ class EventBootstrap implements BootstrapInterface
         $currentHash = AuthLogHelper::genHash($currentUserAgent);
 
         $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
-        if ($authLog && $authLog->attempts >= 2) {
+        if ($authLog) {
             try {
                 $authLog->delete();
             } catch (StaleObjectException $e) {
