@@ -3,14 +3,14 @@
 namespace common\components\helpers;
 
 
-class AuthLogHelper
+class Hash
 {
     /**
      * @param string $userAgent
      * @return string
      * Creates hash for user agent field to store it in DB
      */
-    public static function genHash(string $userAgent): string
+    public static function sha1(string $userAgent): string
     {
         return hash('sha1', $userAgent);
 

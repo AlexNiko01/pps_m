@@ -2,8 +2,9 @@
 
 namespace common\components\bootstrap;
 
+use common\components\exception\ClientIsBlocked;
 use common\models\AuthLog;
-use common\components\helpers\AuthLogHelper;
+use common\components\helpers\Hash;
 use webvimark\modules\UserManagement\components\UserConfig;
 use webvimark\modules\UserManagement\models\forms\LoginForm;
 use yii\base\BootstrapInterface;
@@ -23,6 +24,7 @@ class EventBootstrap implements BootstrapInterface
     public function bootstrap($app): void
     {
 
+        $this->checkUserAccessibility();
         Event::on(LoginForm::class, Model::EVENT_BEFORE_VALIDATE, function ($event) {
             $this->addAuthLog();
         });
@@ -39,7 +41,7 @@ class EventBootstrap implements BootstrapInterface
         try {
             $currentIp = \Yii::$app->request->getUserIP();
             $currentUserAgent = \Yii::$app->request->getUserAgent();
-            $currentHash = AuthLogHelper::genHash($currentUserAgent);
+            $currentHash = Hash::sha1($currentUserAgent);
             $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
             if (!$authLog) {
                 $authLog = new AuthLog();
@@ -77,7 +79,7 @@ class EventBootstrap implements BootstrapInterface
     {
         $currentIp = \Yii::$app->request->getUserIP();
         $currentUserAgent = \Yii::$app->request->getUserAgent();
-        $currentHash = AuthLogHelper::genHash($currentUserAgent);
+        $currentHash = Hash::sha1($currentUserAgent);
 
         $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
         if ($authLog) {
@@ -88,5 +90,9 @@ class EventBootstrap implements BootstrapInterface
             }
         }
 
+    }
+
+    private function checkUserAccessibility() {
+        //TODO: throw new ClientIsBlocked();   if user is blocked
     }
 }
