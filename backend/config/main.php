@@ -28,6 +28,9 @@ return [
         'request' => [
             'csrfParam' => '_csrf-backend',
         ],
+
+        'authLogService' => ['class' => common\components\auth\AuthLogService::class]
+        ,
         'user' => [
             'class' => webvimark\modules\UserManagement\components\UserConfig::class,
             'on afterLogin' => function ($event) {
