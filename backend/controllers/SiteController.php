@@ -46,7 +46,7 @@ class SiteController extends BaseController
             return [
                 'error' => [
                     'class' => 'yii\web\ErrorAction',
-                    'view' => '@backend/views/site/error.php',
+//                    'view' => '@backend/views/site/error.php',
                 ],
             ];
         }
@@ -120,7 +120,6 @@ class SiteController extends BaseController
      */
     public function actionIndex()
     {
-        throw new ClientIsBlocked();
         if (Yii::$app->user->isGuest) {
             return Yii::$app->user->loginRequired();
         }
