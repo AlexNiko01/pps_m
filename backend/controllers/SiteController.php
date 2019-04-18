@@ -6,10 +6,12 @@ use backend\models\Node;
 use backend\models\search\PaymentSystemStatusSearch;
 use backend\models\search\ProjectStatusSearch;
 use backend\models\Settings;
+use common\components\exception\ClientIsBlocked;
 use common\components\exception\SettingsException;
 use common\models\Transaction;
 use common\models\search\TransactionSearch;
 use console\controllers\NotificationController;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use webvimark\components\BaseController;
 use Yii;
@@ -44,6 +46,7 @@ class SiteController extends BaseController
             return [
                 'error' => [
                     'class' => 'yii\web\ErrorAction',
+                    'view' => '@backend/views/site/error.php',
                 ],
             ];
         }
@@ -117,6 +120,7 @@ class SiteController extends BaseController
      */
     public function actionIndex()
     {
+        throw new ClientIsBlocked();
         if (Yii::$app->user->isGuest) {
             return Yii::$app->user->loginRequired();
         }
@@ -218,7 +222,7 @@ class SiteController extends BaseController
         $res = $client->request('GET', $ppsUrl);
         if ($res->getStatusCode() != NotificationController::SUCCESSFUL_SERVES_CODE) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
@@ -241,6 +245,13 @@ class SiteController extends BaseController
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+
+    public function actionError()
+    {
+        $this->layout = 'ban';
+        return $this->render('error');
     }
 
 

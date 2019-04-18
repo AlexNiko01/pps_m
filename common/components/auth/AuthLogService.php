@@ -8,13 +8,14 @@ use common\components\helpers\Hash;
 use common\models\AuthLog;
 use yii\base\Component;
 use yii\db\StaleObjectException;
+use yii\helpers\Url;
 
 class AuthLogService extends Component
 {
     const BLOCKING_DENOMINATOR_TIME_VAL = 300;
 
     /**
-     * @throws ClientIsBlocked
+     * Adding a record to the database about the attempt to authorize a user
      */
     public function addAuthLog(): void
     {
@@ -79,9 +80,7 @@ class AuthLogService extends Component
         }
     }
 
-    /**
-     * @throws ClientIsBlocked
-     */
+
     public function checkUserAccessibility()
     {
         $currentIp = \Yii::$app->request->getUserIP();
