@@ -16,12 +16,12 @@ return [
     ],
     'modules' => [
         'user-management' => [
-            'class' => webvimark\modules\UserManagement\UserManagementModule::class,
-            'on beforeAction' => function (yii\base\ActionEvent $event) {
-                if ($event->action->uniqueId === 'user-management/auth/login') {
-                    $event->action->controller->layout = 'loginLayout.php';
-                }
-            },
+//            'class' => webvimark\modules\UserManagement\UserManagementModule::class,
+//            'on beforeAction' => function (yii\base\ActionEvent $event) {
+//                if ($event->action->uniqueId === 'user-management/auth/login') {
+//                    $event->action->controller->layout = 'loginLayout.php';
+//                }
+//            },
         ]
     ],
     'components' => [
@@ -35,7 +35,9 @@ return [
             'class' => webvimark\modules\UserManagement\components\UserConfig::class,
             'on afterLogin' => function ($event) {
                 \webvimark\modules\UserManagement\models\UserVisitLog::newVisitor($event->identity->id);
-            }
+            },
+//            'enableAutoLogin' => true,
+//            'loginUrl' => ['login/login'],
         ],
 
         'session' => [

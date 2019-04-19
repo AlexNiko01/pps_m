@@ -251,6 +251,8 @@ class SiteController extends BaseController
     public function actionError()
     {
         \Yii::$app->cache->flush();
+        $exception = Yii::$app->errorHandler->exception;
+//        var_dump($exception);
         $currentIp = \Yii::$app->request->getUserIP();
         $currentUserAgent = \Yii::$app->request->getUserAgent();
         $currentHash = Hash::sha1($currentUserAgent);
@@ -261,11 +263,14 @@ class SiteController extends BaseController
             $unblockingTime = $authLog->unblocking_time ? date("Y/m/d  H:i:s", $authLog->unblocking_time) : '';
         }
         $this->layout = 'ban';
-        return $this->render('error',
-            [
-                'unblockingTime' => $unblockingTime
-            ]
-        );
+        if($exception instanceof ClientIsBlocked){
+            return $this->render('error',
+                [
+                    'unblockingTime' => $unblockingTime
+                ]
+            );
+        }
+
     }
 
 
