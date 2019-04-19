@@ -41,8 +41,6 @@ return [
             'on afterLogin' => function ($event) {
                 \webvimark\modules\UserManagement\models\UserVisitLog::newVisitor($event->identity->id);
             },
-//            'enableAutoLogin' => true,
-//            'loginUrl' => ['login/login'],
         ],
 
         'session' => [
