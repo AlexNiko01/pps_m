@@ -252,7 +252,6 @@ class SiteController extends BaseController
     {
         \Yii::$app->cache->flush();
         $exception = Yii::$app->errorHandler->exception;
-//        var_dump($exception);
         $currentIp = \Yii::$app->request->getUserIP();
         $currentUserAgent = \Yii::$app->request->getUserAgent();
         $currentHash = Hash::sha1($currentUserAgent);
@@ -270,8 +269,6 @@ class SiteController extends BaseController
                 ]
             );
         }
-
     }
-
 
 }

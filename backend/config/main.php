@@ -16,21 +16,26 @@ return [
     ],
     'modules' => [
         'user-management' => [
-//            'class' => webvimark\modules\UserManagement\UserManagementModule::class,
-//            'on beforeAction' => function (yii\base\ActionEvent $event) {
-//                if ($event->action->uniqueId === 'user-management/auth/login') {
-//                    $event->action->controller->layout = 'loginLayout.php';
-//                }
-//            },
+            'class' => webvimark\modules\UserManagement\UserManagementModule::class,
+            'on beforeAction' => function (yii\base\ActionEvent $event) {
+                if ($event->action->uniqueId === 'user-management/auth/login') {
+                    $event->action->controller->layout = 'loginLayout.php';
+                }
+            },
         ]
     ],
     'components' => [
+        'view'=>[
+            'theme'=>[
+                'pathMap'=>[
+                    '@vendor/webvimark/module-user-management/views' => '@backend/views/user-management',
+                ],
+            ],
+        ],
         'request' => [
             'csrfParam' => '_csrf-backend',
         ],
-
-        'authLogService' => ['class' => common\components\auth\AuthLogService::class]
-        ,
+        'authLogService' => ['class' => common\components\auth\AuthLogService::class],
         'user' => [
             'class' => webvimark\modules\UserManagement\components\UserConfig::class,
             'on afterLogin' => function ($event) {
