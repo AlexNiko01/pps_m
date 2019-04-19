@@ -6,8 +6,6 @@
 
 /* @var $exception Exception */
 
-use yii\helpers\Html;
-
 $this->title = $name;
 ?>
 <style>
@@ -125,7 +123,6 @@ $this->title = $name;
     <div class="site-error">
         <h1>You are not allowed to this page</h1>
         <h2>next try through...</h2>
-
         <div class="pulse">
             <span id="clock" class="clock"></span>
         </div>
