@@ -19,6 +19,7 @@ class BackendAsset extends AssetBundle
         'css/lte/skins/skin-blue.min.css',
         'js/fancytree/skin-lion/ui.fancytree.min.css',
         'css/default.css',
+        'css/site.css',
     ];
     public $js = [
         'js/lte/app.js',

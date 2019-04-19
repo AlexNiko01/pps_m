@@ -8,6 +8,8 @@ use backend\models\search\ProjectStatusSearch;
 use backend\models\Settings;
 use common\components\exception\ClientIsBlocked;
 use common\components\exception\SettingsException;
+use common\components\helpers\Hash;
+use common\models\AuthLog;
 use common\models\Transaction;
 use common\models\search\TransactionSearch;
 use console\controllers\NotificationController;
@@ -46,7 +48,6 @@ class SiteController extends BaseController
             return [
                 'error' => [
                     'class' => 'yii\web\ErrorAction',
-//                    'view' => '@backend/views/site/error.php',
                 ],
             ];
         }
@@ -249,8 +250,22 @@ class SiteController extends BaseController
 
     public function actionError()
     {
+        \Yii::$app->cache->flush();
+        $currentIp = \Yii::$app->request->getUserIP();
+        $currentUserAgent = \Yii::$app->request->getUserAgent();
+        $currentHash = Hash::sha1($currentUserAgent);
+        $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
+
+        $unblockingTime = '';
+        if ($authLog) {
+            $unblockingTime = $authLog->unblocking_time ? date("Y/m/d  H:i:s", $authLog->unblocking_time) : '';
+        }
         $this->layout = 'ban';
-        return $this->render('error');
+        return $this->render('error',
+            [
+                'unblockingTime' => $unblockingTime
+            ]
+        );
     }
 
 

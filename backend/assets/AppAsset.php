@@ -15,6 +15,8 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
+        'js/jquery.countdown.min.js',
+        'js/scripts'
     ];
     public $depends = [
         'yii\web\YiiAsset',
