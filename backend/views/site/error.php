@@ -15,6 +15,7 @@ $this->title = $name;
     body,
     .content {
         height: 100%;
+        margin: 0;
     }
 
     h1 {
@@ -131,8 +132,10 @@ $this->title = $name;
     </div>
 
 </div>
-<?php var_dump($unblockingTime); ?>
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.0.slim.min.js"
+        integrity="sha256-ZaXnYkHGqIhqTbJ6MB4l9Frs/r7U4jlx7ir8PJYBqbI="
+        crossorigin="anonymous"></script>
+
 <script src="/js/jquery.countdown.min.js"></script>
 <script>
     (function ($) {
