@@ -22,12 +22,14 @@ return [
                     $event->action->controller->layout = 'loginLayout.php';
                 }
             },
+
+//            'controllerNamespace'=>'backend\controllers\UserManagement',
         ]
     ],
     'components' => [
-        'view'=>[
-            'theme'=>[
-                'pathMap'=>[
+        'view' => [
+            'theme' => [
+                'pathMap' => [
                     '@vendor/webvimark/module-user-management/views' => '@backend/views/user-management',
                 ],
             ],

@@ -88,7 +88,7 @@ class AuthLogService extends Component
         $currentHash = Hash::sha1($currentUserAgent);
         $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
         $currentTime = time();
-        if ($authLog->block === 1 && $currentTime < $authLog->unblocking_time) {
+        if ($authLog && $authLog->block === 1 && $currentTime < $authLog->unblocking_time) {
             throw new ClientIsBlocked();
         }
     }

@@ -27,7 +27,6 @@ class BackendAsset extends AssetBundle
         'js/fancytree/jquery.fancytree-all.min.js',
         'js/front.js',
         'js/jquery.countdown.min.js',
-        'js/scripts'
     ];
     public $depends = [
         'yii\web\YiiAsset',

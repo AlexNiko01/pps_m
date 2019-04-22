@@ -16,7 +16,7 @@ $this->title = $name;
         margin: 0;
     }
 
-    h1 {
+    .site-error-wrap h1 {
         color: #e53935
     }
 
