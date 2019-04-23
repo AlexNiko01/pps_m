@@ -12,7 +12,7 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => [
         'log',
-        'common\components\bootstrap\EventBootstrap',
+//        'common\components\bootstrap\EventBootstrap',
     ],
     'modules' => [
         'user-management' => [
@@ -27,13 +27,13 @@ return [
         ]
     ],
     'components' => [
-        'view' => [
-            'theme' => [
-                'pathMap' => [
-                    '@vendor/webvimark/module-user-management/views' => '@backend/views/user-management',
-                ],
-            ],
-        ],
+//        'view' => [
+//            'theme' => [
+//                'pathMap' => [
+//                    '@vendor/webvimark/module-user-management/views' => '@backend/views/user-management',
+//                ],
+//            ],
+//        ],
         'request' => [
             'csrfParam' => '_csrf-backend',
         ],

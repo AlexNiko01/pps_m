@@ -45,6 +45,7 @@ class AuthController extends BaseController
      */
     public function actionLogin()
     {
+
         $this->layout = 'auth';
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -54,9 +55,10 @@ class AuthController extends BaseController
 
         if (Yii::$app->request->isAjax AND $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
+
+
             return ActiveForm::validate($model);
         }
-
         if ($model->load(Yii::$app->request->post()) AND $model->login()) {
             return $this->goBack();
         }
