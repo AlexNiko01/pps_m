@@ -25,15 +25,15 @@ return [
         ],
     ],
     'modules' => [
-        'user-management' => [
-            'class' => webvimark\modules\UserManagement\UserManagementModule::class,
-
-            'on beforeAction' => function (yii\base\ActionEvent $event) {
-                if ($event->action->uniqueId === 'user-management/auth/login') {
-                    $event->action->controller->layout = 'loginLayout.php';
-                }
-            },
-        ],
+//        'user-management' => [
+//            'class' => webvimark\modules\UserManagement\UserManagementModule::class,
+//
+//            'on beforeAction' => function (yii\base\ActionEvent $event) {
+//                if ($event->action->uniqueId === 'user-management/auth/login') {
+//                    $event->action->controller->layout = 'loginLayout.php';
+//                }
+//            },
+//        ],
         'gridview' => [
             'class' => '\kartik\grid\Module',
         ],

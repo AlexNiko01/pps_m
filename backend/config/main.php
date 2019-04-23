@@ -38,6 +38,7 @@ return [
             'csrfParam' => '_csrf-backend',
         ],
         'authLogService' => ['class' => common\components\auth\AuthLogService::class],
+
         'user' => [
             'class' => webvimark\modules\UserManagement\components\UserConfig::class,
             'on afterLogin' => function ($event) {
@@ -63,6 +64,10 @@ return [
                 [
                     'pattern' => 'settings',
                     'route' => 'settings/index'
+                ],
+                [
+                    'pattern' => 'user-management/auth/login',
+                    'route' => 'auth/login'
                 ]
             ],
         ]

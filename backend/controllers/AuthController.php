@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers\UserManagement;
+namespace backend\controllers;
 
 use backend\models\LoginForm;
 use webvimark\components\BaseController;
@@ -29,7 +29,12 @@ class AuthController extends BaseController
     public function actions()
     {
         return [
-            'captcha' => $this->module->captchaOptions,
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'minLength' => 3,
+                'maxLength' => 4,
+                'offset' => 5
+            ],
         ];
     }
 
@@ -40,7 +45,7 @@ class AuthController extends BaseController
      */
     public function actionLogin()
     {
-        Yii::$app->cache->flush();
+        $this->layout = 'auth';
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }

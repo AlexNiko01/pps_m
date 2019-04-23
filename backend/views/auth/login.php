@@ -12,7 +12,7 @@ use yii\helpers\Html;
 
 ?>
     <h1>
-        this view path is:   backend/...user-management/auth/login
+        this view path is:   backend/.../auth/login
     </h1>
     <div class="container" id="login-wrapper">
         <div class="row">
