@@ -40,10 +40,10 @@ use yii\helpers\Html;
 
                         <?= (isset(Yii::$app->user->enableAutoLogin) && Yii::$app->user->enableAutoLogin) ? $form->field($model, 'rememberMe')->checkbox(['value' => true]) : '' ?>
 
-<!--                        --><?//= $form->field($model, 'captcha')->widget(Captcha::className(), [
-//                            'template' => '<div class="row"><div class="col-sm-2">{image}</div><div class="col-sm-3">{input}</div></div>',
-//                            'captchaAction' => ['/user-management/auth/captcha']
-//                        ]) ?>
+                        <?= $form->field($model, 'captcha')->widget(Captcha::className(), [
+                            'template' => '<div class="row"><div class="col-sm-2">{image}</div><div class="col-sm-3">{input}</div></div>',
+                            'captchaAction' => ['/auth/captcha']
+                        ]) ?>
 
                         <?= Html::submitButton(
                             UserManagementModule::t('front', 'Login'),
