@@ -13,7 +13,7 @@ class LoginForm extends \webvimark\modules\UserManagement\models\forms\LoginForm
     public function rules()
     {
         $rules = parent::rules();
-        $rules[] = ['captcha', 'captcha', 'captchaAction' => '/auth/captcha'];
+        $rules[] = ['captcha', 'captcha', 'captchaAction' => '/user-auth/captcha'];
         return $rules;
 
     }

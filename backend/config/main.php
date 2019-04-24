@@ -12,7 +12,7 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => [
         'log',
-//        'common\components\bootstrap\EventBootstrap',
+        'common\components\bootstrap\EventBootstrap',
     ],
     'modules' => [
         'user-management' => [
@@ -67,7 +67,7 @@ return [
                 ],
                 [
                     'pattern' => 'user-management/auth/login',
-                    'route' => 'auth/login'
+                    'route' => 'user-auth/login'
                 ]
             ],
         ]

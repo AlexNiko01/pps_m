@@ -17,6 +17,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use webvimark\components\BaseController;
 use Yii;
+use yii\db\Exception;
 use yii\web\ForbiddenHttpException;
 use pps\payment\Payment;
 
@@ -121,6 +122,7 @@ class SiteController extends BaseController
      */
     public function actionIndex()
     {
+//        throw new Exception();
         if (Yii::$app->user->isGuest) {
             return Yii::$app->user->loginRequired();
         }

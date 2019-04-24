@@ -61,10 +61,9 @@ class AuthLogService extends Component
 
 
     /**
-     * @return StaleObjectException
      * Deletes the record of the blocked user in case of successful authorization
      */
-    public function removeAuthLog(): StaleObjectException
+    public function removeAuthLog()
     {
         $currentIp = \Yii::$app->request->getUserIP();
         $currentUserAgent = \Yii::$app->request->getUserAgent();

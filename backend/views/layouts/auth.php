@@ -1,5 +1,9 @@
 <?php
-use yii\helpers\Html;; ?>
+
+use yii\bootstrap\BootstrapAsset;
+use yii\helpers\Html;
+
+BootstrapAsset::register($this); ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
     <html lang="<?= Yii::$app->language ?>">

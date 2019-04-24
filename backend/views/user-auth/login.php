@@ -1,7 +1,7 @@
 <?php
 /**
  * @var $this yii\web\View
- * @var $model webvimark\modules\UserManagement\models\forms\LoginForm
+ * @var $model backend\models\LoginForm
  */
 
 use webvimark\modules\UserManagement\components\GhostHtml;
@@ -11,9 +11,9 @@ use yii\captcha\Captcha;
 use yii\helpers\Html;
 
 ?>
-    <h1>
-        this view path is: backend/.../auth/login
-    </h1>
+    <!--    <h1>-->
+    <!--        this view path is: backend/.../auth/login-->
+    <!--    </h1>-->
     <div class="container" id="login-wrapper">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
@@ -24,7 +24,7 @@ use yii\helpers\Html;
                     <div class="panel-body">
 
                         <?php $form = ActiveForm::begin([
-                            'enableAjaxValidation'   => false,
+                            'enableAjaxValidation' => false,
                             'enableClientValidation' => true,
                             'id' => 'login-form',
                             'options' => ['autocomplete' => 'off'],
@@ -40,13 +40,14 @@ use yii\helpers\Html;
                         <?= $form->field($model, 'password')
                             ->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'autocomplete' => 'off']) ?>
 
+<!--                        --><?php //if ($showCaptcha):; ?>
+                            <?= $form->field($model, 'captcha')->widget(Captcha::class,
+                                [
+                                    'template' => '<div class="row"><div class="col-md-12 col-sm-2">{image}</div><div class="col-md-12 col-sm-10">{input}</div></div>',
+                                    'captchaAction' => ['/user-auth/captcha']
+                                ]) ?>
+<!--                        --><?php //endif; ?>
                         <?= (isset(Yii::$app->user->enableAutoLogin) && Yii::$app->user->enableAutoLogin) ? $form->field($model, 'rememberMe')->checkbox(['value' => true]) : '' ?>
-
-                        <?= $form->field($model, 'captcha')->widget(Captcha::class,
-                            [
-                                'template' => '<div class="row"><div class="col-sm-2">{image}</div><div class="col-sm-3">{input}</div></div>',
-                                'captchaAction' => ['/auth/captcha']
-                            ]) ?>
 
                         <?= Html::submitButton(
                             UserManagementModule::t('front', 'Login'),
