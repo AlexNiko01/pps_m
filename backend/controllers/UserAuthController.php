@@ -57,12 +57,8 @@ class UserAuthController extends AuthController
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
         $showCaptcha = $this->showCaptcha();
-        $model = new LoginForm(['scenario'=>LoginForm::SCENARIO_LOGIN_DEFAULT]);
-        if($showCaptcha){
-            $model = new LoginForm(['scenario'=>LoginForm::SCENARIO_LOGIN_VERIFICATION]);
-        }
+        $model = new LoginForm(['scenario' => LoginForm::SCENARIO_LOGIN_DEFAULT]);
 
         if (Yii::$app->request->isAjax AND $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -73,6 +69,9 @@ class UserAuthController extends AuthController
             return $this->goBack();
         }
 
+        if ($showCaptcha) {
+            $model = new LoginForm(['scenario' => LoginForm::SCENARIO_LOGIN_VERIFICATION]);
+        }
 
         return $this->renderIsAjax('login',
             [
