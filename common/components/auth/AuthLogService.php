@@ -47,6 +47,8 @@ class AuthLogService extends Component
                     $authLog->blocking_quantity += 1;
                 }
                 $authLog->attempts = null;
+            }else{
+                $authLog->block = 0;
             }
 
             $authLog->ip = $currentIp;

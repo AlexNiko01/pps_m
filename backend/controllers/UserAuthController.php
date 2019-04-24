@@ -60,13 +60,12 @@ class UserAuthController extends AuthController
 
         $showCaptcha = $this->showCaptcha();
         $model = new LoginForm(['scenario'=>LoginForm::SCENARIO_LOGIN_DEFAULT]);
-        if(!$showCaptcha){
+        if($showCaptcha){
             $model = new LoginForm(['scenario'=>LoginForm::SCENARIO_LOGIN_VERIFICATION]);
         }
 
         if (Yii::$app->request->isAjax AND $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
-
 
             return ActiveForm::validate($model);
         }
@@ -75,7 +74,7 @@ class UserAuthController extends AuthController
         }
 
 
-        return $this->renderIsAjax('login',
+        return $this->render('login',
             [
                 'model' => $model,
                 'showCaptcha' => $showCaptcha
