@@ -40,13 +40,13 @@ use yii\helpers\Html;
                         <?= $form->field($model, 'password')
                             ->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'autocomplete' => 'off']) ?>
 
-<!--                        --><?php //if ($showCaptcha):; ?>
+                        <?php if ($showCaptcha):; ?>
                             <?= $form->field($model, 'captcha')->widget(Captcha::class,
                                 [
                                     'template' => '<div class="row"><div class="col-md-12 col-sm-2">{image}</div><div class="col-md-12 col-sm-10">{input}</div></div>',
                                     'captchaAction' => ['/user-auth/captcha']
                                 ]) ?>
-<!--                        --><?php //endif; ?>
+                        <?php endif; ?>
                         <?= (isset(Yii::$app->user->enableAutoLogin) && Yii::$app->user->enableAutoLogin) ? $form->field($model, 'rememberMe')->checkbox(['value' => true]) : '' ?>
 
                         <?= Html::submitButton(
