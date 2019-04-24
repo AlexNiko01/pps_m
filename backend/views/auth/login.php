@@ -25,7 +25,7 @@ use yii\helpers\Html;
 
                         <?php $form = ActiveForm::begin([
                             'enableAjaxValidation'   => false,
-//                            'action' => 'auth/log',
+                            'enableClientValidation' => true,
                             'id' => 'login-form',
                             'options' => ['autocomplete' => 'off'],
                             'validateOnBlur' => false,
