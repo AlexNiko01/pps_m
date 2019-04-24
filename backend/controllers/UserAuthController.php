@@ -39,7 +39,7 @@ class UserAuthController extends AuthController
         $currentUserAgent = \Yii::$app->request->getUserAgent();
         $currentHash = Hash::sha1($currentUserAgent);
         $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
-        if ($authLog && $authLog->attempts >= 1) {
+        if ($authLog && $authLog->attempts === 1) {
             $showCaptcha = true;
         }
         return $showCaptcha;
@@ -74,7 +74,7 @@ class UserAuthController extends AuthController
         }
 
 
-        return $this->render('login',
+        return $this->renderIsAjax('login',
             [
                 'model' => $model,
                 'showCaptcha' => $showCaptcha
