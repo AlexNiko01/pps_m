@@ -39,15 +39,16 @@ class AuthLogService extends Component
             $authLog->attempts = $attempts;
             if ($attempts >= 2) {
                 $authLog->block = 1;
-                $unblockingTime = time() + self::BLOCKING_DENOMINATOR_TIME_VAL * ($authLog->blocking_quantity ?? 1);
-                $authLog->unblocking_time = $unblockingTime;
+
                 if ($authLog->blocking_quantity === null) {
                     $authLog->blocking_quantity = 1;
                 } else {
                     $authLog->blocking_quantity += 1;
                 }
+                $unblockingTime = time() + self::BLOCKING_DENOMINATOR_TIME_VAL * $authLog->blocking_quantity;
+                $authLog->unblocking_time = $unblockingTime;
                 $authLog->attempts = null;
-            }else{
+            } else {
                 $authLog->block = 0;
             }
 

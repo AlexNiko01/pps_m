@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-lg-4 col-xs-6">
         <div class="statuses">
-            <canvas id="deposit-statuses" width="400" height="300"></canvas>
             <?php if (!empty($countOfDepositStatuses)): ?>
+                <canvas id="deposit-statuses" width="400" height="300"></canvas>
                 <input type="button" class="deposit-statuses btn btn-link btn-xs" value="Show Details">
             <?php endif; ?>
         </div>
@@ -11,8 +11,8 @@
     </div>
     <div class="col-lg-4 col-xs-6">
         <div class="statuses">
-            <canvas id="withdraw-statuses" width="400" height="300"></canvas>
             <?php if (!empty($countOfWithdrawStatuses)): ?>
+                <canvas id="withdraw-statuses" width="400" height="300"></canvas>
                 <input type="button" class="withdraw-statuses btn btn-link btn-xs" value="Show Details">
             <?php endif; ?>
         </div>
@@ -45,16 +45,18 @@
 
 <?php if (!empty($countOfDepositStatuses)): ?>
     <script>
-        String.prototype.capitalize = function() {
+        String.prototype.capitalize = function () {
             return this.charAt(0).toUpperCase() + this.slice(1);
         };
+
         function ifEmptyStatuses(type) {
             let pie = document.getElementById(type + "-statuses");
             let p = document.createElement('p');
-            let text = type +  ' statuses not found';
+            let text = type + ' statuses not found';
             p.innerText = text.capitalize();
             pie.parentElement.prepend(p);
         }
+
         function changeDetailView(e, char) {
             char.options.legend.display = !char.options.legend.display;
             if (char.options.legend.display) {

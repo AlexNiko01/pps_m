@@ -39,7 +39,13 @@ class UserAuthController extends AuthController
         $currentUserAgent = \Yii::$app->request->getUserAgent();
         $currentHash = Hash::sha1($currentUserAgent);
         $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
-        if ($authLog && $authLog->attempts === 1) {
+        if ($authLog === null) {
+            return $showCaptcha;
+        }
+        if (
+            ($authLog->attempts >= 1) ||
+            ($authLog->unblocking_time > time() && $authLog->attempts === null)
+        ) {
             $showCaptcha = true;
         }
         return $showCaptcha;
@@ -57,7 +63,7 @@ class UserAuthController extends AuthController
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-        $showCaptcha = $this->showCaptcha();
+
         $model = new LoginForm(['scenario' => LoginForm::SCENARIO_LOGIN_DEFAULT]);
 
         if (Yii::$app->request->isAjax AND $model->load(Yii::$app->request->post())) {
@@ -68,7 +74,7 @@ class UserAuthController extends AuthController
         if ($model->load(Yii::$app->request->post()) AND $model->login()) {
             return $this->goBack();
         }
-
+        $showCaptcha = $this->showCaptcha();
         if ($showCaptcha) {
             $model = new LoginForm(['scenario' => LoginForm::SCENARIO_LOGIN_VERIFICATION]);
         }
