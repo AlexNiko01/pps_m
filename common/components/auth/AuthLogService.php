@@ -94,12 +94,6 @@ class AuthLogService extends Component
         $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
         $currentTime = time();
         if ($authLog && $authLog->block === 1 && $currentTime < $authLog->unblocking_time) {
-            $locator = new ServiceLocator;
-            $locator->set('errorHandler', function () {
-                return [
-                    'errorAction' => 'site/error'
-                ];
-            });
             throw new ClientIsBlocked();
         }
     }
