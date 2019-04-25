@@ -3,7 +3,10 @@
 namespace common\components\exception;
 
 
-class ClientIsBlocked extends \Exception
+
+use yii\base\Exception;
+
+class ClientIsBlocked extends Exception
 {
 
 }

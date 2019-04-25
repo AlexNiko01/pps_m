@@ -8,6 +8,7 @@ use common\components\helpers\Hash;
 use common\models\AuthLog;
 use yii\base\Component;
 use yii\db\StaleObjectException;
+use yii\di\ServiceLocator;
 use yii\helpers\Url;
 
 class AuthLogService extends Component
@@ -82,7 +83,9 @@ class AuthLogService extends Component
         }
     }
 
-
+    /**
+     * Check if user has rights to access login page
+     */
     public function checkUserAccessibility()
     {
         $currentIp = \Yii::$app->request->getUserIP();
@@ -91,6 +94,12 @@ class AuthLogService extends Component
         $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
         $currentTime = time();
         if ($authLog && $authLog->block === 1 && $currentTime < $authLog->unblocking_time) {
+            $locator = new ServiceLocator;
+            $locator->set('errorHandler', function () {
+                return [
+                    'errorAction' => 'site/error'
+                ];
+            });
             throw new ClientIsBlocked();
         }
     }
