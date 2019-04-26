@@ -134,11 +134,18 @@ $this->title = $name;
         crossorigin="anonymous"></script>
 
 <script src="/js/jquery.countdown.min.js"></script>
+
 <script>
     (function ($) {
+        let unblockingTime = "<?php echo $unblockingTime ?? ''; ?>";
+        if (!unblockingTime) {
+            window.location.replace('/');
+        }
         $('#clock').countdown("<?php echo $unblockingTime ?? ''; ?>", function (event) {
             $(this).html(event.strftime('%H:%M:%S'));
+        }).on('finish.countdown', function () {
+            window.location.replace('/');
         });
-    })(jQuery);
-
+    })
+    (jQuery);
 </script>

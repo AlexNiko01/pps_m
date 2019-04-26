@@ -58,7 +58,8 @@ class UserAuthController extends AuthController
      */
     public function actionLogin()
     {
-        \Yii::$app->cache->flush();
+        $authLogService = \Yii::$app->authLogService;
+        $authLogService->checkUserAccessibility();
         $this->layout = 'auth';
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();

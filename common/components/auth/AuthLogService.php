@@ -94,7 +94,7 @@ class AuthLogService extends Component
         $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
         $currentTime = time();
         if ($authLog && $authLog->block === 1 && $currentTime < $authLog->unblocking_time) {
-            throw new ClientIsBlocked();
+            \Yii::$app->getResponse()->redirect('/error/error');
         }
     }
 }

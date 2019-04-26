@@ -6,18 +6,14 @@ use backend\models\Node;
 use backend\models\search\PaymentSystemStatusSearch;
 use backend\models\search\ProjectStatusSearch;
 use backend\models\Settings;
-use common\components\exception\ClientIsBlocked;
 use common\components\exception\SettingsException;
-use common\components\helpers\Hash;
-use common\models\AuthLog;
 use common\models\Transaction;
 use common\models\search\TransactionSearch;
 use console\controllers\NotificationController;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use webvimark\components\BaseController;
 use Yii;
-use yii\db\Exception;
+use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
 use pps\payment\Payment;
 
@@ -38,6 +34,28 @@ class SiteController extends BaseController
     const OBSCURE_DIVIDER = 20;
 
     public $freeAccessActions = ['index', 'set-timezone'];
+
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => false,
+                        'actions' => ['index'],
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['@'],
+                    ],
+                ],
+            ]
+        ];
+    }
 
     /**
      * {@inheritdoc}
@@ -122,7 +140,6 @@ class SiteController extends BaseController
      */
     public function actionIndex()
     {
-//        throw new Exception();
         if (Yii::$app->user->isGuest) {
             return Yii::$app->user->loginRequired();
         }
@@ -226,50 +243,6 @@ class SiteController extends BaseController
             return false;
         } else {
             return true;
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function actionLogin()
-    {
-        return $this->render('log');
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return string
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-
-    public function actionError()
-    {
-        \Yii::$app->cache->flush();
-        $exception = Yii::$app->errorHandler->exception;
-        $currentIp = \Yii::$app->request->getUserIP();
-        $currentUserAgent = \Yii::$app->request->getUserAgent();
-        $currentHash = Hash::sha1($currentUserAgent);
-        $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
-
-        $unblockingTime = '';
-        if ($authLog) {
-            $unblockingTime = $authLog->unblocking_time ? date("Y/m/d  H:i:s", $authLog->unblocking_time) : '';
-        }
-        $this->layout = 'ban';
-        if($exception instanceof ClientIsBlocked){
-            return $this->render('error',
-                [
-                    'unblockingTime' => $unblockingTime
-                ]
-            );
         }
     }
 

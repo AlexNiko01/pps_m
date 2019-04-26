@@ -24,7 +24,6 @@ class EventBootstrap implements BootstrapInterface
          * @var  AuthLogService $authLogService
          */
         $authLogService = \Yii::$app->authLogService;
-        $authLogService->checkUserAccessibility();
         Event::on(LoginForm::class, Model::EVENT_BEFORE_VALIDATE, function ($event) use ($authLogService) {
             $authLogService->addAuthLog();
         });

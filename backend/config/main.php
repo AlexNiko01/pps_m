@@ -22,18 +22,9 @@ return [
                     $event->action->controller->layout = 'loginLayout.php';
                 }
             },
-
-//            'controllerNamespace'=>'backend\controllers\UserManagement',
         ]
     ],
     'components' => [
-//        'view' => [
-//            'theme' => [
-//                'pathMap' => [
-//                    '@vendor/webvimark/module-user-management/views' => '@backend/views/user-management',
-//                ],
-//            ],
-//        ],
         'request' => [
             'csrfParam' => '_csrf-backend',
         ],
@@ -50,9 +41,6 @@ return [
             // this is the name of the session cookie used for login on the backend
             'name' => 'advanced-backend',
         ],
-//        'errorHandler' => [
-//            'errorAction' => 'site/error',
-//        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
