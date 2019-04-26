@@ -3,13 +3,10 @@
 namespace common\components\auth;
 
 
-use common\components\exception\ClientIsBlocked;
 use common\components\helpers\Hash;
 use common\models\AuthLog;
 use yii\base\Component;
 use yii\db\StaleObjectException;
-use yii\di\ServiceLocator;
-use yii\helpers\Url;
 
 class AuthLogService extends Component
 {
@@ -62,7 +59,7 @@ class AuthLogService extends Component
             $transaction->rollBack();
         }
         if ($authLog && $authLog->block === 1 && time() < $authLog->unblocking_time) {
-            \Yii::$app->getResponse()->redirect('/error/error');
+            \Yii::$app->getResponse()->redirect('/forbidden');
         }
     }
 
@@ -96,7 +93,7 @@ class AuthLogService extends Component
         $currentHash = Hash::sha1($currentUserAgent);
         $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
         if ($authLog && $authLog->block === 1 && time() < $authLog->unblocking_time) {
-            \Yii::$app->getResponse()->redirect('/error/error');
+            \Yii::$app->getResponse()->redirect('/forbidden');
         }
     }
 }

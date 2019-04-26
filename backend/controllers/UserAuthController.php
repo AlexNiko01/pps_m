@@ -32,6 +32,11 @@ class UserAuthController extends AuthController
         ];
     }
 
+    /**
+     * @param $action
+     * @return bool
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function beforeAction($action)
     {
         $authLogService = \Yii::$app->authLogService;

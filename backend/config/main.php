@@ -56,6 +56,10 @@ return [
                 [
                     'pattern' => 'user-management/auth/login',
                     'route' => 'user-auth/login'
+                ],
+                [
+                    'pattern' => 'forbidden',
+                    'route' => 'error/error'
                 ]
             ],
         ]

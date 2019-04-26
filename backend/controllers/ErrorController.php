@@ -11,11 +11,14 @@ use yii\filters\AccessControl;
 class ErrorController extends BaseController
 {
 
+    /**
+     * @return array
+     */
     public function behaviors()
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
@@ -32,6 +35,9 @@ class ErrorController extends BaseController
         ];
     }
 
+    /**
+     * @return string
+     */
     public function actionError()
     {
         $currentIp = \Yii::$app->request->getUserIP();
@@ -41,15 +47,14 @@ class ErrorController extends BaseController
         if (!$authLog || $authLog->unblocking_time < time()) {
             $this->redirect(['site/index']);
         }
-            $unblockingTime = $authLog->unblocking_time ? date("Y/m/d  H:i:s", $authLog->unblocking_time) : '';
-            $this->layout = 'ban';
-            return $this->render('error',
-                [
-                    'unblockingTime' => $unblockingTime,
-                    'interval' => ($authLog->unblocking_time - time())
-                ]
-            );
-
+        $unblockingTime = $authLog->unblocking_time ? date("Y/m/d  H:i:s", $authLog->unblocking_time) : '';
+        $this->layout = 'ban';
+        return $this->render('error',
+            [
+                'unblockingTime' => $unblockingTime,
+                'interval' => ($authLog->unblocking_time - time())
+            ]
+        );
     }
 
 }

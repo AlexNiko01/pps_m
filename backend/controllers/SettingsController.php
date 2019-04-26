@@ -6,6 +6,7 @@ use webvimark\components\BaseController;
 use Yii;
 use backend\models\Settings;
 use backend\models\SettingsSearch;
+use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -14,6 +15,28 @@ use yii\web\NotFoundHttpException;
 class SettingsController extends BaseController
 {
     public $freeAccessActions = ['switch-node'];
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => false,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ]
+        ];
+    }
 
     /**
      * Lists all Settings models.
