@@ -16,7 +16,6 @@ class EventBootstrap implements BootstrapInterface
 
     /**
      * @param \yii\base\Application $app
-     * @throws \common\components\exception\ClientIsBlocked
      */
     public function bootstrap($app): void
     {
@@ -29,9 +28,6 @@ class EventBootstrap implements BootstrapInterface
         });
         Event::on(UserConfig::class, User::EVENT_AFTER_LOGIN, function ($event) use ($authLogService) {
             $authLogService->removeAuthLog();
-        });
-        Event::on(LoginForm::class, LoginForm::EVENT_AFTER_VALIDATE, function ($event) use ($authLogService) {
-            $authLogService->checkUserAccessibility();
         });
     }
 

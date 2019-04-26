@@ -61,6 +61,9 @@ class AuthLogService extends Component
         } catch (\Exception $e) {
             $transaction->rollBack();
         }
+        if ($authLog && $authLog->block === 1 && time() < $authLog->unblocking_time) {
+            \Yii::$app->getResponse()->redirect('/error/error');
+        }
     }
 
 
@@ -92,8 +95,7 @@ class AuthLogService extends Component
         $currentUserAgent = \Yii::$app->request->getUserAgent();
         $currentHash = Hash::sha1($currentUserAgent);
         $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
-        $currentTime = time();
-        if ($authLog && $authLog->block === 1 && $currentTime < $authLog->unblocking_time) {
+        if ($authLog && $authLog->block === 1 && time() < $authLog->unblocking_time) {
             \Yii::$app->getResponse()->redirect('/error/error');
         }
     }

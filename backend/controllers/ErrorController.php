@@ -23,7 +23,7 @@ class ErrorController extends BaseController
                         'roles' => ['?'],
                     ],
                     [
-                        'allow' => false,
+                        'allow' => true,
                         'actions' => ['error'],
                         'roles' => ['@'],
                     ],
@@ -38,7 +38,9 @@ class ErrorController extends BaseController
         $currentUserAgent = \Yii::$app->request->getUserAgent();
         $currentHash = Hash::sha1($currentUserAgent);
         $authLog = AuthLog::find()->where(['ip' => $currentIp, 'user_agent' => $currentHash])->one();
-//        if ($authLog && $authLog->unblocking_time > time()) {
+        if (!$authLog || $authLog->unblocking_time < time()) {
+            $this->redirect(['site/index']);
+        }
             $unblockingTime = $authLog->unblocking_time ? date("Y/m/d  H:i:s", $authLog->unblocking_time) : '';
             $this->layout = 'ban';
             return $this->render('error',
@@ -47,7 +49,7 @@ class ErrorController extends BaseController
                     'interval' => ($authLog->unblocking_time - time())
                 ]
             );
-//        }
+
     }
 
 }

@@ -32,6 +32,14 @@ class UserAuthController extends AuthController
         ];
     }
 
+    public function beforeAction($action)
+    {
+        $authLogService = \Yii::$app->authLogService;
+        $authLogService->checkUserAccessibility();
+        return parent::beforeAction($action);
+
+    }
+
     private function showCaptcha(): bool
     {
         $showCaptcha = false;
@@ -58,8 +66,6 @@ class UserAuthController extends AuthController
      */
     public function actionLogin()
     {
-        $authLogService = \Yii::$app->authLogService;
-        $authLogService->checkUserAccessibility();
         $this->layout = 'auth';
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();

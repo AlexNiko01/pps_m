@@ -137,10 +137,7 @@ $this->title = $name;
 
 <script>
     (function ($) {
-        let unblockingTime = "<?php echo $unblockingTime ?? ''; ?>";
-        if (!unblockingTime) {
-            window.location.replace('/');
-        }
+
         $('#clock').countdown("<?php echo $unblockingTime ?? ''; ?>", function (event) {
             $(this).html(event.strftime('%H:%M:%S'));
         }).on('finish.countdown', function () {
