@@ -6,7 +6,6 @@ use kartik\grid\GridView;
 use yii\widgets\Pjax;
 
 
-$this->title = 'Payment systems activity';
 
 Pjax::begin([
     'id' => 'status-pjax',

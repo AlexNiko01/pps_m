@@ -27,21 +27,21 @@ $this->title = 'Dashboard';
 <?= Html::script('', ['src' => Url::to(['/js/chart.min.js'])]) ?>
 
     <div class="row">
-        <div class="col-lg-3 col-xs-12">
+        <div class="col-md-4 col-sm-12">
             <h3>Payment systems statuses</h3>
             <?php echo $this->render('_systems-statuses', [
                 'searchModelSystems' => $searchModelSystems,
                 'dataProviderSystems' => $dataProviderSystems
             ]); ?>
         </div>
-        <div class="col-lg-6 col-xs-12">
+        <div class="col-md-5  col-sm-12">
             <h3>Projects statuses</h3>
             <?php echo $this->render('_projects-statuses', [
                 'searchModelProjects' => $searchModelProjects,
                 'dataProviderProjects' => $dataProviderProjects
             ]); ?>
         </div>
-        <div class="col-lg-3 col-xs-12">
+        <div class="col-md-3  col-sm-12">
             <h3>Pss status</h3>
             <table class="kv-grid-table table table-bordered table-striped kv-table-wrap">
                 <thead>
@@ -68,7 +68,7 @@ $this->title = 'Dashboard';
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-6 col-xs-12">
+        <div class="col-xl-6 no-gutter-right">
             <h3>Deposit transactions</h3>
             <?php echo $this->render('_deposit', [
                 'searchModelDeposit' => $searchModelDeposit,
@@ -76,7 +76,7 @@ $this->title = 'Dashboard';
             ]); ?>
 
         </div>
-        <div class="col-lg-6 col-xs-12">
+        <div class="col-xl-6 no-gutter-left">
             <h3>Withdraw transactions</h3>
             <?php echo $this->render('_withdraw', [
                 'searchModelWithdraw' => $searchModelWithdraw,
