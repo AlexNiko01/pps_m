@@ -27,21 +27,21 @@ $this->title = 'Dashboard';
 <?= Html::script('', ['src' => Url::to(['/js/chart.min.js'])]) ?>
 
     <div class="row">
-        <div class="col-md-4 col-sm-12">
+        <div class="col-lg-4 col-md-12">
             <h3>Payment systems statuses</h3>
             <?php echo $this->render('_systems-statuses', [
                 'searchModelSystems' => $searchModelSystems,
                 'dataProviderSystems' => $dataProviderSystems
             ]); ?>
         </div>
-        <div class="col-md-5  col-sm-12">
+        <div class="col-lg-6  col-md-12">
             <h3>Projects statuses</h3>
             <?php echo $this->render('_projects-statuses', [
                 'searchModelProjects' => $searchModelProjects,
                 'dataProviderProjects' => $dataProviderProjects
             ]); ?>
         </div>
-        <div class="col-md-3  col-sm-12">
+        <div class="col-lg-3  col-md-12">
             <h3>Pss status</h3>
             <table class="kv-grid-table table table-bordered table-striped kv-table-wrap">
                 <thead>
